@@ -1,0 +1,7 @@
+export * from "./Navbar"
+export * from "./Hero"
+export * from "./SectionMinorista"
+export * from "./SectionMayorista"
+export * from "./InfoSection"
+export * from "./FAQSection"
+export * from "./Footer"

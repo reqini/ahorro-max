@@ -2,26 +2,165 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+/* ============================================================
+   CSS CUSTOM PROPERTIES — drives theme switching
+   ============================================================ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-red: #CC0000;
+  --color-yellow: #F5C000;
+
+  /* Theme-sensitive */
+  --th-bg:        #000000;
+  --th-bg-alt:    #0a0800;
+  --th-bg-muted:  #0d0d0d;
+  --th-bg-faint:  #080808;
+  --th-bg-card:   #111111;
+  --th-text:      #FFFFFF;
+  --th-text-80:   rgba(255,255,255,0.80);
+  --th-text-70:   rgba(255,255,255,0.70);
+  --th-text-60:   rgba(255,255,255,0.60);
+  --th-text-40:   rgba(255,255,255,0.40);
+  --th-border:    rgba(255,255,255,0.10);
+  --th-nav-bg:    rgba(0,0,0,0.98);
+
+  /* Hero specific */
+  --th-hero-glow: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(204,0,0,0.18) 0%, transparent 70%);
+  --th-hero-text-shadow: 0 2px 30px rgba(204,0,0,0.5), 0 0 60px rgba(204,0,0,0.2);
+  --th-logo-halo: radial-gradient(circle, #CC0000 0%, transparent 70%);
+  --th-chip-bg:   rgba(255,255,255,0.03);
+  --th-chip-border: rgba(255,255,255,0.10);
+  --th-chip-text: rgba(255,255,255,0.30);
+  --th-grid-color:#F5C000;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ============================================================
+   LIGHT THEME OVERRIDES
+   ============================================================ */
+[data-theme="light"] {
+  --th-bg:        #FFFFFF;
+  --th-bg-alt:    #FFF8EC;
+  --th-bg-muted:  #F2F2F2;
+  --th-bg-faint:  #F5F5F5;
+  --th-bg-card:   #E8E8E8;
+  --th-text:      #111111;
+  --th-text-80:   rgba(17,17,17,0.80);
+  --th-text-70:   rgba(17,17,17,0.70);
+  --th-text-60:   rgba(17,17,17,0.60);
+  --th-text-40:   rgba(17,17,17,0.40);
+  --th-border:    rgba(0,0,0,0.10);
+  --th-nav-bg:    rgba(255,255,255,0.98);
+
+  --th-hero-glow: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(204,0,0,0.06) 0%, transparent 70%);
+  --th-hero-text-shadow: 0 1px 12px rgba(204,0,0,0.20);
+  --th-logo-halo: radial-gradient(circle, rgba(204,0,0,0.15) 0%, transparent 70%);
+  --th-chip-bg:   rgba(0,0,0,0.04);
+  --th-chip-border: rgba(0,0,0,0.10);
+  --th-chip-text: rgba(0,0,0,0.28);
+  --th-grid-color:#CC0000;
 }
 
+/* Body */
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--th-bg);
+  color: var(--th-text);
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+html { scroll-behavior: smooth; }
+
+/* Section backgrounds driven by CSS vars */
+#hero      { background-color: var(--th-bg)      !important; }
+#minorista { background-color: var(--th-bg)       !important; }
+#mayorista { background-color: var(--th-bg-alt)   !important; }
+#info      { background-color: var(--th-bg-muted) !important; }
+#faq       { background-color: var(--th-bg-faint) !important; }
+
+/* Light: section headings and body text */
+[data-theme="light"] section h1,
+[data-theme="light"] section h2,
+[data-theme="light"] section h3 { color: #0A0A0A !important; }
+
+[data-theme="light"] section p   { color: #444444 !important; }
+[data-theme="light"] section li  { color: #333333 !important; }
+
+/* Tailwind white-text utilities → dark in light mode */
+[data-theme="light"] .text-white            { color: #111111 !important; }
+[data-theme="light"] .text-white\/80        { color: rgba(17,17,17,0.80) !important; }
+[data-theme="light"] .text-white\/75        { color: rgba(17,17,17,0.75) !important; }
+[data-theme="light"] .text-white\/70        { color: rgba(17,17,17,0.70) !important; }
+[data-theme="light"] .text-white\/60        { color: rgba(17,17,17,0.60) !important; }
+[data-theme="light"] .text-white\/40        { color: rgba(17,17,17,0.40) !important; }
+[data-theme="light"] .text-white\/30        { color: rgba(17,17,17,0.30) !important; }
+[data-theme="light"] .text-white\/20        { color: rgba(17,17,17,0.20) !important; }
+
+/* Tailwind black-bg utilities → white in light mode */
+[data-theme="light"] .bg-black             { background-color: #FFFFFF !important; }
+[data-theme="light"] .bg-black\/95         { background-color: rgba(255,255,255,0.95) !important; }
+[data-theme="light"] .bg-black\/98         { background-color: rgba(255,255,255,0.98) !important; }
+[data-theme="light"] .bg-\[\#111111\]      { background-color: #E8E8E8 !important; }
+[data-theme="light"] .bg-\[\#0a0800\]      { background-color: #FFF8EC !important; }
+[data-theme="light"] .bg-\[\#0d0d0d\]      { background-color: #F2F2F2 !important; }
+[data-theme="light"] .bg-\[\#080808\]      { background-color: #F5F5F5 !important; }
+
+/* Navbar light */
+[data-theme="light"] header { background-color: rgba(255,255,255,0.98) !important; }
+[data-theme="light"] header nav a { color: #222222 !important; }
+[data-theme="light"] header nav a:hover { color: #CC0000 !important; }
+[data-theme="light"] header nav .flex.flex-col a { color: #222222 !important; }
+
+/* Border overrides */
+[data-theme="light"] .border-white\/10  { border-color: rgba(0,0,0,0.10) !important; }
+[data-theme="light"] .border-white\/20  { border-color: rgba(0,0,0,0.20) !important; }
+[data-theme="light"] .border-white\/30  { border-color: rgba(0,0,0,0.30) !important; }
+
+/* Scrollbar */
+[data-theme="light"] ::-webkit-scrollbar-track { background: #f0f0f0; }
+[data-theme="light"] ::-webkit-scrollbar-thumb { background: #CC0000; }
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up { animation: fadeInUp 0.6s ease-out both; }
+.animation-delay-150 { animation-delay: 150ms; }
+.animation-delay-300 { animation-delay: 300ms; }
+.animation-delay-450 { animation-delay: 450ms; }
+.animation-delay-600 { animation-delay: 600ms; }
+
+/* Scroll-based reveal */
+@supports (animation-timeline: view()) {
+  @keyframes sectionReveal {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  section:not(#hero) {
+    animation: sectionReveal 0.7s ease-out both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 30%;
   }
 }
+
+/* Hero product ticker */
+@keyframes tickerLeft  { from { transform: translateX(0); }    to { transform: translateX(-50%); } }
+@keyframes tickerRight { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+.ticker-left  { animation: tickerLeft  28s linear infinite; }
+.ticker-right { animation: tickerRight 22s linear infinite; }
+
+/* Custom scrollbar */
+::-webkit-scrollbar       { width: 6px; }
+::-webkit-scrollbar-track { background: #111; }
+::-webkit-scrollbar-thumb { background: #CC0000; }
+::-webkit-scrollbar-thumb:hover { background: #F5C000; }
+
+::selection { background: #CC0000; color: white; }
+
+@layer utilities { .text-balance { text-wrap: balance; } }
