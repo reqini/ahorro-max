@@ -91,9 +91,9 @@ export const CONTACTO_CONTENT = {
     nombre: "Nombre",
     telefono: "Teléfono",
     mensaje: "Mensaje",
-    enviar: "Enviar consulta",
+    enviar: "Enviar por WhatsApp",
     enviando: "Enviando...",
-    exito: "¡Mensaje enviado! Te contactamos pronto.",
+    exito: "¡Listo! Se abrió WhatsApp con tu consulta.",
     error: "Hubo un error. Escribinos por WhatsApp.",
   },
 } as const
