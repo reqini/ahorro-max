@@ -51,7 +51,7 @@ function FAQItem({ q, a, className }: FAQItemProps) {
         </h3>
         <ChevronDown className="text-[#CC0000] shrink-0 mt-1" size={20} />
       </div>
-      <p className="mt-3 text-white/70 leading-relaxed">{a}</p>
+      <p className="mt-3 text-white/90 leading-relaxed text-base">{a}</p>
     </div>
   )
 }

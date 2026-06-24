@@ -1,4 +1,4 @@
-export const WHATSAPP_NUMBER = "5491176593626"
+export const WHATSAPP_NUMBER = "5491150203114"
 
 export const WHATSAPP_MINORISTA_MSG =
   "Hola! Vi su página y quiero consultar como minorista 🛒"
@@ -8,7 +8,14 @@ export const WHATSAPP_MAYORISTA_MSG =
 
 export const DIRECCION = "25 de mayo 108, Ciudadela, CP 1702"
 
-export const TELEFONO_DISPLAY = "11 7659-3626"
+export const TELEFONO_DISPLAY = "11 5020-3114"
+
+export const EMAIL = "info@ahorramax.com.ar"
+
+export const SOCIAL_LINKS = {
+  instagram: "#",
+  facebook: "#",
+}
 
 export const HORARIOS = [
   { dias: "Lunes a Viernes", horario: "8:00 - 18:00" },

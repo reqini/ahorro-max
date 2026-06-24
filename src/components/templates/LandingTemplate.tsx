@@ -3,8 +3,10 @@ import {
   Hero,
   SectionMinorista,
   SectionMayorista,
+  OfertasSection,
   InfoSection,
   FAQSection,
+  ContactForm,
   Footer,
 } from "@/components/organisms"
 
@@ -16,8 +18,10 @@ export function LandingTemplate() {
         <Hero />
         <SectionMinorista />
         <SectionMayorista />
+        <OfertasSection />
         <InfoSection />
         <FAQSection />
+        <ContactForm />
       </main>
       <Footer />
     </>
