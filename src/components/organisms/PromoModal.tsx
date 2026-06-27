@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react'
 import type { PromoFlash } from '@/lib/promo'
 import { WHATSAPP_NUMBER } from '@/constants'
 
-const SESSION_KEY = 'promo_flash_closed'
+const SESSION_KEY = 'promo_flash_v2'
 
 export function PromoModal({ promo }: { promo: PromoFlash }) {
   const [visible, setVisible] = useState(false)
