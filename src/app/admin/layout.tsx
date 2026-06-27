@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { clearAdminSession, isAuthenticated } from '@/lib/admin-auth'
+import { clearAdminSession } from '@/lib/admin-auth'
 
 async function logoutAction() {
   'use server'
@@ -9,8 +9,6 @@ async function logoutAction() {
 }
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const auth = await isAuthenticated()
-  if (!auth) redirect('/admin/login')
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white flex flex-col">
