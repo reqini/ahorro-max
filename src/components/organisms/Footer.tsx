@@ -38,9 +38,9 @@ export function Footer() {
       <div className="h-1 bg-gradient-to-r from-[#CC0000] via-[#F5C000] to-[#CC0000]" />
 
       <div className="max-w-7xl mx-auto px-5 md:px-12 py-10 md:py-16">
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 md:gap-12">
           {/* Brand */}
-          <div className="col-span-2 md:col-span-1 flex flex-col gap-4">
+          <div className="col-span-1 sm:col-span-2 md:col-span-1 flex flex-col gap-4">
             <Logo size="md" />
             <p className="text-white/60 text-sm leading-relaxed max-w-xs">
               Distribuidora mayorista y minorista de productos de consumo masivo.
@@ -91,7 +91,7 @@ export function Footer() {
                 className="flex items-center gap-2 text-white/60 hover:text-[#F5C000] transition-colors"
               >
                 <Mail size={18} className="text-[#F5C000] shrink-0" />
-                <span className="text-sm">{EMAIL}</span>
+                <span className="text-sm break-all">{EMAIL}</span>
               </a>
               <div className="flex items-start gap-2 text-white/60">
                 <MapPin size={18} className="text-[#CC0000] shrink-0 mt-0.5" />

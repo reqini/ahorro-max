@@ -18,7 +18,7 @@ export function CTAGroup({
   variant = "red",
 }: CTAGroupProps) {
   return (
-    <div className="flex flex-col sm:flex-row gap-4">
+    <div className="flex flex-col sm:flex-row gap-3">
       <Button
         as="a"
         href={whatsappUrl}
@@ -26,8 +26,10 @@ export function CTAGroup({
         rel="noopener noreferrer"
         variant="whatsapp"
         size="lg"
+        fullWidth
+        className="sm:w-auto"
       >
-        <WhatsAppIcon size={20} />
+        <WhatsAppIcon size={18} />
         {whatsappLabel}
       </Button>
       <Button
@@ -36,8 +38,10 @@ export function CTAGroup({
         download
         variant={variant === "yellow" ? "primary" : "secondary"}
         size="lg"
+        fullWidth
+        className="sm:w-auto"
       >
-        <Download size={20} />
+        <Download size={18} />
         {downloadLabel}
       </Button>
     </div>

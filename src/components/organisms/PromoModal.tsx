@@ -81,7 +81,7 @@ export function PromoModal({ promo }: { promo: PromoFlash }) {
         )}
 
         {/* Content */}
-        <div className="px-6 pt-5 pb-6 flex flex-col items-center text-center gap-4">
+        <div className="px-4 sm:px-6 pt-5 pb-6 flex flex-col items-center text-center gap-4">
 
           {/* Badge */}
           {promo.badge && (
@@ -96,7 +96,7 @@ export function PromoModal({ promo }: { promo: PromoFlash }) {
           {/* Title */}
           <div>
             <h2
-              className="text-3xl md:text-4xl font-black uppercase text-white leading-none"
+              className="text-2xl sm:text-3xl md:text-4xl font-black uppercase text-white leading-none"
               style={{ fontFamily: "Impact, 'Arial Narrow', sans-serif", textShadow: '0 2px 20px rgba(204,0,0,0.4)' }}
             >
               {promo.titulo}
@@ -113,7 +113,7 @@ export function PromoModal({ promo }: { promo: PromoFlash }) {
                 <span className="text-white/35 text-lg line-through">{promo.precio_anterior}</span>
               )}
               <span
-                className="text-5xl md:text-6xl font-black leading-none"
+                className="text-4xl sm:text-5xl md:text-6xl font-black leading-none"
                 style={{
                   color: '#CC0000',
                   fontFamily: "Impact, 'Arial Narrow', sans-serif",

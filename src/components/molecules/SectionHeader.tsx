@@ -31,7 +31,7 @@ export function SectionHeader({
       {badge && <Badge variant={badgeVariant}>{badge}</Badge>}
       <h2
         className={cn(
-          "text-3xl md:text-4xl lg:text-6xl font-black uppercase leading-tight",
+          "text-3xl md:text-4xl lg:text-5xl font-black uppercase leading-tight",
           headlineColor
         )}
         style={{ fontFamily: "Impact, 'Arial Narrow', Oswald, sans-serif" }}

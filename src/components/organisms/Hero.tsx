@@ -42,7 +42,7 @@ export function Hero() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center text-center px-4 gap-4 pt-16">
+      <div className="relative z-10 flex flex-col items-center text-center px-5 gap-4 pt-20 md:pt-16">
 
         {/* Logo con halo */}
         <div className="relative">
@@ -83,11 +83,11 @@ export function Hero() {
         </div>
 
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-3">
-          <Button variant="primary" size="lg" onClick={() => smoothScrollTo("minorista")} className="min-w-[190px]">
+        <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs sm:max-w-none">
+          <Button variant="primary" size="lg" onClick={() => smoothScrollTo("minorista")} fullWidth className="sm:w-auto sm:min-w-[180px]">
             {HERO_CONTENT.ctaMinorista}
           </Button>
-          <Button variant="secondary" size="lg" onClick={() => smoothScrollTo("mayorista")} className="min-w-[190px]">
+          <Button variant="secondary" size="lg" onClick={() => smoothScrollTo("mayorista")} fullWidth className="sm:w-auto sm:min-w-[180px]">
             {HERO_CONTENT.ctaMayorista}
           </Button>
         </div>
