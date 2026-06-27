@@ -75,6 +75,9 @@ body {
 
 html { scroll-behavior: smooth; overflow-x: hidden; }
 
+/* Hard clip: prevents ANY element from causing horizontal scroll */
+section, main, footer, header { max-width: 100vw; overflow-x: clip; }
+
 /* Section backgrounds driven by CSS vars */
 #hero      { background-color: var(--th-bg)      !important; }
 #minorista { background-color: var(--th-bg)       !important; }

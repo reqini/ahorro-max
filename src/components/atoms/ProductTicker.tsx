@@ -53,7 +53,13 @@ function TickerRow({
   // Duplicate for seamless loop
   const doubled = [...items, ...items]
   return (
-    <div className="overflow-hidden w-full">
+    <div
+      className="overflow-hidden w-full"
+      style={{
+        WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+        maskImage: "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+      }}
+    >
       <div className={direction === "left" ? "ticker-left" : "ticker-right"} style={{ display: "flex", width: "max-content" }}>
         {doubled.map((item, i) => (
           <TickerItem key={`${item.label}-${i}`} emoji={item.emoji} label={item.label} />
