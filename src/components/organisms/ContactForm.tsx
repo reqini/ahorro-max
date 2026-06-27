@@ -62,7 +62,7 @@ export function ContactForm() {
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
-              <label className="text-white/60 text-xs uppercase tracking-wider font-semibold">
+              <label className="text-white/85 text-xs uppercase tracking-wider font-bold">
                 {labels.nombre}
               </label>
               <input
@@ -71,12 +71,12 @@ export function ContactForm() {
                 name="nombre"
                 required
                 placeholder="Tu nombre completo"
-                className="bg-[#111] border border-white/10 focus:border-[#CC0000] outline-none text-white px-4 py-3 text-sm placeholder:text-white/30 transition-colors"
+                className="bg-[#242424] border border-white/25 focus:border-[#CC0000] focus:ring-1 focus:ring-[#CC0000]/30 outline-none text-white px-4 py-3.5 text-base placeholder:text-white/50 transition-all"
               />
             </div>
 
             <div className="flex flex-col gap-1">
-              <label className="text-white/60 text-xs uppercase tracking-wider font-semibold">
+              <label className="text-white/85 text-xs uppercase tracking-wider font-bold">
                 {labels.telefono}
               </label>
               <input
@@ -85,12 +85,12 @@ export function ContactForm() {
                 name="telefono"
                 required
                 placeholder="11 1234-5678"
-                className="bg-[#111] border border-white/10 focus:border-[#CC0000] outline-none text-white px-4 py-3 text-sm placeholder:text-white/30 transition-colors"
+                className="bg-[#242424] border border-white/25 focus:border-[#CC0000] focus:ring-1 focus:ring-[#CC0000]/30 outline-none text-white px-4 py-3.5 text-base placeholder:text-white/50 transition-all"
               />
             </div>
 
             <div className="flex flex-col gap-1">
-              <label className="text-white/60 text-xs uppercase tracking-wider font-semibold">
+              <label className="text-white/85 text-xs uppercase tracking-wider font-bold">
                 {labels.mensaje}
               </label>
               <textarea
@@ -99,7 +99,7 @@ export function ContactForm() {
                 required
                 rows={4}
                 placeholder="¿En qué te podemos ayudar?"
-                className="bg-[#111] border border-white/10 focus:border-[#CC0000] outline-none text-white px-4 py-3 text-sm placeholder:text-white/30 transition-colors resize-none"
+                className="bg-[#242424] border border-white/25 focus:border-[#CC0000] focus:ring-1 focus:ring-[#CC0000]/30 outline-none text-white px-4 py-3.5 text-base placeholder:text-white/50 transition-all resize-none"
               />
             </div>
 
