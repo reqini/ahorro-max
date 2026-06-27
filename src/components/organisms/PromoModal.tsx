@@ -66,16 +66,21 @@ export function PromoModal({ promo }: { promo: PromoFlash }) {
 
         {/* Image */}
         {promo.imagen_url && (
-          <div className="w-full aspect-video relative overflow-hidden shrink-0">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={promo.imagen_url} alt={promo.titulo} className="w-full h-full object-cover" />
-            {/* Gradiente cubre la mitad inferior de la imagen eliminando el borde visible */}
-            <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, #0e0e0e 0%, #0e0e0e 15%, rgba(14,14,14,0.6) 45%, transparent 100%)' }} />
+          <div className="relative shrink-0">
+            <div className="w-full aspect-video overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={promo.imagen_url} alt={promo.titulo} className="w-full h-full object-cover" />
+            </div>
+            {/* Gradiente FUERA del overflow-hidden: tapa la unión entre imagen y contenido */}
+            <div
+              className="absolute bottom-0 left-0 right-0 h-20 pointer-events-none"
+              style={{ background: 'linear-gradient(to top, #0e0e0e 0%, transparent 100%)' }}
+            />
           </div>
         )}
 
-        {/* Content — sube -mt-8 para solapar el gradiente y eliminar la línea */}
-        <div className={`flex-1 flex flex-col items-center justify-center text-center gap-5 px-6 py-10 sm:py-8 ${promo.imagen_url ? '-mt-8 relative z-10' : ''}`}>
+        {/* Content */}
+        <div className="flex-1 flex flex-col items-center justify-center text-center gap-5 px-6 py-10 sm:py-8">
 
           {/* Badge */}
           {promo.badge && (
