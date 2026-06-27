@@ -73,7 +73,7 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 
 /* Section backgrounds driven by CSS vars */
 #hero      { background-color: var(--th-bg)      !important; }

@@ -19,7 +19,7 @@ export function InfoSection() {
     >
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#CC0000] via-[#F5C000] to-[#CC0000]" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-5 md:px-12 py-14 md:py-24 w-full">
+      <div className="relative z-10 max-w-7xl mx-auto px-5 md:px-12 py-10 md:py-20 w-full">
         <div className="flex flex-col gap-10 md:gap-16">
           <SectionHeader
             headline={INFO_CONTENT.headline}

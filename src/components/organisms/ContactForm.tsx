@@ -41,7 +41,7 @@ export function ContactForm() {
             {CONTACTO_CONTENT.badge}
           </span>
           <h2
-            className="text-4xl md:text-5xl font-black uppercase text-white leading-none"
+            className="text-[1.75rem] leading-tight sm:text-4xl md:text-5xl font-black uppercase text-white"
             style={{ fontFamily: "Impact, 'Arial Narrow', sans-serif" }}
           >
             {CONTACTO_CONTENT.headline}
