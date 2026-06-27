@@ -53,13 +53,7 @@ function TickerRow({
   // Duplicate for seamless loop
   const doubled = [...items, ...items]
   return (
-    <div
-      className="overflow-hidden w-full"
-      style={{
-        WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
-        maskImage: "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
-      }}
-    >
+    <div className="overflow-hidden w-full relative">
       <div className={direction === "left" ? "ticker-left" : "ticker-right"} style={{ display: "flex", width: "max-content" }}>
         {doubled.map((item, i) => (
           <TickerItem key={`${item.label}-${i}`} emoji={item.emoji} label={item.label} />
@@ -75,7 +69,7 @@ export function ProductTicker() {
       className="absolute inset-0 flex flex-col justify-between py-24 pointer-events-none"
       aria-hidden="true"
     >
-      {/* Gradiente radial central para que los chips no compitan con el contenido */}
+      {/* Gradiente radial central — oscurece el centro para no competir con el contenido */}
       <div
         className="absolute inset-0 z-10"
         style={{
@@ -83,6 +77,10 @@ export function ProductTicker() {
             "radial-gradient(ellipse 55% 65% at 50% 50%, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.75) 50%, transparent 100%)",
         }}
       />
+
+      {/* Fade lateral — oculta chips en los bordes izquierdo y derecho */}
+      <div className="absolute left-0 top-0 bottom-0 w-20 md:w-32 z-20 pointer-events-none" style={{ background: "linear-gradient(to right, #000 0%, transparent 100%)" }} />
+      <div className="absolute right-0 top-0 bottom-0 w-20 md:w-32 z-20 pointer-events-none" style={{ background: "linear-gradient(to left, #000 0%, transparent 100%)" }} />
 
       {/* Fila superior — izquierda */}
       <div className="relative z-0">
