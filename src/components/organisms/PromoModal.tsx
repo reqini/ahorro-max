@@ -58,7 +58,7 @@ export function PromoModal({ promo }: { promo: PromoFlash }) {
         {/* Close button */}
         <button
           onClick={close}
-          className="absolute top-4 right-4 z-10 w-9 h-9 flex items-center justify-center text-white/60 hover:text-white bg-white/8 hover:bg-white/15 transition-colors text-xl leading-none rounded-full border border-white/15"
+          className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center text-white font-bold bg-black/70 hover:bg-black/90 transition-colors text-lg leading-none rounded-full border-2 border-white/50 hover:border-white"
           aria-label="Cerrar"
         >
           ✕
@@ -69,12 +69,13 @@ export function PromoModal({ promo }: { promo: PromoFlash }) {
           <div className="w-full aspect-video relative overflow-hidden shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={promo.imagen_url} alt={promo.titulo} className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e0e] via-transparent to-transparent" />
+            {/* Gradiente cubre la mitad inferior de la imagen eliminando el borde visible */}
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, #0e0e0e 0%, #0e0e0e 15%, rgba(14,14,14,0.6) 45%, transparent 100%)' }} />
           </div>
         )}
 
-        {/* Content — crece para llenar la pantalla en mobile */}
-        <div className="flex-1 flex flex-col items-center justify-center text-center gap-5 px-6 py-10 sm:py-8">
+        {/* Content — sube -mt-8 para solapar el gradiente y eliminar la línea */}
+        <div className={`flex-1 flex flex-col items-center justify-center text-center gap-5 px-6 py-10 sm:py-8 ${promo.imagen_url ? '-mt-8 relative z-10' : ''}`}>
 
           {/* Badge */}
           {promo.badge && (
