@@ -83,7 +83,7 @@ export function Hero() {
         </div>
 
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs sm:max-w-none">
+        <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs sm:w-auto">
           <Button variant="primary" size="lg" onClick={() => smoothScrollTo("minorista")} fullWidth className="sm:w-auto sm:min-w-[180px]">
             {HERO_CONTENT.ctaMinorista}
           </Button>
