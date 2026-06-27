@@ -10,8 +10,10 @@ import {
 } from "@/constants"
 import { MapPin, Phone, Clock, Truck } from "lucide-react"
 import { WhatsAppIcon } from "@/components/atoms"
+import { getZonasEntrega } from "@/lib/zonas"
 
-export function InfoSection() {
+export async function InfoSection() {
+  const zonas = await getZonasEntrega()
   return (
     <section
       id="info"
@@ -63,7 +65,7 @@ export function InfoSection() {
 
               <ContactCard icon={<Truck size={22} />} title={ZONAS_ENTREGA.headline}>
                 <div className="flex flex-wrap gap-2">
-                  {ZONAS_ENTREGA.zonas.map((zona) => (
+                  {zonas.map((zona) => (
                     <span
                       key={zona}
                       className="px-2 py-0.5 bg-[#CC0000]/15 border border-[#CC0000]/30 text-white text-xs font-semibold"

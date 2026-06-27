@@ -49,7 +49,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <nav className="hidden md:flex flex-col w-52 border-r border-white/10 bg-[#0d0d0d] py-6 px-3 gap-1 shrink-0">
           <NavLink href="/admin/promo">⚡ Promo Relámpago</NavLink>
           <NavLink href="/admin/ofertas">Ofertas</NavLink>
-          <NavLink href="/admin/sucursales">Sucursales</NavLink>
+          <NavLink href="/admin/zonas">Zonas de Entrega</NavLink>
           <NavLink href="/admin/config">Teléfono & WhatsApp</NavLink>
           <NavLink href="/admin/precios">Listas de Precios</NavLink>
         </nav>
@@ -58,7 +58,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <div className="md:hidden w-full border-b border-white/10 bg-[#0d0d0d] px-4 py-2 flex gap-1 overflow-x-auto shrink-0 fixed top-[53px] left-0 z-10">
           <MobileNavLink href="/admin/promo">⚡ Promo</MobileNavLink>
           <MobileNavLink href="/admin/ofertas">Ofertas</MobileNavLink>
-          <MobileNavLink href="/admin/sucursales">Sucursales</MobileNavLink>
+          <MobileNavLink href="/admin/zonas">Zonas</MobileNavLink>
           <MobileNavLink href="/admin/config">WhatsApp</MobileNavLink>
           <MobileNavLink href="/admin/precios">Precios</MobileNavLink>
         </div>
