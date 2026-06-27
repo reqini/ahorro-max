@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import { NavLink } from "@/components/molecules"
-import { ThemeToggle } from "@/components/atoms"
 import { NAVBAR_LINKS } from "@/constants"
 import { Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -54,19 +53,17 @@ export function Navbar() {
           <Image src="/logo.png" alt="Distribuidora Ahorra Max" fill className="object-contain" priority />
         </a>
 
-        {/* Desktop nav + toggle */}
+        {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-6">
           <nav className="flex items-center gap-8">
             {NAVBAR_LINKS.map((link) => (
               <NavLink key={link.href} href={link.href} label={link.label} />
             ))}
           </nav>
-          <ThemeToggle />
         </div>
 
-        {/* Mobile: toggle + hamburger */}
+        {/* Mobile: hamburger */}
         <div className="md:hidden flex items-center gap-3">
-          <ThemeToggle />
           <button
             className="text-white p-1.5 -mr-1 touch-manipulation"
             onClick={() => setOpen(!open)}

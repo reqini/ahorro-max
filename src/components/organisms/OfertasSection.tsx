@@ -1,9 +1,10 @@
+import { getOfertas } from "@/lib/ofertas"
 import { OFERTAS_CONTENT, WHATSAPP_MINORISTA_URL, WHATSAPP_MAYORISTA_URL } from "@/constants"
 import { WhatsAppIcon } from "@/components/atoms"
 import { Tag } from "lucide-react"
 
-export function OfertasSection() {
-  const { minorista, mayorista } = OFERTAS_CONTENT
+export async function OfertasSection() {
+  const { minorista, mayorista } = await getOfertas()
 
   return (
     <section
@@ -37,11 +38,11 @@ export function OfertasSection() {
                 className="text-[#CC0000] font-black uppercase tracking-wider text-sm"
                 style={{ fontFamily: "Impact, 'Arial Narrow', sans-serif" }}
               >
-                {minorista.label}
+                {OFERTAS_CONTENT.minorista.label}
               </span>
             </div>
             <div className="divide-y divide-white/5">
-              {minorista.items.map((item) => (
+              {minorista.map((item) => (
                 <div key={item.nombre} className="flex items-center justify-between px-6 py-4 gap-4">
                   <div>
                     <p className="text-white font-semibold text-sm">{item.nombre}</p>
@@ -72,11 +73,11 @@ export function OfertasSection() {
                 className="text-[#F5C000] font-black uppercase tracking-wider text-sm"
                 style={{ fontFamily: "Impact, 'Arial Narrow', sans-serif" }}
               >
-                {mayorista.label}
+                {OFERTAS_CONTENT.mayorista.label}
               </span>
             </div>
             <div className="divide-y divide-white/5">
-              {mayorista.items.map((item) => (
+              {mayorista.map((item) => (
                 <div key={item.nombre} className="flex items-center justify-between px-6 py-4 gap-4">
                   <div>
                     <p className="text-white font-semibold text-sm">{item.nombre}</p>
