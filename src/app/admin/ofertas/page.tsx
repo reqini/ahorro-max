@@ -109,18 +109,18 @@ function OfertasColumn({
             name="nombre"
             required
             placeholder="Nombre del producto *"
-            className="w-full bg-black border border-white/15 text-white text-sm px-3 py-2 focus:outline-none focus:border-white/40 placeholder-white/25"
+            className="w-full bg-[#1a1a1a] border border-white/30 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/45"
           />
           <div className="grid grid-cols-2 gap-2">
             <input
               name="detalle"
               placeholder="Detalle (ej: Pack x6)"
-              className="bg-black border border-white/15 text-white text-sm px-3 py-2 focus:outline-none focus:border-white/40 placeholder-white/25"
+              className="bg-[#1a1a1a] border border-white/30 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/45"
             />
             <input
               name="precio"
               placeholder="Precio (def: Consultá)"
-              className="bg-black border border-white/15 text-white text-sm px-3 py-2 focus:outline-none focus:border-white/40 placeholder-white/25"
+              className="bg-[#1a1a1a] border border-white/30 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/45"
             />
           </div>
           <button

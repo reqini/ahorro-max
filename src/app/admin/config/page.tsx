@@ -29,7 +29,7 @@ export default async function ConfigPage({ searchParams }: ConfigPageProps) {
               name="telefono"
               defaultValue={config.telefono ?? ''}
               placeholder="Ej: 11 5020-3114"
-              className="w-full bg-black border border-white/20 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/25"
+              className="w-full bg-[#1a1a1a] border border-white/30 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/45"
             />
             <p className="text-white/30 text-xs mt-1">Este número se muestra en el sitio como texto.</p>
           </div>
@@ -43,7 +43,7 @@ export default async function ConfigPage({ searchParams }: ConfigPageProps) {
               defaultValue={config.whatsapp_number ?? ''}
               placeholder="Ej: 5491150203114"
               pattern="[0-9]+"
-              className="w-full bg-black border border-white/20 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/25"
+              className="w-full bg-[#1a1a1a] border border-white/30 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/45"
             />
             <p className="text-white/30 text-xs mt-1">Formato: código país + código área + número. Ej: 5491150203114</p>
           </div>
@@ -56,7 +56,7 @@ export default async function ConfigPage({ searchParams }: ConfigPageProps) {
               name="whatsapp_msg_minorista"
               defaultValue={config.whatsapp_msg_minorista ?? ''}
               rows={3}
-              className="w-full bg-black border border-white/20 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/25 resize-none"
+              className="w-full bg-[#1a1a1a] border border-white/30 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/45 resize-none"
             />
           </div>
 
@@ -68,7 +68,7 @@ export default async function ConfigPage({ searchParams }: ConfigPageProps) {
               name="whatsapp_msg_mayorista"
               defaultValue={config.whatsapp_msg_mayorista ?? ''}
               rows={3}
-              className="w-full bg-black border border-white/20 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/25 resize-none"
+              className="w-full bg-[#1a1a1a] border border-white/30 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/45 resize-none"
             />
           </div>
 

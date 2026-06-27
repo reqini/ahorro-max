@@ -92,7 +92,7 @@ export default async function SucursalesPage({ searchParams }: PageProps) {
                 name="nombre"
                 required
                 placeholder="Ej: Sucursal Ciudadela"
-                className="w-full bg-black border border-white/15 text-white text-sm px-3 py-2 focus:outline-none focus:border-white/40 placeholder-white/25"
+                className="w-full bg-[#1a1a1a] border border-white/30 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/45"
               />
             </div>
             <div>
@@ -101,7 +101,7 @@ export default async function SucursalesPage({ searchParams }: PageProps) {
                 name="direccion"
                 required
                 placeholder="Ej: 25 de mayo 108, Ciudadela"
-                className="w-full bg-black border border-white/15 text-white text-sm px-3 py-2 focus:outline-none focus:border-white/40 placeholder-white/25"
+                className="w-full bg-[#1a1a1a] border border-white/30 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/45"
               />
             </div>
             <div>
@@ -109,7 +109,7 @@ export default async function SucursalesPage({ searchParams }: PageProps) {
               <input
                 name="telefono"
                 placeholder="Ej: 11 5020-3114"
-                className="w-full bg-black border border-white/15 text-white text-sm px-3 py-2 focus:outline-none focus:border-white/40 placeholder-white/25"
+                className="w-full bg-[#1a1a1a] border border-white/30 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/45"
               />
             </div>
             <div>
@@ -117,7 +117,7 @@ export default async function SucursalesPage({ searchParams }: PageProps) {
               <input
                 name="horarios"
                 placeholder="Ej: Lun-Vie 8-18hs"
-                className="w-full bg-black border border-white/15 text-white text-sm px-3 py-2 focus:outline-none focus:border-white/40 placeholder-white/25"
+                className="w-full bg-[#1a1a1a] border border-white/30 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/45"
               />
             </div>
             <div className="sm:col-span-2">
@@ -125,7 +125,7 @@ export default async function SucursalesPage({ searchParams }: PageProps) {
               <input
                 name="maps_url"
                 placeholder="https://maps.google.com/..."
-                className="w-full bg-black border border-white/15 text-white text-sm px-3 py-2 focus:outline-none focus:border-white/40 placeholder-white/25"
+                className="w-full bg-[#1a1a1a] border border-white/30 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/45"
               />
             </div>
           </div>

@@ -33,7 +33,7 @@ export function EditSucursalForm({ sucursal }: { sucursal: Sucursal }) {
             name="nombre"
             required
             defaultValue={sucursal.nombre}
-            className="w-full bg-black border border-white/20 text-white text-sm px-3 py-2 focus:outline-none focus:border-white/40"
+            className="w-full bg-[#1a1a1a] border border-white/30 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors"
           />
         </div>
         <div>
@@ -42,7 +42,7 @@ export function EditSucursalForm({ sucursal }: { sucursal: Sucursal }) {
             name="direccion"
             required
             defaultValue={sucursal.direccion}
-            className="w-full bg-black border border-white/20 text-white text-sm px-3 py-2 focus:outline-none focus:border-white/40"
+            className="w-full bg-[#1a1a1a] border border-white/30 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors"
           />
         </div>
         <div>
@@ -50,7 +50,7 @@ export function EditSucursalForm({ sucursal }: { sucursal: Sucursal }) {
           <input
             name="telefono"
             defaultValue={sucursal.telefono}
-            className="w-full bg-black border border-white/20 text-white text-sm px-3 py-2 focus:outline-none focus:border-white/40"
+            className="w-full bg-[#1a1a1a] border border-white/30 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors"
           />
         </div>
         <div>
@@ -58,7 +58,7 @@ export function EditSucursalForm({ sucursal }: { sucursal: Sucursal }) {
           <input
             name="horarios"
             defaultValue={sucursal.horarios}
-            className="w-full bg-black border border-white/20 text-white text-sm px-3 py-2 focus:outline-none focus:border-white/40"
+            className="w-full bg-[#1a1a1a] border border-white/30 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors"
           />
         </div>
         <div className="sm:col-span-2">
@@ -66,7 +66,7 @@ export function EditSucursalForm({ sucursal }: { sucursal: Sucursal }) {
           <input
             name="maps_url"
             defaultValue={sucursal.maps_url}
-            className="w-full bg-black border border-white/20 text-white text-sm px-3 py-2 focus:outline-none focus:border-white/40"
+            className="w-full bg-[#1a1a1a] border border-white/30 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors"
           />
         </div>
       </div>
