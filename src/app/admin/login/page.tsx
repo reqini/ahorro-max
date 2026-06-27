@@ -35,7 +35,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         </div>
 
         {/* Form */}
-        <div className="border border-white/10 bg-[#0d0d0d] p-6">
+        <div className="border border-white/20 bg-[#131313] p-6 shadow-xl shadow-black/60">
           <h1 className="text-white font-semibold text-base mb-5">Ingresar</h1>
 
           {hasError && (

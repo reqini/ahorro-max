@@ -34,7 +34,7 @@ export default async function SucursalesPage({ searchParams }: PageProps) {
           </p>
         )}
         {sucursales.map((s) => (
-          <div key={s.id} className={`border border-white/10 bg-[#0d0d0d] p-4 ${!s.activa ? 'opacity-60' : ''}`}>
+          <div key={s.id} className={`border border-white/20 bg-[#131313] p-4 shadow-lg shadow-black/40 ${!s.activa ? 'opacity-60' : ''}`}>
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
@@ -82,12 +82,12 @@ export default async function SucursalesPage({ searchParams }: PageProps) {
       </div>
 
       {/* Add form */}
-      <div className="border border-white/10 bg-[#0d0d0d] p-5">
+      <div className="border border-white/20 bg-[#131313] p-6 shadow-xl shadow-black/60">
         <h2 className="text-white/60 text-sm font-semibold uppercase tracking-wide mb-4">Agregar sucursal</h2>
         <form action={addSucursalWithRedirect} className="flex flex-col gap-3">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="text-white/40 text-xs block mb-1">Nombre *</label>
+              <label className="text-white/65 text-xs block mb-1 font-medium">Nombre *</label>
               <input
                 name="nombre"
                 required
@@ -96,7 +96,7 @@ export default async function SucursalesPage({ searchParams }: PageProps) {
               />
             </div>
             <div>
-              <label className="text-white/40 text-xs block mb-1">Dirección *</label>
+              <label className="text-white/65 text-xs block mb-1 font-medium">Dirección *</label>
               <input
                 name="direccion"
                 required
@@ -105,7 +105,7 @@ export default async function SucursalesPage({ searchParams }: PageProps) {
               />
             </div>
             <div>
-              <label className="text-white/40 text-xs block mb-1">Teléfono</label>
+              <label className="text-white/65 text-xs block mb-1 font-medium">Teléfono</label>
               <input
                 name="telefono"
                 placeholder="Ej: 11 5020-3114"
@@ -113,7 +113,7 @@ export default async function SucursalesPage({ searchParams }: PageProps) {
               />
             </div>
             <div>
-              <label className="text-white/40 text-xs block mb-1">Horarios</label>
+              <label className="text-white/65 text-xs block mb-1 font-medium">Horarios</label>
               <input
                 name="horarios"
                 placeholder="Ej: Lun-Vie 8-18hs"
@@ -121,7 +121,7 @@ export default async function SucursalesPage({ searchParams }: PageProps) {
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="text-white/40 text-xs block mb-1">URL de Google Maps</label>
+              <label className="text-white/65 text-xs block mb-1 font-medium">URL de Google Maps</label>
               <input
                 name="maps_url"
                 placeholder="https://maps.google.com/..."

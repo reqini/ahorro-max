@@ -19,10 +19,10 @@ export default async function ConfigPage({ searchParams }: ConfigPageProps) {
         </div>
       )}
 
-      <div className="border border-white/10 bg-[#0d0d0d] p-5 max-w-xl">
+      <div className="border border-white/20 bg-[#131313] p-6 max-w-xl shadow-xl shadow-black/60">
         <form action={saveConfig} className="flex flex-col gap-5">
           <div>
-            <label className="text-white/60 text-xs uppercase tracking-wide block mb-1.5">
+            <label className="text-white/75 text-xs uppercase tracking-wide block mb-1.5 font-medium">
               Teléfono de display
             </label>
             <input
@@ -35,7 +35,7 @@ export default async function ConfigPage({ searchParams }: ConfigPageProps) {
           </div>
 
           <div>
-            <label className="text-white/60 text-xs uppercase tracking-wide block mb-1.5">
+            <label className="text-white/75 text-xs uppercase tracking-wide block mb-1.5 font-medium">
               Número WhatsApp (sin espacios ni +)
             </label>
             <input
@@ -49,7 +49,7 @@ export default async function ConfigPage({ searchParams }: ConfigPageProps) {
           </div>
 
           <div>
-            <label className="text-white/60 text-xs uppercase tracking-wide block mb-1.5">
+            <label className="text-white/75 text-xs uppercase tracking-wide block mb-1.5 font-medium">
               Mensaje WhatsApp — Minorista
             </label>
             <textarea
@@ -61,7 +61,7 @@ export default async function ConfigPage({ searchParams }: ConfigPageProps) {
           </div>
 
           <div>
-            <label className="text-white/60 text-xs uppercase tracking-wide block mb-1.5">
+            <label className="text-white/75 text-xs uppercase tracking-wide block mb-1.5 font-medium">
               Mensaje WhatsApp — Mayorista
             </label>
             <textarea

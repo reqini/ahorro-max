@@ -61,7 +61,7 @@ function OfertasColumn({
   const labelColor = color === 'red' ? 'text-[#CC0000]' : 'text-[#F5C000]'
 
   return (
-    <div className={`border ${borderColor} bg-black/30`}>
+    <div className={`border ${borderColor} bg-[#131313] shadow-xl shadow-black/60`}>
       <div className={`px-4 py-3 border-b ${headerBorder} ${headerBg}`}>
         <span className={`${labelColor} font-black uppercase tracking-wider text-sm`}>{label}</span>
         <span className="text-white/40 text-xs ml-2">({items.length} ofertas)</span>
@@ -101,7 +101,7 @@ function OfertasColumn({
         ))}
       </div>
 
-      <div className={`border-t ${headerBorder} px-4 py-4 bg-black/20`}>
+      <div className={`border-t ${headerBorder} px-4 py-4 bg-[#0d0d0d]`}>
         <p className="text-white/40 text-xs uppercase tracking-wide mb-3">Agregar oferta</p>
         <form action={addOfertaWithRedirect} className="flex flex-col gap-2">
           <input type="hidden" name="tipo" value={tipo} />
