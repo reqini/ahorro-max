@@ -61,8 +61,8 @@ export function ContactForm() {
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div className="flex flex-col gap-1">
-              <label className="text-white/85 text-xs uppercase tracking-wider font-bold">
+            <div className="flex flex-col gap-0">
+              <label className="text-white/90 text-sm uppercase tracking-widest font-bold mb-2 block">
                 {labels.nombre}
               </label>
               <input
@@ -75,8 +75,8 @@ export function ContactForm() {
               />
             </div>
 
-            <div className="flex flex-col gap-1">
-              <label className="text-white/85 text-xs uppercase tracking-wider font-bold">
+            <div className="flex flex-col gap-0">
+              <label className="text-white/90 text-sm uppercase tracking-widest font-bold mb-2 block">
                 {labels.telefono}
               </label>
               <input
@@ -89,8 +89,8 @@ export function ContactForm() {
               />
             </div>
 
-            <div className="flex flex-col gap-1">
-              <label className="text-white/85 text-xs uppercase tracking-wider font-bold">
+            <div className="flex flex-col gap-0">
+              <label className="text-white/90 text-sm uppercase tracking-widest font-bold mb-2 block">
                 {labels.mensaje}
               </label>
               <textarea
