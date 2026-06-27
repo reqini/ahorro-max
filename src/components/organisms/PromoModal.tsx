@@ -4,15 +4,12 @@ import { useEffect, useState, useRef } from 'react'
 import type { PromoFlash } from '@/lib/promo'
 import { WHATSAPP_NUMBER } from '@/constants'
 
-const SESSION_KEY = 'promo_flash_v2'
-
 export function PromoModal({ promo }: { promo: PromoFlash }) {
   const [visible, setVisible] = useState(false)
   const [countdown, setCountdown] = useState(promo.countdown_segundos)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
-    if (sessionStorage.getItem(SESSION_KEY)) return
     const t = setTimeout(() => setVisible(true), 600)
     return () => clearTimeout(t)
   }, [])
@@ -31,7 +28,6 @@ export function PromoModal({ promo }: { promo: PromoFlash }) {
   function close() {
     if (intervalRef.current) clearInterval(intervalRef.current)
     setVisible(false)
-    sessionStorage.setItem(SESSION_KEY, '1')
   }
 
   const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(promo.cta_mensaje_wa)}`
