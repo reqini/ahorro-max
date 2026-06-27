@@ -8,11 +8,16 @@ import {
   FAQSection,
   ContactForm,
   Footer,
+  PromoModal,
 } from "@/components/organisms"
+import { getPromoFlash } from "@/lib/promo"
 
-export function LandingTemplate() {
+export async function LandingTemplate() {
+  const promo = await getPromoFlash()
+
   return (
     <>
+      {promo.activa && <PromoModal promo={promo} />}
       <Navbar />
       <main>
         <Hero />
