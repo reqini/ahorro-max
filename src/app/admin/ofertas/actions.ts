@@ -5,11 +5,11 @@ import { getSupabaseAdmin } from '@/lib/supabase'
 
 export async function addOferta(formData: FormData) {
   const tipo = formData.get('tipo') as 'minorista' | 'mayorista'
-  const nombre = (formData.get('nombre') as string).trim()
+  const nombre = (formData.get('nombre') as string | null)?.trim()
   const detalle = (formData.get('detalle') as string | null)?.trim() ?? ''
   const precio = (formData.get('precio') as string | null)?.trim() || 'Consultá'
 
-  if (!nombre) return
+  if (!tipo || !nombre) return
 
   const supabase = getSupabaseAdmin()
   const { data: last } = await supabase
@@ -28,12 +28,14 @@ export async function addOferta(formData: FormData) {
 }
 
 export async function deleteOferta(id: string) {
+  if (!id) return
   await getSupabaseAdmin().from('ofertas').delete().eq('id', id)
   revalidatePath('/')
   revalidatePath('/admin/ofertas')
 }
 
 export async function toggleOfertaActiva(id: string, activa: boolean) {
+  if (!id) return
   await getSupabaseAdmin().from('ofertas').update({ activa: !activa }).eq('id', id)
   revalidatePath('/')
   revalidatePath('/admin/ofertas')

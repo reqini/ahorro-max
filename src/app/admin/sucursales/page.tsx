@@ -2,15 +2,29 @@ import { getSupabaseAdmin } from '@/lib/supabase'
 import type { Sucursal } from '@/types/database'
 import { addSucursal, deleteSucursal, toggleSucursalActiva } from './actions'
 import { EditSucursalForm } from './EditSucursalForm'
+import { DeleteButton } from '../components/DeleteButton'
 
-export default async function SucursalesPage() {
-  const supabase = getSupabaseAdmin()
-  const { data } = await supabase.from('sucursales').select('*').order('orden')
+interface PageProps {
+  searchParams: Promise<{ added?: string }>
+}
+
+export default async function SucursalesPage({ searchParams }: PageProps) {
+  const [{ data }, params] = await Promise.all([
+    getSupabaseAdmin().from('sucursales').select('*').order('orden'),
+    searchParams,
+  ])
   const sucursales: Sucursal[] = data ?? []
+  const added = params.added === '1'
 
   return (
     <div>
       <h1 className="text-xl font-bold text-white mb-6">Sucursales</h1>
+
+      {added && (
+        <div className="mb-5 px-4 py-3 bg-green-950/40 border border-green-700/40 text-green-400 text-sm">
+          Sucursal agregada correctamente.
+        </div>
+      )}
 
       {/* List */}
       <div className="flex flex-col gap-4 mb-8">
@@ -33,7 +47,12 @@ export default async function SucursalesPage() {
                 {s.telefono && <p className="text-white/40 text-xs mt-0.5">Tel: {s.telefono}</p>}
                 {s.horarios && <p className="text-white/40 text-xs mt-0.5">Horarios: {s.horarios}</p>}
                 {s.maps_url && (
-                  <a href={s.maps_url} target="_blank" rel="noopener noreferrer" className="text-[#F5C000] text-xs mt-0.5 hover:underline inline-block">
+                  <a
+                    href={s.maps_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#F5C000] text-xs mt-0.5 hover:underline inline-block"
+                  >
                     Ver en Maps →
                   </a>
                 )}
@@ -51,15 +70,10 @@ export default async function SucursalesPage() {
                     {s.activa ? 'ON' : 'OFF'}
                   </button>
                 </form>
-                <form action={deleteSucursal.bind(null, s.id)}>
-                  <button
-                    type="submit"
-                    className="text-xs px-2 py-1 border border-red-900/50 text-red-500/70 hover:text-red-400 hover:bg-red-950/30 transition-colors"
-                    title="Eliminar"
-                  >
-                    ✕
-                  </button>
-                </form>
+                <DeleteButton
+                  action={deleteSucursal.bind(null, s.id)}
+                  label={`¿Eliminar la sucursal "${s.nombre}"?`}
+                />
               </div>
             </div>
             <EditSucursalForm sucursal={s} />
@@ -70,7 +84,7 @@ export default async function SucursalesPage() {
       {/* Add form */}
       <div className="border border-white/10 bg-[#0d0d0d] p-5">
         <h2 className="text-white/60 text-sm font-semibold uppercase tracking-wide mb-4">Agregar sucursal</h2>
-        <form action={addSucursal} className="flex flex-col gap-3">
+        <form action={addSucursalWithRedirect} className="flex flex-col gap-3">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="text-white/40 text-xs block mb-1">Nombre *</label>
@@ -125,4 +139,11 @@ export default async function SucursalesPage() {
       </div>
     </div>
   )
+}
+
+async function addSucursalWithRedirect(formData: FormData) {
+  'use server'
+  const { redirect } = await import('next/navigation')
+  await addSucursal(formData)
+  redirect('/admin/sucursales?added=1')
 }

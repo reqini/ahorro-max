@@ -1,38 +1,46 @@
 import { getSupabaseAdmin } from '@/lib/supabase'
 import type { Oferta } from '@/types/database'
 import { addOferta, deleteOferta, toggleOfertaActiva } from './actions'
+import { DeleteButton } from '../components/DeleteButton'
 
-export default async function OfertasPage() {
-  const supabase = getSupabaseAdmin()
-  const { data } = await supabase
-    .from('ofertas')
-    .select('*')
-    .order('orden')
+interface PageProps {
+  searchParams: Promise<{ added?: string }>
+}
+
+export default async function OfertasPage({ searchParams }: PageProps) {
+  const [{ data }, params] = await Promise.all([
+    getSupabaseAdmin().from('ofertas').select('*').order('orden'),
+    searchParams,
+  ])
 
   const ofertas: Oferta[] = data ?? []
   const minoristas = ofertas.filter((o) => o.tipo === 'minorista')
   const mayoristas = ofertas.filter((o) => o.tipo === 'mayorista')
+  const added = params.added === '1'
 
   return (
     <div>
       <h1 className="text-xl font-bold text-white mb-6">Ofertas</h1>
 
+      {added && (
+        <div className="mb-5 px-4 py-3 bg-green-950/40 border border-green-700/40 text-green-400 text-sm">
+          Oferta agregada correctamente.
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <OfertasColumn
-          tipo="minorista"
-          label="Minorista"
-          color="red"
-          items={minoristas}
-        />
-        <OfertasColumn
-          tipo="mayorista"
-          label="Mayorista"
-          color="yellow"
-          items={mayoristas}
-        />
+        <OfertasColumn tipo="minorista" label="Minorista" color="red" items={minoristas} />
+        <OfertasColumn tipo="mayorista" label="Mayorista" color="yellow" items={mayoristas} />
       </div>
     </div>
   )
+}
+
+async function addOfertaWithRedirect(formData: FormData) {
+  'use server'
+  const { redirect } = await import('next/navigation')
+  await addOferta(formData)
+  redirect('/admin/ofertas?added=1')
 }
 
 function OfertasColumn({
@@ -54,13 +62,11 @@ function OfertasColumn({
 
   return (
     <div className={`border ${borderColor} bg-black/30`}>
-      {/* Header */}
       <div className={`px-4 py-3 border-b ${headerBorder} ${headerBg}`}>
         <span className={`${labelColor} font-black uppercase tracking-wider text-sm`}>{label}</span>
         <span className="text-white/40 text-xs ml-2">({items.length} ofertas)</span>
       </div>
 
-      {/* Items list */}
       <div className="divide-y divide-white/5">
         {items.length === 0 && (
           <p className="px-4 py-6 text-white/30 text-sm text-center">Sin ofertas. Agregá una abajo.</p>
@@ -86,24 +92,18 @@ function OfertasColumn({
                   {item.activa ? 'ON' : 'OFF'}
                 </button>
               </form>
-              <form action={deleteOferta.bind(null, item.id)}>
-                <button
-                  type="submit"
-                  title="Eliminar"
-                  className="text-xs px-2 py-1 border border-red-900/50 text-red-500/70 hover:text-red-400 hover:bg-red-950/30 transition-colors"
-                >
-                  ✕
-                </button>
-              </form>
+              <DeleteButton
+                action={deleteOferta.bind(null, item.id)}
+                label={`¿Eliminar "${item.nombre}"?`}
+              />
             </div>
           </div>
         ))}
       </div>
 
-      {/* Add form */}
       <div className={`border-t ${headerBorder} px-4 py-4 bg-black/20`}>
         <p className="text-white/40 text-xs uppercase tracking-wide mb-3">Agregar oferta</p>
-        <form action={addOferta} className="flex flex-col gap-2">
+        <form action={addOfertaWithRedirect} className="flex flex-col gap-2">
           <input type="hidden" name="tipo" value={tipo} />
           <input
             name="nombre"

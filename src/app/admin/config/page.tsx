@@ -20,7 +20,7 @@ export default async function ConfigPage({ searchParams }: ConfigPageProps) {
       )}
 
       <div className="border border-white/10 bg-[#0d0d0d] p-5 max-w-xl">
-        <form action={saveConfigWithRedirect} className="flex flex-col gap-5">
+        <form action={saveConfig} className="flex flex-col gap-5">
           <div>
             <label className="text-white/60 text-xs uppercase tracking-wide block mb-1.5">
               Teléfono de display
@@ -82,11 +82,4 @@ export default async function ConfigPage({ searchParams }: ConfigPageProps) {
       </div>
     </div>
   )
-}
-
-async function saveConfigWithRedirect(formData: FormData) {
-  'use server'
-  const { redirect } = await import('next/navigation')
-  await saveConfig(formData)
-  redirect('/admin/config?saved=1')
 }

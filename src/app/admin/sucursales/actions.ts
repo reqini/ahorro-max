@@ -4,8 +4,8 @@ import { revalidatePath } from 'next/cache'
 import { getSupabaseAdmin } from '@/lib/supabase'
 
 export async function addSucursal(formData: FormData) {
-  const nombre = (formData.get('nombre') as string).trim()
-  const direccion = (formData.get('direccion') as string).trim()
+  const nombre = (formData.get('nombre') as string | null)?.trim()
+  const direccion = (formData.get('direccion') as string | null)?.trim()
   const telefono = (formData.get('telefono') as string | null)?.trim() ?? ''
   const horarios = (formData.get('horarios') as string | null)?.trim() ?? ''
   const maps_url = (formData.get('maps_url') as string | null)?.trim() ?? ''
@@ -27,15 +27,16 @@ export async function addSucursal(formData: FormData) {
 }
 
 export async function deleteSucursal(id: string) {
+  if (!id) return
   await getSupabaseAdmin().from('sucursales').delete().eq('id', id)
   revalidatePath('/')
   revalidatePath('/admin/sucursales')
 }
 
 export async function updateSucursal(formData: FormData) {
-  const id = formData.get('id') as string
-  const nombre = (formData.get('nombre') as string).trim()
-  const direccion = (formData.get('direccion') as string).trim()
+  const id = (formData.get('id') as string | null)?.trim()
+  const nombre = (formData.get('nombre') as string | null)?.trim()
+  const direccion = (formData.get('direccion') as string | null)?.trim()
   const telefono = (formData.get('telefono') as string | null)?.trim() ?? ''
   const horarios = (formData.get('horarios') as string | null)?.trim() ?? ''
   const maps_url = (formData.get('maps_url') as string | null)?.trim() ?? ''
@@ -52,6 +53,7 @@ export async function updateSucursal(formData: FormData) {
 }
 
 export async function toggleSucursalActiva(id: string, activa: boolean) {
+  if (!id) return
   await getSupabaseAdmin().from('sucursales').update({ activa: !activa }).eq('id', id)
   revalidatePath('/')
   revalidatePath('/admin/sucursales')
