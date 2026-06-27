@@ -66,16 +66,9 @@ export function PromoModal({ promo }: { promo: PromoFlash }) {
 
         {/* Image */}
         {promo.imagen_url && (
-          <div className="relative shrink-0">
-            <div className="w-full aspect-video overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={promo.imagen_url} alt={promo.titulo} className="w-full h-full object-cover" />
-            </div>
-            {/* Gradiente FUERA del overflow-hidden: tapa la unión entre imagen y contenido */}
-            <div
-              className="absolute bottom-0 left-0 right-0 h-20 pointer-events-none"
-              style={{ background: 'linear-gradient(to top, #0e0e0e 0%, transparent 100%)' }}
-            />
+          <div className="w-full aspect-video overflow-hidden shrink-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={promo.imagen_url} alt={promo.titulo} className="w-full h-full object-cover" />
           </div>
         )}
 
@@ -115,9 +108,9 @@ export function PromoModal({ promo }: { promo: PromoFlash }) {
                 className="font-black leading-none"
                 style={{
                   fontSize: 'clamp(3rem, 18vw, 5rem)',
-                  color: '#CC0000',
+                  color: '#F5C000',
                   fontFamily: "Impact, 'Arial Narrow', sans-serif",
-                  textShadow: '0 0 50px rgba(204,0,0,0.6)',
+                  textShadow: '0 0 40px rgba(245,192,0,0.5)',
                 }}
               >
                 {promo.precio}
