@@ -1,11 +1,11 @@
 import { redirect } from 'next/navigation'
-import { setAdminSession } from '@/lib/admin-auth'
+import { setVendorSession } from '@/lib/admin-auth'
 
 async function loginAction(formData: FormData) {
   'use server'
   const password = formData.get('password') as string
-  if (password === (process.env.ADMIN_PASSWORD ?? 'admin')) {
-    await setAdminSession()
+  if (password === (process.env.VENDOR_PASSWORD ?? 'vendedor')) {
+    await setVendorSession()
     redirect('/vendedor/clientes')
   }
   redirect('/vendedor/login?error=1')
@@ -25,11 +25,17 @@ export default async function VendedorLogin({ searchParams }: Props) {
         </div>
 
         <div className="border border-white/20 bg-[#131313] p-6">
+          <div className="flex items-center gap-2 mb-5">
+            <span className="text-xs px-2 py-0.5 bg-[#F5C000]/10 text-[#F5C000] border border-[#F5C000]/30 font-bold uppercase tracking-wide">Vendedor</span>
+            <span className="text-white/50 text-sm">Ingresar</span>
+          </div>
+
           {params.error === '1' && (
             <div className="mb-4 px-3 py-2 bg-red-950/50 border border-red-800/50 text-red-400 text-sm">
               Contraseña incorrecta
             </div>
           )}
+
           <form action={loginAction} className="flex flex-col gap-4">
             <div>
               <label className="block text-white/60 text-xs mb-1.5 uppercase tracking-wide">

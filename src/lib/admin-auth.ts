@@ -9,38 +9,53 @@ function sign(value: string): string {
   return `${value}.${sig}`
 }
 
-function verify(token: string): boolean {
+function verifyAndExtract(token: string): string | null {
   const idx = token.lastIndexOf('.')
-  if (idx === -1) return false
+  if (idx === -1) return null
   const value = token.slice(0, idx)
   const expected = sign(value)
   try {
-    return timingSafeEqual(Buffer.from(token), Buffer.from(expected))
+    if (timingSafeEqual(Buffer.from(token), Buffer.from(expected))) return value
+    return null
   } catch {
-    return false
+    return null
   }
 }
 
-export async function setAdminSession() {
+export type SessionRole = 'admin' | 'vendor'
+
+async function setSession(role: SessionRole) {
   const cookieStore = await cookies()
-  const token = sign('authenticated')
-  cookieStore.set(COOKIE, token, {
+  cookieStore.set(COOKIE, sign(role), {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
-    maxAge: 60 * 60 * 24 * 7, // 7 days
+    maxAge: 60 * 60 * 24 * 7,
     path: '/',
   })
 }
+
+export async function setAdminSession() { return setSession('admin') }
+export async function setVendorSession() { return setSession('vendor') }
 
 export async function clearAdminSession() {
   const cookieStore = await cookies()
   cookieStore.delete(COOKIE)
 }
 
-export async function isAuthenticated(): Promise<boolean> {
+export async function getSessionRole(): Promise<SessionRole | null> {
   const cookieStore = await cookies()
   const token = cookieStore.get(COOKIE)?.value
-  if (!token) return false
-  return verify(token)
+  if (!token) return null
+  const role = verifyAndExtract(token)
+  if (role === 'admin' || role === 'vendor') return role
+  return null
+}
+
+export async function isAuthenticated(): Promise<boolean> {
+  return (await getSessionRole()) !== null
+}
+
+export async function isAdmin(): Promise<boolean> {
+  return (await getSessionRole()) === 'admin'
 }
