@@ -28,27 +28,25 @@ async function verifyAndGetRole(token: string): Promise<Role | null> {
   for (let i = 0; i < sig.length; i++) diff |= sig.charCodeAt(i) ^ expectedSig.charCodeAt(i)
   if (diff !== 0) return null
 
-  if (value === 'admin' || value === 'vendor') return value
+  if (value === 'admin') return 'admin'
+  if (value.startsWith('vendor:')) return 'vendor'
   return null
 }
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Public login pages — always allow
   if (pathname === '/admin/login' || pathname === '/admin/login/') return NextResponse.next()
   if (pathname === '/vendedor/login' || pathname === '/vendedor/login/') return NextResponse.next()
 
   const token = request.cookies.get('admin_session')?.value
   const role = token ? await verifyAndGetRole(token) : null
 
-  // Admin section requires admin role
   if (pathname.startsWith('/admin')) {
     if (role !== 'admin') return NextResponse.redirect(new URL('/admin/login', request.url))
     return NextResponse.next()
   }
 
-  // Vendor section requires vendor role
   if (pathname.startsWith('/vendedor')) {
     if (role !== 'vendor') return NextResponse.redirect(new URL('/vendedor/login', request.url))
     return NextResponse.next()

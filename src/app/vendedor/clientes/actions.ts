@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { getSupabaseAdmin } from '@/lib/supabase'
+import { getVendedorUsername } from '@/lib/admin-auth'
 import type { TipoCliente } from '@/lib/clientes'
 
 function str(fd: FormData, key: string) {
@@ -13,6 +14,7 @@ export async function addCliente(formData: FormData) {
   const nombre = str(formData, 'nombre')
   if (!nombre) return
 
+  const vendedor = (await getVendedorUsername()) ?? str(formData, 'vendedor')
   const notaInicial = str(formData, 'nota')
 
   const supabase = getSupabaseAdmin()
@@ -28,8 +30,8 @@ export async function addCliente(formData: FormData) {
       horarios:       str(formData, 'horarios'),
       dia_visita:     str(formData, 'dia_visita'),
       metodo_contacto: str(formData, 'metodo_contacto'),
-      vendedor:       str(formData, 'vendedor'),
       zona_ruta:      str(formData, 'zona_ruta'),
+      vendedor,
       estado:         'activo',
     })
     .select('id')
@@ -40,6 +42,7 @@ export async function addCliente(formData: FormData) {
   }
 
   revalidatePath('/vendedor/clientes')
+  revalidatePath('/admin/clientes')
   redirect(`/vendedor/clientes/${data?.id ?? ''}`)
 }
 

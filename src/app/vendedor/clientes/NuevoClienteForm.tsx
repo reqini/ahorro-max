@@ -11,15 +11,17 @@ const TIPOS_CLIENTE = [
 const METODOS = ['WhatsApp', 'Llamada', 'En persona', 'Email']
 const DIAS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
 const TIPOS_NEGOCIO = ['Almacén', 'Kiosco', 'Ferretería', 'Farmacia', 'Restaurante', 'Bar', 'Otro']
+const STORAGE_KEY = 'vendedor_pending_clientes'
 
 interface Props {
   action: (fd: FormData) => Promise<void>
   onCancel: () => void
+  vendedorUsername: string
 }
 
 const INPUT = "w-full bg-[#1a1a1a] border border-white/20 text-white px-3 py-3 text-base focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/35"
 
-export function NuevoClienteForm({ action, onCancel }: Props) {
+export function NuevoClienteForm({ action, onCancel, vendedorUsername }: Props) {
   const [tipo, setTipo] = useState('potencial')
   const [metodo, setMetodo] = useState('')
   const [saving, setSaving] = useState(false)
@@ -27,9 +29,10 @@ export function NuevoClienteForm({ action, onCancel }: Props) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    const fd = new FormData(formRef.current!)
+
     if (!navigator.onLine) {
-      const fd = new FormData(formRef.current!)
-      const pending = JSON.parse(localStorage.getItem('vendedor_pending_clientes') ?? '[]')
+      const pending = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]')
       pending.push({
         id: crypto.randomUUID(),
         nombre: fd.get('nombre'),
@@ -40,35 +43,32 @@ export function NuevoClienteForm({ action, onCancel }: Props) {
         horarios: fd.get('horarios'),
         dia_visita: fd.get('dia_visita'),
         metodo_contacto: fd.get('metodo_contacto'),
-        vendedor: fd.get('vendedor'),
         zona_ruta: fd.get('zona_ruta'),
         tipo: fd.get('tipo'),
         nota: fd.get('nota'),
+        vendedor: vendedorUsername,
         timestamp: Date.now(),
       })
-      localStorage.setItem('vendedor_pending_clientes', JSON.stringify(pending))
-      alert('Sin conexión. Cliente guardado localmente. Se sincronizará cuando vuelva la conexión.')
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(pending))
+      alert('Sin conexión. Cliente guardado localmente. Se sincronizará al reconectar.')
       onCancel()
       return
     }
+
     setSaving(true)
-    await action(new FormData(formRef.current!))
+    await action(fd)
     setSaving(false)
   }
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-4">
+      {/* Hidden vendedor from session */}
+      <input type="hidden" name="vendedor" value={vendedorUsername} />
 
-      {/* Sección vendedor */}
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="text-white/50 text-xs uppercase tracking-wide block mb-1.5">Vendedor</label>
-          <input name="vendedor" placeholder="Tu nombre" className={INPUT} />
-        </div>
-        <div>
-          <label className="text-white/50 text-xs uppercase tracking-wide block mb-1.5">Zona / Ruta</label>
-          <input name="zona_ruta" placeholder="Norte, Centro..." className={INPUT} />
-        </div>
+      {/* Zona / Ruta */}
+      <div>
+        <label className="text-white/50 text-xs uppercase tracking-wide block mb-1.5">Zona / Ruta</label>
+        <input name="zona_ruta" placeholder="Norte, Centro, Ruta 3..." className={INPUT} />
       </div>
 
       <div className="border-t border-white/10 pt-4">
@@ -81,12 +81,8 @@ export function NuevoClienteForm({ action, onCancel }: Props) {
         {/* Tipo negocio */}
         <div className="mb-4">
           <label className="text-white/60 text-xs uppercase tracking-wide block mb-1.5">Tipo de negocio</label>
-          <input
-            name="tipo_negocio"
-            placeholder="Almacén, Kiosco, Ferretería..."
-            list="tipos-negocio-list"
-            className={INPUT}
-          />
+          <input name="tipo_negocio" placeholder="Almacén, Kiosco, Ferretería..."
+            list="tipos-negocio-list" className={INPUT} />
           <datalist id="tipos-negocio-list">
             {TIPOS_NEGOCIO.map((t) => <option key={t} value={t} />)}
           </datalist>

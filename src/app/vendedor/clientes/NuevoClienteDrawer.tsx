@@ -5,9 +5,10 @@ import { NuevoClienteForm } from './NuevoClienteForm'
 
 interface Props {
   action: (fd: FormData) => Promise<void>
+  vendedorUsername: string
 }
 
-export function NuevoClienteDrawer({ action }: Props) {
+export function NuevoClienteDrawer({ action, vendedorUsername }: Props) {
   const [open, setOpen] = useState(false)
 
   if (!open) {
@@ -24,18 +25,13 @@ export function NuevoClienteDrawer({ action }: Props) {
 
   return (
     <>
-      {/* Overlay */}
-      <div
-        className="fixed inset-0 z-40 bg-black/70"
-        onClick={() => setOpen(false)}
-      />
-      {/* Drawer */}
+      <div className="fixed inset-0 z-40 bg-black/70" onClick={() => setOpen(false)} />
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#111] border-t border-white/10 rounded-t-2xl px-5 pt-5 pb-8 max-h-[92vh] overflow-y-auto max-w-2xl mx-auto">
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-white font-bold text-base">Nuevo cliente</h2>
           <button onClick={() => setOpen(false)} className="text-white/40 hover:text-white text-xl">✕</button>
         </div>
-        <NuevoClienteForm action={action} onCancel={() => setOpen(false)} />
+        <NuevoClienteForm action={action} onCancel={() => setOpen(false)} vendedorUsername={vendedorUsername} />
       </div>
     </>
   )

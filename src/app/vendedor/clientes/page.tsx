@@ -1,8 +1,10 @@
 import Link from 'next/link'
 import { getClientes } from '@/lib/clientes'
+import { getVendedorUsername } from '@/lib/admin-auth'
 import { addCliente } from './actions'
 import { NuevoClienteDrawer } from './NuevoClienteDrawer'
 import { OfflineBar } from './OfflineBar'
+import { SyncPending } from './SyncPending'
 import type { TipoCliente } from '@/lib/clientes'
 
 const BADGE: Record<string, string> = {
@@ -16,7 +18,7 @@ interface PageProps {
 }
 
 export default async function ClientesPage({ searchParams }: PageProps) {
-  const params = await searchParams
+  const [params, username] = await Promise.all([searchParams, getVendedorUsername()])
   const tipoFiltro = params.tipo as TipoCliente | undefined
   const busqueda = params.q
 
@@ -32,6 +34,7 @@ export default async function ClientesPage({ searchParams }: PageProps) {
   return (
     <div className="flex flex-col">
       <OfflineBar />
+      <SyncPending />
 
       {/* Search + filters */}
       <div className="sticky top-[53px] z-30 bg-[#0d0d0d] border-b border-white/10 px-4 pt-3 pb-3 flex flex-col gap-2">
@@ -47,7 +50,6 @@ export default async function ClientesPage({ searchParams }: PageProps) {
           </button>
         </form>
 
-        {/* Filter pills */}
         <div className="flex gap-2 overflow-x-auto pb-0.5">
           {[
             { label: `Todos (${counts.total})`, value: undefined },
@@ -57,15 +59,9 @@ export default async function ClientesPage({ searchParams }: PageProps) {
           ].map((f) => {
             const active = tipoFiltro === f.value
             return (
-              <Link
-                key={f.label}
+              <Link key={f.label}
                 href={f.value ? `/vendedor/clientes?tipo=${f.value}${busqueda ? `&q=${busqueda}` : ''}` : `/vendedor/clientes${busqueda ? `?q=${busqueda}` : ''}`}
-                className={`px-3 py-1 text-xs font-bold uppercase tracking-wide whitespace-nowrap border transition-colors ${
-                  active
-                    ? 'bg-[#CC0000] border-[#CC0000] text-white'
-                    : 'border-white/20 text-white/50 hover:text-white hover:border-white/40'
-                }`}
-              >
+                className={`px-3 py-1 text-xs font-bold uppercase tracking-wide whitespace-nowrap border transition-colors ${active ? 'bg-[#CC0000] border-[#CC0000] text-white' : 'border-white/20 text-white/50 hover:text-white hover:border-white/40'}`}>
                 {f.label}
               </Link>
             )
@@ -84,12 +80,8 @@ export default async function ClientesPage({ searchParams }: PageProps) {
         )}
 
         {clientes.map((c) => (
-          <Link
-            key={c.id}
-            href={`/vendedor/clientes/${c.id}`}
-            className="flex items-center gap-3 px-4 py-4 hover:bg-white/3 active:bg-white/5 transition-colors"
-          >
-            {/* Avatar inicial */}
+          <Link key={c.id} href={`/vendedor/clientes/${c.id}`}
+            className="flex items-center gap-3 px-4 py-4 hover:bg-white/3 active:bg-white/5 transition-colors">
             <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-base shrink-0 ${
               c.tipo === 'minorista' ? 'bg-[#CC0000]/20 text-[#CC0000]' :
               c.tipo === 'mayorista' ? 'bg-[#F5C000]/20 text-[#F5C000]' :
@@ -110,12 +102,8 @@ export default async function ClientesPage({ searchParams }: PageProps) {
                   </span>
                 )}
               </div>
-              {c.telefono && (
-                <p className="text-white/40 text-xs mt-0.5 truncate">{c.telefono}</p>
-              )}
-              {c.direccion && (
-                <p className="text-white/30 text-xs truncate">{c.direccion}</p>
-              )}
+              {c.tipo_negocio && <p className="text-white/40 text-xs mt-0.5 truncate">{c.tipo_negocio}</p>}
+              {c.telefono && <p className="text-white/30 text-xs truncate">{c.telefono}</p>}
             </div>
 
             <span className="text-white/20 text-lg shrink-0">›</span>
@@ -123,8 +111,7 @@ export default async function ClientesPage({ searchParams }: PageProps) {
         ))}
       </div>
 
-      {/* FAB nuevo cliente */}
-      <NuevoClienteDrawer action={addCliente} />
+      <NuevoClienteDrawer action={addCliente} vendedorUsername={username ?? ''} />
     </div>
   )
 }

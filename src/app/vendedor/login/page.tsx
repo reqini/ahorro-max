@@ -1,11 +1,17 @@
 import { redirect } from 'next/navigation'
 import { setVendorSession } from '@/lib/admin-auth'
+import { getVendedorByUsername, verifyPassword } from '@/lib/vendedores'
 
 async function loginAction(formData: FormData) {
   'use server'
+  const username = (formData.get('username') as string)?.trim().toLowerCase()
   const password = formData.get('password') as string
-  if (password === (process.env.VENDOR_PASSWORD ?? 'vendedor')) {
-    await setVendorSession()
+
+  if (!username || !password) redirect('/vendedor/login?error=1')
+
+  const vendedor = await getVendedorByUsername(username)
+  if (vendedor && verifyPassword(password, vendedor.password_hash)) {
+    await setVendorSession(vendedor.username)
     redirect('/vendedor/clientes')
   }
   redirect('/vendedor/login?error=1')
@@ -26,17 +32,34 @@ export default async function VendedorLogin({ searchParams }: Props) {
 
         <div className="border border-white/20 bg-[#131313] p-6">
           <div className="flex items-center gap-2 mb-5">
-            <span className="text-xs px-2 py-0.5 bg-[#F5C000]/10 text-[#F5C000] border border-[#F5C000]/30 font-bold uppercase tracking-wide">Vendedor</span>
+            <span className="text-xs px-2 py-0.5 bg-[#F5C000]/10 text-[#F5C000] border border-[#F5C000]/30 font-bold uppercase tracking-wide">
+              Vendedor
+            </span>
             <span className="text-white/50 text-sm">Ingresar</span>
           </div>
 
           {params.error === '1' && (
             <div className="mb-4 px-3 py-2 bg-red-950/50 border border-red-800/50 text-red-400 text-sm">
-              Contraseña incorrecta
+              Usuario o contraseña incorrectos
             </div>
           )}
 
           <form action={loginAction} className="flex flex-col gap-4">
+            <div>
+              <label className="block text-white/60 text-xs mb-1.5 uppercase tracking-wide">
+                Usuario
+              </label>
+              <input
+                name="username"
+                type="text"
+                required
+                autoFocus
+                autoComplete="username"
+                autoCapitalize="off"
+                className="w-full bg-[#1a1a1a] border border-white/30 text-white px-3 py-3 text-base focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/30"
+                placeholder="pedro"
+              />
+            </div>
             <div>
               <label className="block text-white/60 text-xs mb-1.5 uppercase tracking-wide">
                 Contraseña
@@ -45,7 +68,7 @@ export default async function VendedorLogin({ searchParams }: Props) {
                 name="password"
                 type="password"
                 required
-                autoFocus
+                autoComplete="current-password"
                 className="w-full bg-[#1a1a1a] border border-white/30 text-white px-3 py-3 text-base focus:outline-none focus:border-[#CC0000] transition-colors"
                 placeholder="••••••••"
               />

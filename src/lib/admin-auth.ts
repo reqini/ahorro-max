@@ -24,9 +24,9 @@ function verifyAndExtract(token: string): string | null {
 
 export type SessionRole = 'admin' | 'vendor'
 
-async function setSession(role: SessionRole) {
+async function setSession(value: string) {
   const cookieStore = await cookies()
-  cookieStore.set(COOKIE, sign(role), {
+  cookieStore.set(COOKIE, sign(value), {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
@@ -35,21 +35,37 @@ async function setSession(role: SessionRole) {
   })
 }
 
-export async function setAdminSession() { return setSession('admin') }
-export async function setVendorSession() { return setSession('vendor') }
+export async function setAdminSession() {
+  return setSession('admin')
+}
+
+export async function setVendorSession(username: string) {
+  return setSession(`vendor:${username}`)
+}
 
 export async function clearAdminSession() {
   const cookieStore = await cookies()
   cookieStore.delete(COOKIE)
 }
 
-export async function getSessionRole(): Promise<SessionRole | null> {
+async function getRawValue(): Promise<string | null> {
   const cookieStore = await cookies()
   const token = cookieStore.get(COOKIE)?.value
   if (!token) return null
-  const role = verifyAndExtract(token)
-  if (role === 'admin' || role === 'vendor') return role
+  return verifyAndExtract(token)
+}
+
+export async function getSessionRole(): Promise<SessionRole | null> {
+  const value = await getRawValue()
+  if (value === 'admin') return 'admin'
+  if (value?.startsWith('vendor:')) return 'vendor'
   return null
+}
+
+export async function getVendedorUsername(): Promise<string | null> {
+  const value = await getRawValue()
+  if (!value?.startsWith('vendor:')) return null
+  return value.slice(7) || null
 }
 
 export async function isAuthenticated(): Promise<boolean> {
