@@ -10,10 +10,10 @@ export const DIRECCION = "25 de mayo 108, Ciudadela, CP 1702"
 
 export const TELEFONO_DISPLAY = "11 5020-3114"
 
-export const EMAIL = "info@ahorramax.com.ar"
+export const EMAIL = "ahorramaxdistribuidora@gmail.com"
 
 export const SOCIAL_LINKS = {
-  instagram: "#",
+  instagram: "https://www.instagram.com/distri.ahorramax",
   facebook: "#",
 }
 
