@@ -78,16 +78,44 @@ export default async function PromoPage({ searchParams }: PageProps) {
           <p className="text-white/30 text-xs mt-1">Pegá la URL de una imagen. Se muestra arriba del texto.</p>
         </div>
 
+        {/* Tipo de oferta */}
+        <div className="border border-white/10 bg-[#0d0d0d] p-4 flex flex-col gap-3">
+          <p className="text-white/50 text-xs uppercase tracking-wide font-bold">Tipo de oferta</p>
+          <div className="flex gap-3">
+            {(['minorista', 'mayorista', 'ambos'] as const).map((t) => (
+              <label key={t} className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="tipo"
+                  value={t}
+                  defaultChecked={promo.tipo === t}
+                  className="accent-[#CC0000]"
+                />
+                <span className={`text-sm font-bold uppercase ${
+                  t === 'minorista' ? 'text-[#CC0000]' : t === 'mayorista' ? 'text-[#F5C000]' : 'text-white/60'
+                }`}>
+                  {t === 'ambos' ? 'Ambos' : t.charAt(0).toUpperCase() + t.slice(1)}
+                </span>
+              </label>
+            ))}
+          </div>
+        </div>
+
         {/* Precios */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className={LABEL}>Precio anterior (tachado)</label>
-            <input name="precio_anterior" className={INPUT} defaultValue={promo.precio_anterior} placeholder="Ej: $2500" />
+        <div className="flex flex-col gap-3">
+          <label className={LABEL}>Precio anterior / tachado (opcional)</label>
+          <input name="precio_anterior" className={INPUT} defaultValue={promo.precio_anterior} placeholder="Ej: $2500" />
+          <div className="grid grid-cols-2 gap-4 mt-1">
+            <div>
+              <label className={`${LABEL} text-[#CC0000]/80`}>Precio Minorista</label>
+              <input name="precio_minorista" className={INPUT} defaultValue={promo.precio_minorista} placeholder="Ej: $1499" />
+            </div>
+            <div>
+              <label className={`${LABEL} text-[#F5C000]/80`}>Precio Mayorista</label>
+              <input name="precio_mayorista" className={INPUT} defaultValue={promo.precio_mayorista} placeholder="Ej: $1199" />
+            </div>
           </div>
-          <div>
-            <label className={LABEL}>Precio destacado</label>
-            <input name="precio" className={INPUT} defaultValue={promo.precio} placeholder="Ej: $1499" />
-          </div>
+          <p className="text-white/25 text-xs">Completá solo los precios del tipo de oferta seleccionado, o ambos si aplica.</p>
         </div>
 
         {/* CTA */}

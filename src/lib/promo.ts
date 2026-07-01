@@ -2,11 +2,13 @@ import { getSupabaseAdmin } from './supabase'
 
 export interface PromoFlash {
   activa: boolean
+  tipo: 'minorista' | 'mayorista' | 'ambos'
   badge: string
   titulo: string
   subtitulo: string
   imagen_url: string
-  precio: string
+  precio_minorista: string
+  precio_mayorista: string
   precio_anterior: string
   cta_texto: string
   cta_mensaje_wa: string
@@ -15,11 +17,13 @@ export interface PromoFlash {
 
 export const PROMO_DEFAULT: PromoFlash = {
   activa: false,
+  tipo: 'ambos',
   badge: '⚡ OFERTA RELÁMPAGO ⚡',
   titulo: 'Oferta Especial',
   subtitulo: '¡Solo por tiempo limitado!',
   imagen_url: '',
-  precio: '',
+  precio_minorista: '',
+  precio_mayorista: '',
   precio_anterior: '',
   cta_texto: '¡Quiero esta oferta!',
   cta_mensaje_wa: 'Hola! Vi la oferta relámpago en su web y quiero aprovecharla 🔥',

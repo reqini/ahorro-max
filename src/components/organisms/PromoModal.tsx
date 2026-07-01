@@ -85,6 +85,20 @@ export function PromoModal({ promo }: { promo: PromoFlash }) {
             </span>
           )}
 
+          {/* Tipo tags */}
+          <div className="flex items-center justify-center gap-2">
+            {(promo.tipo === 'minorista' || promo.tipo === 'ambos') && (
+              <span className="px-3 py-1 text-[10px] font-black uppercase tracking-widest text-white border border-[#CC0000] bg-[#CC0000]/20">
+                Minorista
+              </span>
+            )}
+            {(promo.tipo === 'mayorista' || promo.tipo === 'ambos') && (
+              <span className="px-3 py-1 text-[10px] font-black uppercase tracking-widest text-black bg-[#F5C000]">
+                Mayorista
+              </span>
+            )}
+          </div>
+
           {/* Title */}
           <div className="flex flex-col gap-2">
             <h2
@@ -98,23 +112,53 @@ export function PromoModal({ promo }: { promo: PromoFlash }) {
             )}
           </div>
 
-          {/* Price */}
-          {promo.precio && (
-            <div className="flex flex-col items-center gap-1">
+          {/* Prices */}
+          {(promo.precio_minorista || promo.precio_mayorista) && (
+            <div className="flex flex-col items-center gap-2 w-full">
               {promo.precio_anterior && (
-                <span className="text-white/35 text-xl sm:text-lg line-through">{promo.precio_anterior}</span>
+                <span className="text-white/35 text-lg line-through">{promo.precio_anterior}</span>
               )}
-              <span
-                className="font-black leading-none"
-                style={{
-                  fontSize: 'clamp(3rem, 18vw, 5rem)',
-                  color: '#F5C000',
-                  fontFamily: "Impact, 'Arial Narrow', sans-serif",
-                  textShadow: '0 0 40px rgba(245,192,0,0.5)',
-                }}
-              >
-                {promo.precio}
-              </span>
+              <div className={`flex gap-4 w-full ${promo.precio_minorista && promo.precio_mayorista ? 'justify-center' : 'justify-center'}`}>
+                {(promo.tipo === 'minorista' || promo.tipo === 'ambos') && promo.precio_minorista && (
+                  <div className="flex flex-col items-center gap-1">
+                    {promo.tipo === 'ambos' && (
+                      <span className="text-[#CC0000] text-[10px] font-black uppercase tracking-widest">Minorista</span>
+                    )}
+                    <span
+                      className="font-black leading-none"
+                      style={{
+                        fontSize: promo.tipo === 'ambos' ? 'clamp(2rem, 12vw, 3.5rem)' : 'clamp(3rem, 18vw, 5rem)',
+                        color: '#FFFFFF',
+                        fontFamily: "Impact, 'Arial Narrow', sans-serif",
+                        textShadow: '0 0 30px rgba(204,0,0,0.5)',
+                      }}
+                    >
+                      {promo.precio_minorista}
+                    </span>
+                  </div>
+                )}
+                {promo.tipo === 'ambos' && promo.precio_minorista && promo.precio_mayorista && (
+                  <div className="w-px bg-white/15 self-stretch" />
+                )}
+                {(promo.tipo === 'mayorista' || promo.tipo === 'ambos') && promo.precio_mayorista && (
+                  <div className="flex flex-col items-center gap-1">
+                    {promo.tipo === 'ambos' && (
+                      <span className="text-[#F5C000] text-[10px] font-black uppercase tracking-widest">Mayorista</span>
+                    )}
+                    <span
+                      className="font-black leading-none"
+                      style={{
+                        fontSize: promo.tipo === 'ambos' ? 'clamp(2rem, 12vw, 3.5rem)' : 'clamp(3rem, 18vw, 5rem)',
+                        color: '#F5C000',
+                        fontFamily: "Impact, 'Arial Narrow', sans-serif",
+                        textShadow: '0 0 30px rgba(245,192,0,0.4)',
+                      }}
+                    >
+                      {promo.precio_mayorista}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
