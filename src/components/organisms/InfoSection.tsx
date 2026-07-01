@@ -78,35 +78,29 @@ export async function InfoSection() {
               </ContactCard>
             </div>
 
-            {/* Map placeholder */}
-            <div className="relative w-full min-h-[280px] md:min-h-[400px] bg-[#111111] border border-[#CC0000]/30 overflow-hidden">
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-                <div className="w-14 h-14 md:w-16 md:h-16 rounded-full border-4 border-[#CC0000] flex items-center justify-center">
-                  <MapPin size={24} className="text-[#CC0000]" />
-                </div>
-                <div className="text-center px-4">
-                  <p className="text-white font-bold text-base md:text-lg">Distribuidora Ahorra Max</p>
-                  <p className="text-white/60 text-sm">{DIRECCION}</p>
-                </div>
-                <a
-                  href={`https://www.google.com/maps/search/${encodeURIComponent(
-                    "25 de mayo 108, Ciudadela, Buenos Aires"
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-[#CC0000] text-white font-bold uppercase tracking-wider px-5 py-3 rounded-full hover:bg-red-700 transition-colors text-sm"
-                >
-                  <MapPin size={15} />
-                  {INFO_CONTENT.mapPlaceholder}
-                </a>
+            {/* Google Maps embed */}
+            <div className="flex flex-col gap-3">
+              <div className="relative w-full border border-[#CC0000]/30 overflow-hidden" style={{ aspectRatio: '4/3' }}>
+                <iframe
+                  title="Distribuidora Ahorra Max — Ubicación"
+                  src="https://maps.google.com/maps?q=25+de+Mayo+108,+Ciudadela,+Buenos+Aires,+Argentina&output=embed&hl=es&z=15"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0, display: 'block', filter: 'grayscale(30%) contrast(1.1)' }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
               </div>
-              <div
-                className="absolute inset-0 opacity-5 pointer-events-none"
-                style={{
-                  backgroundImage:
-                    "repeating-linear-gradient(0deg, #CC0000 0px, #CC0000 1px, transparent 1px, transparent 40px), repeating-linear-gradient(90deg, #CC0000 0px, #CC0000 1px, transparent 1px, transparent 40px)",
-                }}
-              />
+              <a
+                href="https://www.google.com/maps/search/25+de+Mayo+108,+Ciudadela,+Buenos+Aires,+Argentina"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 w-full bg-[#CC0000] hover:bg-red-700 text-white font-bold uppercase tracking-wider py-3 text-sm transition-colors"
+              >
+                <MapPin size={15} />
+                {INFO_CONTENT.mapPlaceholder}
+              </a>
             </div>
           </div>
         </div>
