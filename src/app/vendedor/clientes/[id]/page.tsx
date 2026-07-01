@@ -5,6 +5,7 @@ import { updateCliente, addNota, deleteNota } from './actions'
 import { deleteCliente } from '../actions'
 import { EditClienteForm } from './EditClienteForm'
 import { AddNotaForm } from './AddNotaForm'
+import { DeleteClienteButton, DeleteNotaButton } from './DeleteClienteButton'
 
 const TIPO_BADGE: Record<string, string> = {
   minorista: 'bg-[#CC0000]/20 text-[#CC0000] border border-[#CC0000]/40',
@@ -40,13 +41,7 @@ export default async function ClienteDetailPage({ params }: Props) {
         <Link href="/vendedor/clientes" className="text-white/40 hover:text-white transition-colors text-sm flex items-center gap-1">
           ← Clientes
         </Link>
-        <form action={boundDelete}>
-          <button type="submit"
-            onClick={(e) => { if (!confirm('¿Eliminar este cliente y todas sus notas?')) e.preventDefault() }}
-            className="text-xs px-3 py-1.5 border border-red-900/60 text-red-500/70 hover:text-red-400 hover:border-red-600 transition-colors">
-            Eliminar
-          </button>
-        </form>
+        <DeleteClienteButton action={boundDelete} />
       </div>
 
       {/* Cliente header */}
@@ -108,13 +103,7 @@ export default async function ClienteDetailPage({ params }: Props) {
                   <p className="text-white/80 text-sm whitespace-pre-wrap">{nota.texto}</p>
                   <p className="text-white/25 text-[11px] mt-1.5">{fmtDate(nota.created_at)}</p>
                 </div>
-                <form action={boundDeleteNota}>
-                  <button type="submit"
-                    onClick={(e) => { if (!confirm('¿Eliminar esta nota?')) e.preventDefault() }}
-                    className="text-white/20 hover:text-red-400 transition-colors text-sm mt-0.5">
-                    ✕
-                  </button>
-                </form>
+                <DeleteNotaButton action={boundDeleteNota} />
               </div>
             )
           })}

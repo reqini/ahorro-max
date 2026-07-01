@@ -1,5 +1,6 @@
 import { getVendedores } from '@/lib/vendedores'
 import { addVendedor, toggleVendedor, resetPassword, deleteVendedor } from './actions'
+import { DeleteButton } from '@/app/admin/components/DeleteButton'
 
 function fmtDate(iso: string) {
   return new Date(iso).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: '2-digit' })
@@ -43,13 +44,7 @@ export default async function VendedoresPage() {
                       {v.activo ? 'Desactivar' : 'Activar'}
                     </button>
                   </form>
-                  <form action={boundDelete}>
-                    <button type="submit"
-                      onClick={(e) => { if (!confirm(`¿Eliminar a ${v.nombre}?`)) e.preventDefault() }}
-                      className="text-xs px-3 py-1.5 border border-red-900/50 text-red-500/60 hover:text-red-400 hover:border-red-700 transition-colors">
-                      Eliminar
-                    </button>
-                  </form>
+                  <DeleteButton action={boundDelete} label={`¿Eliminar a ${v.nombre}?`} />
                 </div>
               </div>
 
