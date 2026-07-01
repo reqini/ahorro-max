@@ -36,12 +36,20 @@ async function verifyToken(token: string): Promise<boolean> {
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
+
+  // Public login pages
   if (pathname === '/admin/login' || pathname === '/admin/login/') return NextResponse.next()
+  if (pathname === '/vendedor/login' || pathname === '/vendedor/login/') return NextResponse.next()
+
   const token = request.cookies.get('admin_session')?.value
   if (!token || !(await verifyToken(token))) {
+    // Redirect vendor routes to vendor login
+    if (pathname.startsWith('/vendedor')) {
+      return NextResponse.redirect(new URL('/vendedor/login', request.url))
+    }
     return NextResponse.redirect(new URL('/admin/login', request.url))
   }
   return NextResponse.next()
 }
 
-export const config = { matcher: '/admin/:path*' }
+export const config = { matcher: ['/admin/:path*', '/vendedor/:path*'] }
