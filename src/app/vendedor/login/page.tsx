@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { setVendorSession } from '@/lib/admin-auth'
 import { getVendedorByUsername, verifyPassword } from '@/lib/vendedores'
+import { PasswordInput } from '@/components/ui/PasswordInput'
 
 async function vendorLoginAction(formData: FormData) {
   'use server'
@@ -62,14 +63,7 @@ export default async function VendedorLoginPage({ searchParams }: Props) {
               <label className="block text-white/50 text-xs mb-1.5 uppercase tracking-wide">
                 Contraseña
               </label>
-              <input
-                name="password"
-                type="password"
-                required
-                autoComplete="current-password"
-                className="w-full bg-[#1a1a1a] border border-white/20 text-white px-3 py-3 text-base focus:outline-none focus:border-[#CC0000] transition-colors"
-                placeholder="••••••••"
-              />
+              <PasswordInput name="password" required />
             </div>
 
             <button
