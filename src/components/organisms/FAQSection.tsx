@@ -43,8 +43,7 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
       >
         {/* Number */}
         <span
-          className="shrink-0 text-3xl font-black leading-none text-[#CC0000]/40 group-hover:text-[#CC0000] transition-colors duration-200 w-8 text-center"
-          style={{ fontFamily: "Impact, 'Arial Narrow', sans-serif" }}
+          className="shrink-0 text-2xl font-black leading-none text-[#CC0000]/30 group-hover:text-[#CC0000]/60 transition-colors duration-200 w-8 text-center tabular-nums"
           aria-hidden
         >
           {String(index + 1).padStart(2, "0")}
@@ -52,8 +51,7 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
 
         {/* Question */}
         <span
-          className="flex-1 text-white text-xl md:text-2xl font-black uppercase leading-tight group-hover:text-[#F5C000] transition-colors duration-200"
-          style={{ fontFamily: "Impact, 'Arial Narrow', sans-serif", letterSpacing: "0.01em" }}
+          className="flex-1 text-white text-base md:text-lg font-bold leading-snug group-hover:text-[#F5C000] transition-colors duration-200"
         >
           {q}
         </span>
@@ -97,10 +95,7 @@ export function FAQSection() {
           <span className="inline-block px-3 py-1 text-xs font-bold uppercase tracking-widest bg-[#CC0000] text-white mb-4">
             FAQ
           </span>
-          <h2
-            className="text-4xl md:text-5xl font-black uppercase text-white leading-none"
-            style={{ fontFamily: "Impact, 'Arial Narrow', sans-serif" }}
-          >
+          <h2 className="text-3xl md:text-4xl font-black text-white leading-tight">
             Preguntas Frecuentes
           </h2>
         </div>

@@ -40,10 +40,7 @@ export function ContactForm() {
           <span className="inline-block px-3 py-1 text-xs font-bold uppercase tracking-widest bg-[#CC0000] text-white mb-4">
             {CONTACTO_CONTENT.badge}
           </span>
-          <h2
-            className="text-[1.75rem] leading-tight sm:text-4xl md:text-5xl font-black uppercase text-white"
-            style={{ fontFamily: "Impact, 'Arial Narrow', sans-serif" }}
-          >
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white leading-tight">
             {CONTACTO_CONTENT.headline}
           </h2>
           <p className="mt-3 text-white/70">{CONTACTO_CONTENT.description}</p>

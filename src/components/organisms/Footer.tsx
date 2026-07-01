@@ -50,10 +50,7 @@ export function Footer() {
 
           {/* Links */}
           <div className="flex flex-col gap-4">
-            <h3
-              className="text-[#F5C000] font-black uppercase tracking-wider text-sm"
-              style={{ fontFamily: "Impact, 'Arial Narrow', sans-serif" }}
-            >
+            <h3 className="text-[#F5C000] font-bold uppercase tracking-wider text-xs">
               Navegación
             </h3>
             <nav className="flex flex-col gap-2">
@@ -70,10 +67,7 @@ export function Footer() {
 
           {/* Contact */}
           <div className="flex flex-col gap-4">
-            <h3
-              className="text-[#F5C000] font-black uppercase tracking-wider text-sm"
-              style={{ fontFamily: "Impact, 'Arial Narrow', sans-serif" }}
-            >
+            <h3 className="text-[#F5C000] font-bold uppercase tracking-wider text-xs">
               Contacto
             </h3>
             <div className="flex flex-col gap-3">

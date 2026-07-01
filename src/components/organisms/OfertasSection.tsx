@@ -19,10 +19,7 @@ export async function OfertasSection() {
           <span className="inline-block px-3 py-1 text-xs font-bold uppercase tracking-widest bg-[#F5C000] text-black mb-4">
             {OFERTAS_CONTENT.badge}
           </span>
-          <h2
-            className="text-4xl md:text-5xl font-black uppercase text-white leading-none"
-            style={{ fontFamily: "Impact, 'Arial Narrow', sans-serif" }}
-          >
+          <h2 className="text-3xl md:text-4xl font-black text-white leading-tight">
             {OFERTAS_CONTENT.headline}
           </h2>
           <p className="mt-3 text-white/70 max-w-xl mx-auto">{OFERTAS_CONTENT.description}</p>
@@ -34,10 +31,7 @@ export async function OfertasSection() {
           <div className="border border-[#CC0000]/40 bg-black/40">
             <div className="flex items-center gap-3 px-6 py-4 border-b border-[#CC0000]/30 bg-[#CC0000]/10">
               <Tag size={18} className="text-[#CC0000]" />
-              <span
-                className="text-[#CC0000] font-black uppercase tracking-wider text-sm"
-                style={{ fontFamily: "Impact, 'Arial Narrow', sans-serif" }}
-              >
+              <span className="text-[#CC0000] font-bold uppercase tracking-wider text-sm">
                 {OFERTAS_CONTENT.minorista.label}
               </span>
             </div>
@@ -69,10 +63,7 @@ export async function OfertasSection() {
           <div className="border border-[#F5C000]/40 bg-black/40">
             <div className="flex items-center gap-3 px-6 py-4 border-b border-[#F5C000]/30 bg-[#F5C000]/10">
               <Tag size={18} className="text-[#F5C000]" />
-              <span
-                className="text-[#F5C000] font-black uppercase tracking-wider text-sm"
-                style={{ fontFamily: "Impact, 'Arial Narrow', sans-serif" }}
-              >
+              <span className="text-[#F5C000] font-bold uppercase tracking-wider text-sm">
                 {OFERTAS_CONTENT.mayorista.label}
               </span>
             </div>
