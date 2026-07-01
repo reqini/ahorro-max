@@ -4,6 +4,11 @@ import { useEffect, useState, useRef } from 'react'
 import type { PromoFlash } from '@/lib/promo'
 import { WHATSAPP_NUMBER } from '@/constants'
 
+function fmt(precio: string) {
+  if (!precio || precio.startsWith('$')) return precio
+  return `$${precio}`
+}
+
 export function PromoModal({ promo }: { promo: PromoFlash }) {
   const [visible, setVisible] = useState(false)
   const [countdown, setCountdown] = useState(promo.countdown_segundos)
@@ -116,7 +121,7 @@ export function PromoModal({ promo }: { promo: PromoFlash }) {
           {(promo.precio_minorista || promo.precio_mayorista) && (
             <div className="flex flex-col items-center gap-2 w-full">
               {promo.precio_anterior && (
-                <span className="text-white/35 text-lg line-through">{promo.precio_anterior}</span>
+                <span className="text-white/35 text-lg line-through">{fmt(promo.precio_anterior)}</span>
               )}
               <div className={`flex gap-4 w-full ${promo.precio_minorista && promo.precio_mayorista ? 'justify-center' : 'justify-center'}`}>
                 {(promo.tipo === 'minorista' || promo.tipo === 'ambos') && promo.precio_minorista && (
@@ -133,7 +138,7 @@ export function PromoModal({ promo }: { promo: PromoFlash }) {
                         textShadow: '0 0 30px rgba(204,0,0,0.5)',
                       }}
                     >
-                      {promo.precio_minorista}
+                      {fmt(promo.precio_minorista)}
                     </span>
                   </div>
                 )}
@@ -154,7 +159,7 @@ export function PromoModal({ promo }: { promo: PromoFlash }) {
                         textShadow: '0 0 30px rgba(245,192,0,0.4)',
                       }}
                     >
-                      {promo.precio_mayorista}
+                      {fmt(promo.precio_mayorista)}
                     </span>
                   </div>
                 )}

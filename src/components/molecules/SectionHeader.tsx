@@ -31,10 +31,10 @@ export function SectionHeader({
       {badge && <Badge variant={badgeVariant}>{badge}</Badge>}
       <h2
         className={cn(
-          "text-3xl md:text-4xl lg:text-5xl font-black uppercase leading-tight w-full",
+          "text-2xl md:text-3xl lg:text-4xl font-black uppercase leading-tight tracking-tight w-full",
           headlineColor
         )}
-        style={{ fontFamily: "Impact, 'Arial Narrow', Oswald, sans-serif", wordBreak: "break-word", overflowWrap: "anywhere" }}
+        style={{ wordBreak: "break-word", overflowWrap: "anywhere" }}
       >
         {headline}
       </h2>
