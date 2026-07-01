@@ -27,6 +27,12 @@ export default async function VendedorLayout({ children }: { children: React.Rea
           >
             Clientes
           </Link>
+          <Link
+            href="/vendedor/productos"
+            className="text-xs text-white/50 hover:text-white px-3 py-1.5 border border-white/10 hover:border-white/30 transition-colors"
+          >
+            Productos
+          </Link>
           <form action={logoutAction}>
             <button className="text-xs text-white/40 hover:text-white transition-colors px-2 py-1.5">
               Salir

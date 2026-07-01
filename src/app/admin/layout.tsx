@@ -50,6 +50,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <NavLink href="/admin/promo">⚡ Promo Relámpago</NavLink>
           <NavLink href="/admin/ofertas">Ofertas</NavLink>
           <NavLink href="/admin/faqs">Preguntas Frecuentes</NavLink>
+          <NavLink href="/admin/productos">Productos</NavLink>
           <NavLink href="/admin/clientes">Lista Digital</NavLink>
           <NavLink href="/admin/vendedores">Vendedores</NavLink>
           <NavLink href="/admin/zonas">Zonas de Entrega</NavLink>
@@ -62,6 +63,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <MobileNavLink href="/admin/promo">⚡ Promo</MobileNavLink>
           <MobileNavLink href="/admin/ofertas">Ofertas</MobileNavLink>
           <MobileNavLink href="/admin/faqs">FAQ</MobileNavLink>
+          <MobileNavLink href="/admin/productos">Productos</MobileNavLink>
           <MobileNavLink href="/admin/clientes">Clientes</MobileNavLink>
           <MobileNavLink href="/admin/vendedores">Vendedores</MobileNavLink>
           <MobileNavLink href="/admin/zonas">Zonas</MobileNavLink>
