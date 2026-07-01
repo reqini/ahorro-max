@@ -2,10 +2,9 @@ import { SectionHeader, CTAGroup, FeatureList } from "@/components/molecules"
 import {
   MINORISTA_CONTENT,
   WHATSAPP_MINORISTA_URL,
-  CATALOGO_MINORISTA_URL,
 } from "@/constants"
 
-export function SectionMinorista() {
+export function SectionMinorista({ catalogoUrl }: { catalogoUrl: string }) {
   return (
     <section
       id="minorista"
@@ -43,7 +42,7 @@ export function SectionMinorista() {
             <CTAGroup
               whatsappUrl={WHATSAPP_MINORISTA_URL}
               whatsappLabel={MINORISTA_CONTENT.ctaWhatsApp}
-              downloadUrl={CATALOGO_MINORISTA_URL}
+              downloadUrl={catalogoUrl}
               downloadLabel={MINORISTA_CONTENT.ctaCatalogo}
               variant="red"
             />

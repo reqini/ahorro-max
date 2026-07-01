@@ -2,10 +2,9 @@ import { SectionHeader, CTAGroup, FeatureList } from "@/components/molecules"
 import {
   MAYORISTA_CONTENT,
   WHATSAPP_MAYORISTA_URL,
-  LISTA_MAYORISTA_URL,
 } from "@/constants"
 
-export function SectionMayorista() {
+export function SectionMayorista({ listaUrl }: { listaUrl: string }) {
   return (
     <section
       id="mayorista"
@@ -70,7 +69,7 @@ export function SectionMayorista() {
             <CTAGroup
               whatsappUrl={WHATSAPP_MAYORISTA_URL}
               whatsappLabel={MAYORISTA_CONTENT.ctaWhatsApp}
-              downloadUrl={LISTA_MAYORISTA_URL}
+              downloadUrl={listaUrl}
               downloadLabel={MAYORISTA_CONTENT.ctaLista}
               variant="yellow"
             />

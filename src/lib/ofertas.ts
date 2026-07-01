@@ -13,13 +13,14 @@ export async function getOfertas(): Promise<OfertasData> {
       .eq('activa', true)
       .order('orden')
 
-    if (error || !data?.length) return fallback()
+    // Only fallback on actual error — empty DB means intentionally cleared
+    if (error) return fallback()
 
     return {
-      minorista: data
+      minorista: (data ?? [])
         .filter((o: { tipo: string }) => o.tipo === 'minorista')
         .map(({ nombre, detalle, precio }: { nombre: string; detalle: string; precio: string }) => ({ nombre, detalle, precio })),
-      mayorista: data
+      mayorista: (data ?? [])
         .filter((o: { tipo: string }) => o.tipo === 'mayorista')
         .map(({ nombre, detalle, precio }: { nombre: string; detalle: string; precio: string }) => ({ nombre, detalle, precio })),
     }

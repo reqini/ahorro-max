@@ -1,6 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 import { getSupabaseAdmin } from '@/lib/supabase'
 
 export async function addOferta(formData: FormData) {
@@ -25,6 +26,11 @@ export async function addOferta(formData: FormData) {
 
   revalidatePath('/')
   revalidatePath('/admin/ofertas')
+}
+
+export async function addOfertaAndRedirect(formData: FormData) {
+  await addOferta(formData)
+  redirect('/admin/ofertas?added=1')
 }
 
 export async function deleteOferta(id: string) {

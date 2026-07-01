@@ -1,6 +1,6 @@
 import { getSupabaseAdmin } from '@/lib/supabase'
 import type { Oferta } from '@/types/database'
-import { addOferta, deleteOferta, toggleOfertaActiva } from './actions'
+import { addOfertaAndRedirect, deleteOferta, toggleOfertaActiva } from './actions'
 import { DeleteButton } from '../components/DeleteButton'
 
 interface PageProps {
@@ -34,13 +34,6 @@ export default async function OfertasPage({ searchParams }: PageProps) {
       </div>
     </div>
   )
-}
-
-async function addOfertaWithRedirect(formData: FormData) {
-  'use server'
-  const { redirect } = await import('next/navigation')
-  await addOferta(formData)
-  redirect('/admin/ofertas?added=1')
 }
 
 function OfertasColumn({
@@ -103,7 +96,7 @@ function OfertasColumn({
 
       <div className={`border-t ${headerBorder} px-4 py-4 bg-[#0d0d0d]`}>
         <p className="text-white/40 text-xs uppercase tracking-wide mb-3">Agregar oferta</p>
-        <form action={addOfertaWithRedirect} className="flex flex-col gap-2">
+        <form action={addOfertaAndRedirect} className="flex flex-col gap-2">
           <input type="hidden" name="tipo" value={tipo} />
           <input
             name="nombre"

@@ -1,14 +1,19 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
+
 interface DeleteButtonProps {
   action: () => Promise<void>
   label?: string
 }
 
 export function DeleteButton({ action, label = '¿Eliminar?' }: DeleteButtonProps) {
+  const router = useRouter()
+
   async function handleClick() {
     if (!confirm(label)) return
     await action()
+    router.refresh()
   }
 
   return (

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createHmac, timingSafeEqual } from 'crypto'
+import { revalidatePath } from 'next/cache'
 import { getSupabaseAdmin } from '@/lib/supabase'
 
 function verifyToken(token: string): boolean {
@@ -61,6 +62,8 @@ export async function POST(request: NextRequest) {
   await supabase
     .from('config')
     .upsert({ key: configKey, value: publicUrl, updated_at: new Date().toISOString() }, { onConflict: 'key' })
+
+  revalidatePath('/')
 
   return NextResponse.json({ url: publicUrl })
 }
