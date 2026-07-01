@@ -107,8 +107,8 @@ export function PromoModal({ promo }: { promo: PromoFlash }) {
           {/* Title */}
           <div className="flex flex-col gap-2">
             <h2
-              className="text-3xl sm:text-4xl font-black uppercase text-white leading-none"
-              style={{ fontFamily: "Impact, 'Arial Narrow', sans-serif", textShadow: '0 2px 20px rgba(204,0,0,0.4)' }}
+              className="text-2xl sm:text-3xl font-black text-white leading-tight tracking-tight"
+              style={{ textShadow: '0 2px 20px rgba(204,0,0,0.4)' }}
             >
               {promo.titulo}
             </h2>
@@ -134,7 +134,6 @@ export function PromoModal({ promo }: { promo: PromoFlash }) {
                       style={{
                         fontSize: promo.tipo === 'ambos' ? 'clamp(2rem, 12vw, 3.5rem)' : 'clamp(3rem, 18vw, 5rem)',
                         color: '#FFFFFF',
-                        fontFamily: "Impact, 'Arial Narrow', sans-serif",
                         textShadow: '0 0 30px rgba(204,0,0,0.5)',
                       }}
                     >
@@ -155,7 +154,6 @@ export function PromoModal({ promo }: { promo: PromoFlash }) {
                       style={{
                         fontSize: promo.tipo === 'ambos' ? 'clamp(2rem, 12vw, 3.5rem)' : 'clamp(3rem, 18vw, 5rem)',
                         color: '#F5C000',
-                        fontFamily: "Impact, 'Arial Narrow', sans-serif",
                         textShadow: '0 0 30px rgba(245,192,0,0.4)',
                       }}
                     >
