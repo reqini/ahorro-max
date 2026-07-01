@@ -42,7 +42,9 @@ export async function OfertasSection() {
                     <p className="text-white font-semibold text-sm">{item.nombre}</p>
                     <p className="text-white/50 text-xs mt-0.5">{item.detalle}</p>
                   </div>
-                  <span className="text-[#CC0000] font-black text-sm whitespace-nowrap">{item.precio}</span>
+                  <span className="text-white font-black text-base whitespace-nowrap">
+                    {item.precio === 'Consultá' ? item.precio : `$${item.precio}`}
+                  </span>
                 </div>
               ))}
             </div>
@@ -74,7 +76,9 @@ export async function OfertasSection() {
                     <p className="text-white font-semibold text-sm">{item.nombre}</p>
                     <p className="text-white/50 text-xs mt-0.5">{item.detalle}</p>
                   </div>
-                  <span className="text-[#F5C000] font-black text-sm whitespace-nowrap">{item.precio}</span>
+                  <span className="text-white font-black text-base whitespace-nowrap">
+                    {item.precio === 'Consultá' ? item.precio : `$${item.precio}`}
+                  </span>
                 </div>
               ))}
             </div>
