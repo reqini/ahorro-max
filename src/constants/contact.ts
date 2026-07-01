@@ -6,7 +6,7 @@ export const WHATSAPP_MINORISTA_MSG =
 export const WHATSAPP_MAYORISTA_MSG =
   "Hola! Vi su página y quiero consultar precios mayoristas 📦"
 
-export const DIRECCION = "25 de mayo 108, Ciudadela, CP 1702"
+export const DIRECCION = "Ciudadela, Buenos Aires"
 
 export const TELEFONO_DISPLAY = "11 5020-3114"
 
