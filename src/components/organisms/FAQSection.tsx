@@ -1,87 +1,9 @@
-"use client"
+import { getFaqs } from '@/lib/faqs'
+import { FAQList } from './FAQList'
 
-import { useState } from "react"
-import { ChevronDown } from "lucide-react"
-import { cn } from "@/lib/utils"
+export async function FAQSection() {
+  const faqs = await getFaqs()
 
-const FAQS = [
-  {
-    q: "¿Dónde están ubicados?",
-    a: "En 25 de mayo 108, Ciudadela, CP 1702 — Partido de Tres de Febrero, zona oeste del Gran Buenos Aires.",
-  },
-  {
-    q: "¿Venden al por mayor y al por menor?",
-    a: "Sí. Atendemos a consumidores finales sin mínimo de compra y a revendedores, almacenes y kioscos con precios por volumen.",
-  },
-  {
-    q: "¿Cuál es el WhatsApp?",
-    a: "+54 11 5020-3114. Podés escribirnos para consultar precios, catálogo y disponibilidad de stock.",
-  },
-  {
-    q: "¿Qué productos tienen?",
-    a: "Productos de consumo masivo: alimentos secos, bebidas, limpieza, higiene personal y del hogar.",
-  },
-  {
-    q: "¿Cuáles son los horarios?",
-    a: "Lunes a Viernes de 8:00 a 18:00 hs. Sábados de 8:00 a 13:00 hs. Domingos cerrado.",
-  },
-  {
-    q: "¿Tienen lista de precios mayoristas?",
-    a: "Sí, tenemos catálogo descargable en esta página. También podés pedirla por WhatsApp.",
-  },
-]
-
-function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
-  const [open, setOpen] = useState(false)
-
-  return (
-    <div className="border-b border-white/10 last:border-0">
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center gap-5 py-6 text-left group cursor-pointer"
-        aria-expanded={open}
-      >
-        {/* Number */}
-        <span
-          className="shrink-0 text-2xl font-black leading-none text-[#CC0000]/30 group-hover:text-[#CC0000]/60 transition-colors duration-200 w-8 text-center tabular-nums"
-          aria-hidden
-        >
-          {String(index + 1).padStart(2, "0")}
-        </span>
-
-        {/* Question */}
-        <span
-          className="flex-1 text-white text-base md:text-lg font-bold leading-snug group-hover:text-[#F5C000] transition-colors duration-200"
-        >
-          {q}
-        </span>
-
-        {/* Chevron */}
-        <ChevronDown
-          size={22}
-          className={cn(
-            "shrink-0 text-[#CC0000] transition-transform duration-300",
-            open && "rotate-180"
-          )}
-        />
-      </button>
-
-      {/* Answer */}
-      <div
-        className={cn(
-          "overflow-hidden transition-all duration-300 ease-in-out",
-          open ? "max-h-40 pb-6" : "max-h-0"
-        )}
-      >
-        <p className="pl-13 text-white/70 text-base leading-relaxed" style={{ paddingLeft: "3.25rem" }}>
-          {a}
-        </p>
-      </div>
-    </div>
-  )
-}
-
-export function FAQSection() {
   return (
     <section
       id="faq"
@@ -100,11 +22,7 @@ export function FAQSection() {
           </h2>
         </div>
 
-        <div>
-          {FAQS.map((faq, i) => (
-            <FAQItem key={faq.q} q={faq.q} a={faq.a} index={i} />
-          ))}
-        </div>
+        <FAQList faqs={faqs} />
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#CC0000] to-transparent" />
