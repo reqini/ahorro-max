@@ -56,7 +56,7 @@ export async function OfertasSection() {
                 className="flex items-center justify-center gap-2 w-full bg-[#CC0000] hover:bg-red-700 text-white font-bold uppercase tracking-wider py-3 text-sm transition-colors"
               >
                 <WhatsAppIcon size={16} />
-                Consultar precios
+                Quiero esta promo
               </a>
             </div>
           </div>
@@ -90,7 +90,7 @@ export async function OfertasSection() {
                 className="flex items-center justify-center gap-2 w-full bg-[#F5C000] hover:bg-yellow-400 text-black font-bold uppercase tracking-wider py-3 text-sm transition-colors"
               >
                 <WhatsAppIcon size={16} />
-                Consultar precios
+                Quiero esta promo
               </a>
             </div>
           </div>
