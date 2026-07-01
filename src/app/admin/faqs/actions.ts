@@ -26,6 +26,17 @@ export async function deleteFaq(id: string) {
   revalidatePath('/admin/faqs')
 }
 
+export async function updateFaq(id: string, formData: FormData) {
+  const q = (formData.get('q') as string | null)?.trim()
+  const a = (formData.get('a') as string | null)?.trim()
+  if (!q || !a) return
+
+  const faqs = await getFaqs()
+  await saveFaqs(faqs.map((f) => (f.id === id ? { ...f, q, a } : f)))
+  revalidatePath('/')
+  revalidatePath('/admin/faqs')
+}
+
 export async function moveFaq(id: string, dir: 'up' | 'down') {
   const faqs = await getFaqs()
   const idx = faqs.findIndex((f) => f.id === id)

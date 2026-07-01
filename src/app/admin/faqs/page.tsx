@@ -1,6 +1,7 @@
 import { getFaqs } from '@/lib/faqs'
-import { addFaq, deleteFaq, moveFaq } from './actions'
+import { addFaq, deleteFaq, moveFaq, updateFaq } from './actions'
 import { DeleteButton } from '../components/DeleteButton'
+import { EditFaqForm } from './EditFaqForm'
 
 const INPUT = "w-full bg-[#1a1a1a] border border-white/30 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/45"
 const LABEL = "text-white/75 text-xs uppercase tracking-wide block mb-1.5 font-medium"
@@ -53,11 +54,8 @@ export default async function FaqsPage({ searchParams }: PageProps) {
               </form>
             </div>
 
-            {/* Contenido */}
-            <div className="flex-1 min-w-0">
-              <p className="text-white text-sm font-semibold">{faq.q}</p>
-              <p className="text-white/50 text-xs mt-1 leading-relaxed">{faq.a}</p>
-            </div>
+            {/* Contenido editable */}
+            <EditFaqForm faq={faq} updateAction={updateFaq.bind(null, faq.id)} />
 
             {/* Eliminar */}
             <DeleteButton
