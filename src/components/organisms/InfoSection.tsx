@@ -82,8 +82,8 @@ export async function InfoSection() {
             <div className="flex flex-col gap-3">
               <div className="relative w-full border border-[#CC0000]/30 overflow-hidden" style={{ aspectRatio: '4/3' }}>
                 <iframe
-                  title="Distribuidora Ahorra Max — Ubicación"
-                  src="https://maps.google.com/maps?q=25+de+Mayo+108,+Ciudadela,+Buenos+Aires,+Argentina&output=embed&hl=es&z=15"
+                  title="Zona Ciudadela — Distribuidora Ahorra Max"
+                  src="https://maps.google.com/maps?q=Ciudadela,+Buenos+Aires,+Argentina&output=embed&hl=es&z=13"
                   width="100%"
                   height="100%"
                   style={{ border: 0, display: 'block', filter: 'grayscale(30%) contrast(1.1)' }}
@@ -93,7 +93,7 @@ export async function InfoSection() {
                 />
               </div>
               <a
-                href="https://www.google.com/maps/search/25+de+Mayo+108,+Ciudadela,+Buenos+Aires,+Argentina"
+                href="https://www.google.com/maps/place/Ciudadela,+Buenos+Aires,+Argentina"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 w-full bg-[#CC0000] hover:bg-red-700 text-white font-bold uppercase tracking-wider py-3 text-sm transition-colors"
