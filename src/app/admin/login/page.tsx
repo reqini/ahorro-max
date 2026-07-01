@@ -3,9 +3,13 @@ import { setAdminSession } from '@/lib/admin-auth'
 
 async function loginAction(formData: FormData) {
   'use server'
+  const username = (formData.get('username') as string)?.trim().toLowerCase()
   const password = (formData.get('password') as string) ?? ''
 
-  if (password === (process.env.ADMIN_PASSWORD ?? 'admin')) {
+  const validUser = process.env.ADMIN_USERNAME ?? 'admin'
+  const validPass = process.env.ADMIN_PASSWORD ?? 'admin'
+
+  if (username === validUser && password === validPass) {
     await setAdminSession()
     redirect('/admin/ofertas')
   }
@@ -32,20 +36,35 @@ export default async function AdminLoginPage({ searchParams }: Props) {
         <div className="border border-white/20 bg-[#131313] p-6 shadow-xl shadow-black/60">
           {params.error === '1' && (
             <div className="mb-5 px-3 py-2.5 bg-red-950/50 border border-red-800/50 text-red-400 text-sm">
-              Contraseña incorrecta
+              Usuario o contraseña incorrectos
             </div>
           )}
 
           <form action={loginAction} className="flex flex-col gap-4">
             <div>
               <label className="block text-white/50 text-xs mb-1.5 uppercase tracking-wide">
-                Contraseña de administrador
+                Usuario
+              </label>
+              <input
+                name="username"
+                type="text"
+                required
+                autoFocus
+                autoCapitalize="off"
+                autoComplete="username"
+                className="w-full bg-[#1a1a1a] border border-white/20 text-white px-3 py-3 text-base focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/25"
+                placeholder="admin"
+              />
+            </div>
+
+            <div>
+              <label className="block text-white/50 text-xs mb-1.5 uppercase tracking-wide">
+                Contraseña
               </label>
               <input
                 name="password"
                 type="password"
                 required
-                autoFocus
                 autoComplete="current-password"
                 className="w-full bg-[#1a1a1a] border border-white/20 text-white px-3 py-3 text-base focus:outline-none focus:border-[#CC0000] transition-colors"
                 placeholder="••••••••"
