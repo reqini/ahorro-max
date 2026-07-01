@@ -29,7 +29,6 @@ export const MAYORISTA_CONTENT = {
     "Si tenés un almacén, kiosco, maxiquiosco o sos revendedor, acá encontrás los mejores precios del mercado. Volúmenes grandes, precios chicos. Así trabajamos.",
   features: [
     "Precios por volumen",
-    "Crédito y financiación",
     "Entrega programada",
     "Lista de precios actualizada",
   ],

@@ -11,6 +11,7 @@ import {
 import { MapPin, Phone, Clock, Truck } from "lucide-react"
 import { WhatsAppIcon } from "@/components/atoms"
 import { getZonasEntrega } from "@/lib/zonas"
+import { MapaZona } from "./MapaZona"
 
 export async function InfoSection() {
   const zonas = await getZonasEntrega()
@@ -78,19 +79,10 @@ export async function InfoSection() {
               </ContactCard>
             </div>
 
-            {/* Google Maps embed */}
+            {/* Mapa Leaflet con zona Ciudadela */}
             <div className="flex flex-col gap-3">
-              <div className="relative w-full border border-[#CC0000]/30 overflow-hidden" style={{ aspectRatio: '4/3' }}>
-                <iframe
-                  title="Zona Ciudadela — Distribuidora Ahorra Max"
-                  src="https://maps.google.com/maps?q=Ciudadela,+Buenos+Aires,+Argentina&output=embed&hl=es&z=13"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0, display: 'block', filter: 'grayscale(30%) contrast(1.1)' }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
+              <div className="relative w-full border border-[#CC0000]/30 overflow-hidden" style={{ height: '360px' }}>
+                <MapaZona />
               </div>
               <a
                 href="https://www.google.com/maps/place/Ciudadela,+Buenos+Aires,+Argentina"
