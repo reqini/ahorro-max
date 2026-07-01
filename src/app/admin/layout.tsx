@@ -16,10 +16,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <header className="border-b border-white/10 bg-[#0d0d0d]">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <span
-              className="text-[#CC0000] font-black text-lg tracking-tight"
-              style={{ fontFamily: "Impact, 'Arial Narrow', sans-serif" }}
-            >
+            <span className="text-[#CC0000] font-black text-lg tracking-tight">
               AHORRA MAX
             </span>
             <span className="text-white/30 hidden sm:inline">|</span>

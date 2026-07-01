@@ -26,7 +26,7 @@ export const MAYORISTA_CONTENT = {
   badge: "Para revendedores y comercios",
   headline: "Precios mayoristas que marcan la diferencia",
   description:
-    "Si tenés un almacén, kiosco, maxiquiosco o sos revendedor, acá encontrás los mejores precios del mercado. Volúmenes grandes, precios chicos. Así trabajamos.",
+    "Si tenés un almacén, kiosco, maxikiosco o sos revendedor, acá encontrás los mejores precios del mercado. Volúmenes grandes, precios chicos. Así trabajamos.",
   features: [
     "Precios por volumen",
     "Entrega programada",

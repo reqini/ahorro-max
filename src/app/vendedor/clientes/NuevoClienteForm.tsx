@@ -50,35 +50,36 @@ export function NuevoClienteForm({ action, onCancel, vendedorUsername }: Props) 
         timestamp: Date.now(),
       })
       localStorage.setItem(STORAGE_KEY, JSON.stringify(pending))
-      alert('Sin conexión. Cliente guardado localmente. Se sincronizará al reconectar.')
+      // Notify SyncPending component in the same tab
+      window.dispatchEvent(new CustomEvent('offline-queue-updated'))
       onCancel()
       return
     }
 
     setSaving(true)
-    await action(fd)
-    setSaving(false)
+    try {
+      await action(fd)
+    } finally {
+      // Resets if action throws; on redirect the component unmounts so this is harmless
+      setSaving(false)
+    }
   }
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-4">
-      {/* Hidden vendedor from session */}
       <input type="hidden" name="vendedor" value={vendedorUsername} />
 
-      {/* Zona / Ruta */}
       <div>
         <label className="text-white/50 text-xs uppercase tracking-wide block mb-1.5">Zona / Ruta</label>
         <input name="zona_ruta" placeholder="Norte, Centro, Ruta 3..." className={INPUT} />
       </div>
 
       <div className="border-t border-white/10 pt-4">
-        {/* Nombre */}
         <div className="mb-4">
           <label className="text-white/60 text-xs uppercase tracking-wide block mb-1.5">Nombre / Razón Social *</label>
           <input name="nombre" required placeholder="Almacén Don Juan / Juan García" className={INPUT} />
         </div>
 
-        {/* Tipo negocio */}
         <div className="mb-4">
           <label className="text-white/60 text-xs uppercase tracking-wide block mb-1.5">Tipo de negocio</label>
           <input name="tipo_negocio" placeholder="Almacén, Kiosco, Ferretería..."
@@ -88,7 +89,6 @@ export function NuevoClienteForm({ action, onCancel, vendedorUsername }: Props) 
           </datalist>
         </div>
 
-        {/* Tipo cliente */}
         <div className="mb-4">
           <label className="text-white/60 text-xs uppercase tracking-wide block mb-1.5">Tipo de cliente</label>
           <input type="hidden" name="tipo" value={tipo} />
@@ -102,7 +102,6 @@ export function NuevoClienteForm({ action, onCancel, vendedorUsername }: Props) 
           </div>
         </div>
 
-        {/* Contacto + Teléfono */}
         <div className="grid grid-cols-2 gap-3 mb-4">
           <div>
             <label className="text-white/60 text-xs uppercase tracking-wide block mb-1.5">Contacto</label>
@@ -114,13 +113,11 @@ export function NuevoClienteForm({ action, onCancel, vendedorUsername }: Props) 
           </div>
         </div>
 
-        {/* Dirección */}
         <div className="mb-4">
           <label className="text-white/60 text-xs uppercase tracking-wide block mb-1.5">Dirección</label>
           <input name="direccion" placeholder="Av. Rivadavia 1234, local 5" className={INPUT} />
         </div>
 
-        {/* Horarios + Día visita */}
         <div className="grid grid-cols-2 gap-3 mb-4">
           <div>
             <label className="text-white/60 text-xs uppercase tracking-wide block mb-1.5">Horarios</label>
@@ -135,7 +132,6 @@ export function NuevoClienteForm({ action, onCancel, vendedorUsername }: Props) 
           </div>
         </div>
 
-        {/* Método de contacto */}
         <div className="mb-4">
           <label className="text-white/60 text-xs uppercase tracking-wide block mb-1.5">Método de contacto</label>
           <input type="hidden" name="metodo_contacto" value={metodo} />
@@ -149,7 +145,6 @@ export function NuevoClienteForm({ action, onCancel, vendedorUsername }: Props) 
           </div>
         </div>
 
-        {/* Observaciones */}
         <div className="mb-4">
           <label className="text-white/60 text-xs uppercase tracking-wide block mb-1.5">Observaciones</label>
           <textarea name="nota" rows={3}

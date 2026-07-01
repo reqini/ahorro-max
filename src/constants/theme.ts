@@ -11,6 +11,6 @@ export const COLORS = {
 } as const
 
 export const FONTS = {
-  heading: "'Impact', 'Arial Narrow', 'Oswald', sans-serif",
+  heading: "'Inter', 'Helvetica Neue', Arial, sans-serif",
   body: "'Inter', 'Helvetica Neue', Arial, sans-serif",
 } as const

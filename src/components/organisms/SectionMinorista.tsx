@@ -53,14 +53,8 @@ export function SectionMinorista({ catalogoUrl }: { catalogoUrl: string }) {
             <div className="relative">
               <div className="w-72 h-72 border-4 border-[#CC0000] flex items-center justify-center">
                 <div className="text-center px-8">
-                  <div
-                    className="text-8xl font-black text-[#CC0000] leading-none"
-                    style={{ fontFamily: "Impact, 'Arial Narrow', sans-serif" }}
-                  >%</div>
-                  <div
-                    className="text-2xl font-black text-white uppercase mt-2"
-                    style={{ fontFamily: "Impact, 'Arial Narrow', sans-serif" }}
-                  >Mejor precio</div>
+                  <div className="text-8xl font-black text-[#CC0000] leading-none tracking-tight">%</div>
+                  <div className="text-2xl font-black text-white uppercase mt-2 tracking-tight">Mejor precio</div>
                   <div className="text-white/60 text-sm mt-1">Para el consumidor final</div>
                 </div>
               </div>

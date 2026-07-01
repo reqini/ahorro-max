@@ -36,13 +36,9 @@ async function verifyAndGetRole(token: string): Promise<Role | null> {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Login unificado — siempre permitir
+  // Login pages — always allow
   if (pathname === '/admin/login' || pathname === '/admin/login/') return NextResponse.next()
-
-  // /vendedor/login redirige al login unificado
-  if (pathname === '/vendedor/login' || pathname === '/vendedor/login/') {
-    return NextResponse.redirect(new URL('/admin/login', request.url))
-  }
+  if (pathname === '/vendedor/login' || pathname === '/vendedor/login/') return NextResponse.next()
 
   const token = request.cookies.get('admin_session')?.value
   const role = token ? await verifyAndGetRole(token) : null
@@ -53,7 +49,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (pathname.startsWith('/vendedor')) {
-    if (role !== 'vendor') return NextResponse.redirect(new URL('/admin/login', request.url))
+    if (role !== 'vendor') return NextResponse.redirect(new URL('/vendedor/login', request.url))
     return NextResponse.next()
   }
 

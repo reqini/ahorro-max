@@ -35,19 +35,10 @@ export function SectionMayorista({ listaUrl }: { listaUrl: string }) {
             <div className="relative">
               <div className="w-72 h-72 border-4 border-[#F5C000] flex items-center justify-center">
                 <div className="text-center px-8">
-                  <div
-                    className="text-5xl font-black text-[#F5C000] leading-none uppercase"
-                    style={{ fontFamily: "Impact, 'Arial Narrow', sans-serif" }}
-                  >Mayor</div>
-                  <div
-                    className="text-5xl font-black text-[#F5C000] leading-none uppercase"
-                    style={{ fontFamily: "Impact, 'Arial Narrow', sans-serif" }}
-                  >ista</div>
+                  <div className="text-5xl font-black text-[#F5C000] leading-none uppercase tracking-tight">Mayor</div>
+                  <div className="text-5xl font-black text-[#F5C000] leading-none uppercase tracking-tight">ista</div>
                   <div className="w-16 h-1 bg-[#F5C000] mx-auto my-3" />
-                  <div
-                    className="text-2xl font-black text-white uppercase"
-                    style={{ fontFamily: "Impact, 'Arial Narrow', sans-serif" }}
-                  >Precios que convienen</div>
+                  <div className="text-2xl font-black text-white uppercase tracking-tight">Precios que convienen</div>
                 </div>
               </div>
               <div className="absolute -top-3 -left-3 w-6 h-6 bg-[#F5C000]" />

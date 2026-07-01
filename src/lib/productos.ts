@@ -13,34 +13,49 @@ export interface Producto {
 }
 
 export async function getProductos(filtro?: { categoria?: string; busqueda?: string }): Promise<Producto[]> {
-  let query = getSupabaseAdmin()
-    .from('productos')
-    .select('*')
-    .eq('activo', true)
-    .order('categoria')
-    .order('nombre')
+  try {
+    let query = getSupabaseAdmin()
+      .from('productos')
+      .select('*')
+      .eq('activo', true)
+      .order('categoria')
+      .order('nombre')
 
-  if (filtro?.categoria) query = query.eq('categoria', filtro.categoria)
-  if (filtro?.busqueda) query = query.ilike('nombre', `%${filtro.busqueda}%`)
+    if (filtro?.categoria) query = query.eq('categoria', filtro.categoria)
+    if (filtro?.busqueda) query = query.ilike('nombre', `%${filtro.busqueda}%`)
 
-  const { data } = await query
-  return (data ?? []) as Producto[]
+    const { data, error } = await query
+    if (error) return []
+    return (data ?? []) as Producto[]
+  } catch {
+    return []
+  }
 }
 
 export async function getAllProductos(): Promise<Producto[]> {
-  const { data } = await getSupabaseAdmin()
-    .from('productos')
-    .select('*')
-    .order('categoria')
-    .order('nombre')
-  return (data ?? []) as Producto[]
+  try {
+    const { data, error } = await getSupabaseAdmin()
+      .from('productos')
+      .select('*')
+      .order('categoria')
+      .order('nombre')
+    if (error) return []
+    return (data ?? []) as Producto[]
+  } catch {
+    return []
+  }
 }
 
 export async function getCategorias(): Promise<string[]> {
-  const { data } = await getSupabaseAdmin()
-    .from('productos')
-    .select('categoria')
-    .eq('activo', true)
-  const cats = [...new Set((data ?? []).map((r: { categoria: string }) => r.categoria).filter(Boolean))]
-  return cats.sort()
+  try {
+    const { data, error } = await getSupabaseAdmin()
+      .from('productos')
+      .select('categoria')
+      .eq('activo', true)
+    if (error) return []
+    const cats = [...new Set((data ?? []).map((r: { categoria: string }) => r.categoria).filter(Boolean))]
+    return cats.sort()
+  } catch {
+    return []
+  }
 }

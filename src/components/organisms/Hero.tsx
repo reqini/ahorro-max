@@ -55,9 +55,8 @@ export function Hero() {
 
         {/* Headline */}
         <h1
-          className="text-4xl md:text-5xl lg:text-6xl font-black uppercase leading-none"
+          className="text-4xl md:text-5xl lg:text-6xl font-black uppercase leading-none tracking-tight"
           style={{
-            fontFamily: "Impact, 'Arial Narrow', Oswald, sans-serif",
             color: "var(--th-text)",
             textShadow: "var(--th-hero-text-shadow)",
           }}

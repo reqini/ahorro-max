@@ -6,6 +6,7 @@ async function logoutAction() {
   'use server'
   await clearAdminSession()
   redirect('/vendedor/login')
+
 }
 
 export default async function VendedorLayout({ children }: { children: React.ReactNode }) {
