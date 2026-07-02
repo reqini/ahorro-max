@@ -36,25 +36,25 @@ async function verifyAndGetRole(token: string): Promise<Role | null> {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Login único — siempre permitir
+  // Login pages — siempre permitir
+  if (pathname === '/login' || pathname === '/login/') return NextResponse.next()
   if (pathname === '/admin/login' || pathname === '/admin/login/') return NextResponse.next()
-  // /vendedor/login redirige al login unificado (handled by page redirect)
   if (pathname === '/vendedor/login' || pathname === '/vendedor/login/') return NextResponse.next()
 
   const token = request.cookies.get('admin_session')?.value
   const role = token ? await verifyAndGetRole(token) : null
 
   if (pathname.startsWith('/admin')) {
-    if (role !== 'admin') return NextResponse.redirect(new URL('/admin/login', request.url))
+    if (role !== 'admin') return NextResponse.redirect(new URL('/login', request.url))
     return NextResponse.next()
   }
 
   if (pathname.startsWith('/vendedor')) {
-    if (role !== 'vendor') return NextResponse.redirect(new URL('/admin/login', request.url))
+    if (role !== 'vendor') return NextResponse.redirect(new URL('/login', request.url))
     return NextResponse.next()
   }
 
   return NextResponse.next()
 }
 
-export const config = { matcher: ['/admin/:path*', '/vendedor/:path*'] }
+export const config = { matcher: ['/login', '/admin/:path*', '/vendedor/:path*'] }
