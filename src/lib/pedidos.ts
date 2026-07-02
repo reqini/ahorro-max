@@ -68,3 +68,30 @@ export async function updateEstadoPedido(id: string, estado: Pedido['estado']): 
     return !error
   } catch { return false }
 }
+
+export async function updatePedido(id: string, data: {
+  cliente_nombre?: string
+  cliente_id?: string | null
+  items?: PedidoItem[]
+  tipo_precio?: 'minorista' | 'mayorista'
+  total_estimado?: string
+  notas?: string
+}): Promise<boolean> {
+  try {
+    const { error } = await getSupabaseAdmin()
+      .from('pedidos')
+      .update(data)
+      .eq('id', id)
+    return !error
+  } catch { return false }
+}
+
+export async function deletePedido(id: string): Promise<boolean> {
+  try {
+    const { error } = await getSupabaseAdmin()
+      .from('pedidos')
+      .delete()
+      .eq('id', id)
+    return !error
+  } catch { return false }
+}
