@@ -28,7 +28,7 @@ export interface NotaCliente {
   created_at: string
 }
 
-export async function getClientes(filtro?: { tipo?: TipoCliente; busqueda?: string }): Promise<Cliente[]> {
+export async function getClientes(filtro?: { tipo?: TipoCliente; busqueda?: string; vendedor?: string }): Promise<Cliente[]> {
   let query = getSupabaseAdmin()
     .from('clientes')
     .select('*')
@@ -36,6 +36,7 @@ export async function getClientes(filtro?: { tipo?: TipoCliente; busqueda?: stri
 
   if (filtro?.tipo) query = query.eq('tipo', filtro.tipo)
   if (filtro?.busqueda) query = query.ilike('nombre', `%${filtro.busqueda}%`)
+  if (filtro?.vendedor) query = query.eq('vendedor', filtro.vendedor)
 
   const { data } = await query
   return (data ?? []) as Cliente[]

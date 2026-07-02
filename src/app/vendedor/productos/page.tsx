@@ -1,29 +1,28 @@
 import { getProductos, getCategorias } from '@/lib/productos'
-import { ProductosView } from './ProductosView'
+import { getVendedorUsername } from '@/lib/admin-auth'
+import { getClientes } from '@/lib/clientes'
+import { CatalogoCards } from '@/components/catalogo/CatalogoCards'
+import { crearPedidoDesdeVendedor } from './actions'
 
-interface PageProps {
-  searchParams: Promise<{ q?: string; cat?: string }>
-}
+export const dynamic = 'force-dynamic'
 
-export default async function VendedorProductosPage({ searchParams }: PageProps) {
-  const params = await searchParams
-  const busqueda = params.q
-  const catFiltro = params.cat
-
-  const [productos, todosLosProductos, categorias] = await Promise.all([
-    getProductos({ categoria: catFiltro, busqueda }),
-    getProductos(), // total count without filters
+export default async function VendedorProductosPage() {
+  const [productos, categorias, username] = await Promise.all([
+    getProductos(),
     getCategorias(),
+    getVendedorUsername(),
   ])
 
+  const clientes = username ? await getClientes({ vendedor: username }) : []
+
   return (
-    <div className="flex flex-col">
-      <ProductosView
-        serverProductos={productos}
-        allCount={todosLosProductos.length}
+    <div className="max-w-2xl mx-auto">
+      <CatalogoCards
+        productos={productos}
         categorias={categorias}
-        busqueda={busqueda}
-        catFiltro={catFiltro}
+        modo="vendedor"
+        clientes={clientes.map(c => ({ id: c.id, nombre: c.nombre, telefono: c.telefono, tipo_negocio: c.tipo_negocio }))}
+        onCrearPedido={crearPedidoDesdeVendedor}
       />
     </div>
   )
