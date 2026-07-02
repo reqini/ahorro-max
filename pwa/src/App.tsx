@@ -2,10 +2,14 @@ import { useMemo, useState } from 'react'
 import Papa from 'papaparse'
 import rawCsv from './data/lista_precios_ahorra_max_julio2026.csv?raw'
 import { Header } from './components/Header'
+import { TabBar } from './components/TabBar'
 import { SearchBar } from './components/SearchBar'
 import { CategoryFilter } from './components/CategoryFilter'
 import { PriceList } from './components/PriceList'
-import type { Producto } from './types'
+import { CartBar } from './components/CartBar'
+import { CartDrawer } from './components/CartDrawer'
+import { useCart } from './hooks/useCart'
+import type { Producto, TipoPrecio } from './types'
 
 const { data: ALL_PRODUCTOS } = Papa.parse<Producto>(rawCsv.trim(), {
   header: true,
@@ -14,8 +18,12 @@ const { data: ALL_PRODUCTOS } = Papa.parse<Producto>(rawCsv.trim(), {
 })
 
 export default function App() {
+  const [tipoPrecio, setTipoPrecio] = useState<TipoPrecio>('minorista')
   const [query, setQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('Todos')
+  const [cartOpen, setCartOpen] = useState(false)
+
+  const cart = useCart()
 
   const categories = useMemo(() => {
     const cats = [...new Set(ALL_PRODUCTOS.map((p) => p.categoria).filter(Boolean))]
@@ -49,12 +57,27 @@ export default function App() {
     setQuery('')
   }
 
+  const handleTabChange = (tipo: TipoPrecio) => {
+    setTipoPrecio(tipo)
+    setQuery('')
+    setSelectedCategory('Todos')
+  }
+
+  const minoristaCount = cart.minoristaItems.reduce((s, i) => s + i.cantidad, 0)
+  const mayoristaCount = cart.mayoristaItems.reduce((s, i) => s + i.cantidad, 0)
+
   return (
     <div className="flex flex-col h-full bg-[#0a0a0a]">
       <Header totalProducts={ALL_PRODUCTOS.length} />
 
-      {/* Sticky controls */}
-      <div className="sticky top-14 z-20 bg-[#0a0a0a] border-b border-white/8 shadow-[0_4px_20px_rgba(0,0,0,0.6)]">
+      {/* Tabs + sticky controls */}
+      <div className="sticky top-14 z-20 bg-[#0a0a0a] shadow-[0_4px_20px_rgba(0,0,0,0.6)]">
+        <TabBar
+          active={tipoPrecio}
+          onChange={handleTabChange}
+          cartCountMinorista={minoristaCount}
+          cartCountMayorista={mayoristaCount}
+        />
         <SearchBar
           value={query}
           onChange={(v) => {
@@ -71,7 +94,33 @@ export default function App() {
         />
       </div>
 
-      <PriceList grouped={grouped} query={query} />
+      <PriceList
+        grouped={grouped}
+        query={query}
+        tipoPrecio={tipoPrecio}
+        getQty={cart.getQty}
+        onAdd={(producto) => cart.add(producto, tipoPrecio)}
+        hasCartItems={cart.count > 0}
+      />
+
+      <CartBar
+        count={cart.count}
+        total={cart.total}
+        hasMixed={cart.hasMixed}
+        onOpen={() => setCartOpen(true)}
+      />
+
+      <CartDrawer
+        open={cartOpen}
+        onClose={() => setCartOpen(false)}
+        minoristaItems={cart.minoristaItems}
+        mayoristaItems={cart.mayoristaItems}
+        total={cart.total}
+        hasMixed={cart.hasMixed}
+        onQtyChange={cart.setQty}
+        onClear={cart.clear}
+        buildResumen={cart.buildResumen}
+      />
     </div>
   )
 }
