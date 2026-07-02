@@ -5,7 +5,7 @@ import { clearAdminSession, getVendedorUsername } from '@/lib/admin-auth'
 async function logoutAction() {
   'use server'
   await clearAdminSession()
-  redirect('/admin/login')
+  redirect('/login')
 }
 
 export default async function VendedorLayout({ children }: { children: React.ReactNode }) {

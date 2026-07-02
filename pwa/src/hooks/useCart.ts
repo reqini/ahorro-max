@@ -1,8 +1,33 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { CartItem, Producto, TipoPrecio } from '../types'
 
+const LS_KEY = 'ahorra_max_cart'
+
+function loadFromStorage(): CartItem[] {
+  try {
+    const raw = localStorage.getItem(LS_KEY)
+    if (!raw) return []
+    return JSON.parse(raw) as CartItem[]
+  } catch {
+    return []
+  }
+}
+
+function saveToStorage(items: CartItem[]) {
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify(items))
+  } catch {
+    // localStorage not available (private mode, full, etc.)
+  }
+}
+
 export function useCart() {
-  const [items, setItems] = useState<CartItem[]>([])
+  const [items, setItems] = useState<CartItem[]>(loadFromStorage)
+
+  // Persist to localStorage on every change
+  useEffect(() => {
+    saveToStorage(items)
+  }, [items])
 
   function add(producto: Producto, tipo: TipoPrecio) {
     const precio = tipo === 'minorista' ? producto.precio_minorista : producto.precio_mayorista
@@ -60,9 +85,7 @@ export function useCart() {
       lines.push('🔴 PRECIOS MINORISTAS:')
       minoristaItems.forEach((i) => {
         const subtotal = i.precio * i.cantidad
-        lines.push(
-          ` • ${i.cantidad}× ${i.nombre} — ${fmt(i.precio)} c/u = ${fmt(subtotal)}`
-        )
+        lines.push(` • ${i.cantidad}× ${i.nombre} — ${fmt(i.precio)} c/u = ${fmt(subtotal)}`)
       })
       const sub = minoristaItems.reduce((s, i) => s + i.precio * i.cantidad, 0)
       lines.push(` Subtotal: ${fmt(sub)}`)
@@ -73,9 +96,7 @@ export function useCart() {
       lines.push('🟡 PRECIOS MAYORISTAS:')
       mayoristaItems.forEach((i) => {
         const subtotal = i.precio * i.cantidad
-        lines.push(
-          ` • ${i.cantidad}× ${i.nombre} — ${fmt(i.precio)} c/u = ${fmt(subtotal)}`
-        )
+        lines.push(` • ${i.cantidad}× ${i.nombre} — ${fmt(i.precio)} c/u = ${fmt(subtotal)}`)
       })
       const sub = mayoristaItems.reduce((s, i) => s + i.precio * i.cantidad, 0)
       lines.push(` Subtotal: ${fmt(sub)}`)
