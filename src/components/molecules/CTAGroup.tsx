@@ -35,6 +35,8 @@ export function CTAGroup({
       <Button
         as="a"
         href={downloadUrl}
+        target="_blank"
+        rel="noopener noreferrer"
         download
         variant={variant === "yellow" ? "primary" : "secondary"}
         size="lg"

@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
     .from('listas-precios')
     .getPublicUrl(`${tipo}.pdf`)
 
-  const publicUrl = publicUrlData.publicUrl
+  const publicUrl = publicUrlData.publicUrl + '?download=true'
 
   const configKey = tipo === 'minorista' ? 'lista_minorista_url' : 'lista_mayorista_url'
   await supabase
