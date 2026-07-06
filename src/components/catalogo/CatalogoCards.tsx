@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useMemo, useCallback, useTransition } from 'react'
+import { OfflineBar } from '@/components/ui/OfflineBar'
 
 export interface ProductoCatalogo {
   id: string
@@ -56,6 +57,27 @@ function calcTotal(items: CartItem[]): number {
 }
 
 const cartStorageKey = (modo: ModoCatalogo) => `catalogo_cart_${modo}`
+const PENDING_PEDIDOS_KEY = 'vendedor_pending_pedidos'
+
+function queuePedidoOffline(payload: PedidoPayload) {
+  try {
+    const pending = JSON.parse(localStorage.getItem(PENDING_PEDIDOS_KEY) ?? '[]')
+    pending.push({
+      id: crypto.randomUUID(),
+      cliente_nombre: payload.cliente_nombre,
+      items: payload.items,
+      tipo_precio: payload.tipo_precio,
+      total_estimado: payload.total_estimado,
+      notas: payload.notas,
+      timestamp: Date.now(),
+    })
+    localStorage.setItem(PENDING_PEDIDOS_KEY, JSON.stringify(pending))
+    window.dispatchEvent(new CustomEvent('pedido-offline-saved'))
+    return true
+  } catch {
+    return false
+  }
+}
 
 function loadCartFromStorage(modo: ModoCatalogo): CartItem[] {
   try {
@@ -90,6 +112,7 @@ export function CatalogoCards({ productos, categorias, modo, clientes = [], what
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const [offlineQueued, setOfflineQueued] = useState(false)
   const [, startTransition] = useTransition()
 
   const filtrados = useMemo(() => {
@@ -136,6 +159,7 @@ export function CatalogoCards({ productos, categorias, modo, clientes = [], what
     setNotas('')
     setError('')
     setSuccess(false)
+    setOfflineQueued(false)
   }
 
   const totalNum = calcTotal(cart)
@@ -164,12 +188,27 @@ export function CatalogoCards({ productos, categorias, modo, clientes = [], what
     }
 
     if (!onCrearPedido) return
+
+    if (!navigator.onLine) {
+      queuePedidoOffline(payload)
+      setOfflineQueued(true)
+      setSuccess(true)
+      setTimeout(resetOrder, 2000)
+      return
+    }
+
     setSaving(true)
     try {
       const res = await onCrearPedido(payload)
       if (res.error) { setError(res.error); return }
       setSuccess(true)
       setTimeout(resetOrder, 1500)
+    } catch {
+      // Went offline mid-request, or a network blip — don't lose the pedido
+      queuePedidoOffline(payload)
+      setOfflineQueued(true)
+      setSuccess(true)
+      setTimeout(resetOrder, 2000)
     } finally {
       setSaving(false)
     }
@@ -178,9 +217,16 @@ export function CatalogoCards({ productos, categorias, modo, clientes = [], what
   if (success) {
     return (
       <div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-5xl mb-4">✓</div>
-          <p className="text-white font-black text-xl">Pedido registrado</p>
+        <div className="text-center px-6">
+          <div className="text-5xl mb-4">{offlineQueued ? '📴' : '✓'}</div>
+          <p className="text-white font-black text-xl">
+            {offlineQueued ? 'Guardado sin conexión' : 'Pedido registrado'}
+          </p>
+          {offlineQueued && (
+            <p className="text-amber-400/80 text-xs mt-2 max-w-xs mx-auto">
+              Se sincroniza solo cuando vuelva la señal — revisá &quot;Pedidos&quot; para confirmarlo.
+            </p>
+          )}
           <p className="text-white/40 text-sm mt-2">Total: {totalFmt}</p>
         </div>
       </div>
@@ -189,6 +235,8 @@ export function CatalogoCards({ productos, categorias, modo, clientes = [], what
 
   return (
     <div className="flex flex-col min-h-screen bg-[#0a0a0a]">
+      {modo === 'vendedor' && <OfflineBar offlineMessage="el pedido se guarda localmente" />}
+
       {/* Tipo precio toggle */}
       <div className="sticky top-0 z-20 bg-[#0a0a0a]/95 backdrop-blur border-b border-white/8 px-4 pt-3 pb-3 flex flex-col gap-2.5">
         {/* Precio toggle */}

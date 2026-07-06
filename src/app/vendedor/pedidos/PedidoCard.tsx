@@ -97,6 +97,7 @@ export function PedidoCard({ pedido, serverProductos }: Props) {
 
   async function handleSave() {
     if (editItems.length === 0) { setError('Agregá al menos un producto'); return }
+    if (!navigator.onLine) { setError('Sin conexión — esperá a tener señal para editar el pedido'); return }
     setSaving(true)
     setError('')
     try {
@@ -110,15 +111,24 @@ export function PedidoCard({ pedido, serverProductos }: Props) {
       if (res.error) { setError(res.error); return }
       setShowEdit(false)
       router.refresh()
+    } catch {
+      setError('Sin conexión — no se pudo guardar. Reintentá cuando vuelva la señal.')
     } finally { setSaving(false) }
   }
 
   async function handleDelete() {
     if (!confirm('¿Eliminar este pedido? Esta acción no se puede deshacer.')) return
+    if (!navigator.onLine) { alert('Sin conexión — esperá a tener señal para eliminar el pedido'); return }
     setDeleting(true)
-    const res = await eliminarPedidoAction(pedido.id)
-    if (res.error) { alert(res.error); setDeleting(false); return }
-    router.refresh()
+    try {
+      const res = await eliminarPedidoAction(pedido.id)
+      if (res.error) { alert(res.error); return }
+      router.refresh()
+    } catch {
+      alert('Sin conexión — no se pudo eliminar. Reintentá cuando vuelva la señal.')
+    } finally {
+      setDeleting(false)
+    }
   }
 
   return (

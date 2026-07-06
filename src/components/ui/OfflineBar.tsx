@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from 'react'
 
-export function OfflineBar() {
+interface Props {
+  offlineMessage?: string
+}
+
+export function OfflineBar({ offlineMessage = 'los cambios se guardan localmente' }: Props) {
   const [online, setOnline] = useState(true)
   const [showRestored, setShowRestored] = useState(false)
 
@@ -26,7 +30,7 @@ export function OfflineBar() {
 
   return (
     <div className={`text-xs font-bold text-center py-2 px-4 ${online ? 'bg-green-900/80 text-green-300' : 'bg-red-950/90 text-red-300'}`}>
-      {online ? '✓ Conexión restaurada' : '⚠ Sin conexión — los clientes se guardan localmente'}
+      {online ? '✓ Conexión restaurada' : `⚠ Sin conexión — ${offlineMessage}`}
     </div>
   )
 }

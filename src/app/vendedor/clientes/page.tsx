@@ -3,7 +3,7 @@ import { getClientes } from '@/lib/clientes'
 import { getVendedorUsername } from '@/lib/admin-auth'
 import { addCliente } from './actions'
 import { NuevoClienteDrawer } from './NuevoClienteDrawer'
-import { OfflineBar } from './OfflineBar'
+import { OfflineBar } from '@/components/ui/OfflineBar'
 import { SyncPending } from './SyncPending'
 import type { TipoCliente } from '@/lib/clientes'
 
@@ -33,7 +33,7 @@ export default async function ClientesPage({ searchParams }: PageProps) {
 
   return (
     <div className="flex flex-col">
-      <OfflineBar />
+      <OfflineBar offlineMessage="los clientes se guardan localmente" />
       <SyncPending />
 
       {/* Search + filters */}

@@ -13,7 +13,7 @@ export default async function ZonasPage({ searchParams }: PageProps) {
   return (
     <div>
       <h1 className="text-xl font-bold text-white mb-2">Zonas de Entrega</h1>
-      <p className="text-white/40 text-sm mb-6">Las zonas aparecen en la sección "Entrega sin cargo" del sitio.</p>
+      <p className="text-white/40 text-sm mb-6">Las zonas aparecen en la sección &quot;Entrega sin cargo&quot; del sitio.</p>
 
       {added && (
         <div className="mb-5 px-4 py-3 bg-green-950/40 border border-green-700/40 text-green-400 text-sm">

@@ -36,3 +36,6 @@ export const GOOGLE_MAPS_EMBED_URL =
 // TODO: Google Sheets integration — replace these with dynamic URLs from sheets
 export const CATALOGO_MINORISTA_URL = "/catalogo-minorista.pdf"
 export const LISTA_MAYORISTA_URL = "/catalogo-mayorista.pdf"
+
+// PWA instalable de precios offline (proyecto Vercel separado, ver pwa/)
+export const PWA_PRECIOS_URL = "https://ahorramax-precios.vercel.app"

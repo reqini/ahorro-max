@@ -1,9 +1,14 @@
 'use client'
 
-import { useState } from 'react'
 import { SyncPedidosPending } from './SyncPedidosPending'
 import { PedidoCard } from './PedidoCard'
+import { OfflineBar } from '@/components/ui/OfflineBar'
+import { agruparPedidosPorFecha, resumenDelMes } from './groupPedidos'
 import type { Pedido } from '@/lib/pedidos'
+
+function formatARS(n: number): string {
+  return '$' + Math.round(n).toLocaleString('es-AR')
+}
 
 interface ProductoCatalogo {
   id: string
@@ -19,8 +24,12 @@ interface Props {
 }
 
 export function PedidosClientPage({ pedidos, serverProductos }: Props) {
+  const grupos = agruparPedidosPorFecha(pedidos)
+  const resumen = resumenDelMes(pedidos)
+
   return (
     <>
+      <OfflineBar offlineMessage="los cambios se guardan localmente" />
       <SyncPedidosPending />
 
       {/* Header */}
@@ -37,7 +46,20 @@ export function PedidosClientPage({ pedidos, serverProductos }: Props) {
         </a>
       </div>
 
-      {/* Lista */}
+      {/* Resumen del mes */}
+      {resumen.cantidad > 0 && (
+        <div className="mx-4 mt-4 border border-white/10 bg-[#111] px-4 py-3 flex items-center justify-between">
+          <div>
+            <p className="text-white/30 text-[10px] uppercase tracking-wide">Resumen de {resumen.mesLabel}</p>
+            <p className="text-white text-sm font-bold mt-0.5">
+              {resumen.cantidad} pedido{resumen.cantidad !== 1 ? 's' : ''}
+            </p>
+          </div>
+          <p className="text-white font-black text-lg">{formatARS(resumen.total)}</p>
+        </div>
+      )}
+
+      {/* Lista agrupada por fecha */}
       {pedidos.length === 0 ? (
         <div className="px-4 py-16 text-center">
           <p className="text-white/20 text-sm mb-4">Sin pedidos todavía</p>
@@ -47,9 +69,16 @@ export function PedidosClientPage({ pedidos, serverProductos }: Props) {
           </a>
         </div>
       ) : (
-        <div>
-          {pedidos.map(p => (
-            <PedidoCard key={p.id} pedido={p} serverProductos={serverProductos} />
+        <div className="mt-2">
+          {grupos.map(grupo => (
+            <div key={grupo.label}>
+              <p className="px-4 pt-4 pb-1.5 text-white/30 text-[10px] font-bold uppercase tracking-widest sticky top-0 bg-[#0a0a0a] z-10">
+                {grupo.label} · {grupo.pedidos.length}
+              </p>
+              {grupo.pedidos.map(p => (
+                <PedidoCard key={p.id} pedido={p} serverProductos={serverProductos} />
+              ))}
+            </div>
           ))}
         </div>
       )}
