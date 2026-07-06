@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useCallback, useTransition } from 'react'
+import { useState, useEffect, useMemo, useCallback, useTransition } from 'react'
 
 export interface ProductoCatalogo {
   id: string
@@ -55,12 +55,33 @@ function calcTotal(items: CartItem[]): number {
   return items.reduce((s, it) => s + parseNum(it.precio) * it.cantidad, 0)
 }
 
+const cartStorageKey = (modo: ModoCatalogo) => `catalogo_cart_${modo}`
+
+function loadCartFromStorage(modo: ModoCatalogo): CartItem[] {
+  try {
+    const raw = localStorage.getItem(cartStorageKey(modo))
+    return raw ? JSON.parse(raw) as CartItem[] : []
+  } catch {
+    return []
+  }
+}
+
 export function CatalogoCards({ productos, categorias, modo, clientes = [], whatsappNumber, onCrearPedido }: Props) {
   const [tipoPrecio, setTipoPrecio] = useState<'minorista' | 'mayorista'>('minorista')
   const [busqueda, setBusqueda] = useState('')
   const [catFiltro, setCatFiltro] = useState('')
-  const [cart, setCart] = useState<CartItem[]>([])
+  const [cart, setCart] = useState<CartItem[]>(() => loadCartFromStorage(modo))
   const [showOrder, setShowOrder] = useState(false)
+
+  // Persist cart so it survives page refresh / navigation
+  useEffect(() => {
+    try {
+      if (cart.length === 0) localStorage.removeItem(cartStorageKey(modo))
+      else localStorage.setItem(cartStorageKey(modo), JSON.stringify(cart))
+    } catch {
+      // localStorage not available (private mode, full, etc.)
+    }
+  }, [cart, modo])
 
   // Order form state
   const [clienteQuery, setClienteQuery] = useState('')
