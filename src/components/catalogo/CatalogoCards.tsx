@@ -267,19 +267,19 @@ export function CatalogoCards({ productos, categorias, modo, clientes = [], what
                     <p className="text-white font-bold text-sm leading-tight line-clamp-2">{p.nombre}</p>
                     {p.descripcion && <p className="text-white/30 text-xs line-clamp-1">{p.descripcion}</p>}
 
-                    {/* Precios */}
-                    <div className="flex gap-3 mt-auto pt-1">
-                      {precioMin && (
-                        <div className={tipoPrecio === 'minorista' ? '' : 'opacity-40'}>
-                          <p className="text-[9px] text-white/30 uppercase leading-none mb-0.5">Min</p>
-                          <p className="text-white font-black text-sm">{precioMin}</p>
+                    {/* Precio (según tipo activo) */}
+                    <div className="mt-auto pt-1">
+                      {precioActivo ? (
+                        <div>
+                          <p className={`text-[9px] uppercase leading-none mb-0.5 ${tipoPrecio === 'mayorista' ? 'text-[#F5C000]/50' : 'text-white/30'}`}>
+                            {tipoPrecio}
+                          </p>
+                          <p className={`font-black text-sm ${tipoPrecio === 'mayorista' ? 'text-[#F5C000]' : 'text-white'}`}>
+                            {precioActivo}
+                          </p>
                         </div>
-                      )}
-                      {precioMay && (
-                        <div className={tipoPrecio === 'mayorista' ? '' : 'opacity-40'}>
-                          <p className="text-[9px] text-[#F5C000]/50 uppercase leading-none mb-0.5">May</p>
-                          <p className="text-[#F5C000] font-black text-sm">{precioMay}</p>
-                        </div>
+                      ) : (
+                        <p className="text-white/20 text-xs">Sin precio {tipoPrecio}</p>
                       )}
                     </div>
 
