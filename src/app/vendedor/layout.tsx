@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { clearAdminSession, getVendedorUsername } from '@/lib/admin-auth'
 import { PWA_PRECIOS_URL } from '@/constants/contact'
+import { VendedorNav } from './VendedorNav'
 
 async function logoutAction() {
   'use server'
@@ -22,18 +23,7 @@ export default async function VendedorLayout({ children }: { children: React.Rea
           {username && (
             <span className="text-white/40 text-xs hidden sm:inline">@{username}</span>
           )}
-          <Link href="/vendedor/pedidos"
-            className="text-xs text-white/50 hover:text-white px-2.5 py-1.5 border border-white/10 hover:border-white/30 transition-colors">
-            Pedidos
-          </Link>
-          <Link href="/vendedor/clientes"
-            className="text-xs text-white/50 hover:text-white px-2.5 py-1.5 border border-white/10 hover:border-white/30 transition-colors">
-            Clientes
-          </Link>
-          <Link href="/vendedor/productos"
-            className="text-xs text-white/50 hover:text-white px-2.5 py-1.5 border border-white/10 hover:border-white/30 transition-colors">
-            Precios
-          </Link>
+          <VendedorNav />
           <a href={PWA_PRECIOS_URL} target="_blank" rel="noopener noreferrer"
             className="text-xs text-[#F97316] hover:text-orange-300 px-2.5 py-1.5 border border-[#F97316]/40 hover:border-[#F97316] transition-colors">
             📲 App offline
