@@ -36,6 +36,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'No se recibió archivo' }, { status: 400 })
   }
 
+  if (file.type !== 'application/pdf') {
+    return NextResponse.json({ error: 'El archivo debe ser un PDF' }, { status: 400 })
+  }
+
+  const MAX_SIZE = 15 * 1024 * 1024 // 15MB
+  if (file.size > MAX_SIZE) {
+    return NextResponse.json({ error: 'El archivo es demasiado grande (máx 15MB)' }, { status: 400 })
+  }
+
   const arrayBuffer = await file.arrayBuffer()
   const buffer = Buffer.from(arrayBuffer)
 
@@ -52,11 +61,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: uploadError.message }, { status: 500 })
   }
 
+  const downloadName = tipo === 'minorista' ? 'Lista-Minorista-AhorraMax.pdf' : 'Lista-Mayorista-AhorraMax.pdf'
   const { data: publicUrlData } = supabase.storage
     .from('listas-precios')
-    .getPublicUrl(`${tipo}.pdf`)
+    .getPublicUrl(`${tipo}.pdf`, { download: downloadName })
 
-  const publicUrl = publicUrlData.publicUrl + '?download=true'
+  const publicUrl = publicUrlData.publicUrl
 
   const configKey = tipo === 'minorista' ? 'lista_minorista_url' : 'lista_mayorista_url'
   await supabase

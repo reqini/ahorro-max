@@ -58,9 +58,17 @@ export function ImportExcel() {
       </form>
 
       {state?.count !== undefined && (
-        <p className="mt-3 text-green-400 text-sm font-medium">
-          ✓ {state.count} producto{state.count !== 1 ? 's' : ''} importado{state.count !== 1 ? 's' : ''} correctamente
-        </p>
+        <div className="mt-3">
+          <p className="text-green-400 text-sm font-medium">
+            ✓ {state.count} producto{state.count !== 1 ? 's' : ''} procesado{state.count !== 1 ? 's' : ''}
+            {' — '}{state.nuevos} nuevo{state.nuevos !== 1 ? 's' : ''}, {state.actualizados} actualizado{state.actualizados !== 1 ? 's' : ''}
+          </p>
+          {state.ignoradas > 0 && (
+            <p className="text-amber-400/80 text-xs mt-1">
+              ⚠ {state.ignoradas} fila{state.ignoradas !== 1 ? 's' : ''} ignorada{state.ignoradas !== 1 ? 's' : ''} por no tener un precio válido (revisá el archivo)
+            </p>
+          )}
+        </div>
       )}
       {state?.error && (
         <p className="mt-3 text-red-400 text-sm">{state.error}</p>

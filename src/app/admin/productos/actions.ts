@@ -39,7 +39,16 @@ export async function toggleProducto(id: string, activo: boolean) {
   revalidatePath('/vendedor/productos')
 }
 
-export type ImportResult = { count: number; error?: never } | { error: string; count?: never }
+export type ImportResult =
+  | { count: number; nuevos: number; actualizados: number; ignoradas: number; error?: never }
+  | { error: string; count?: never; nuevos?: never; actualizados?: never; ignoradas?: never }
+
+// Una fila real de producto tiene al menos un precio con dígitos. Descarta filas
+// basura tipo encabezados repetidos dentro del archivo ("Precio x Pack", "Precio Unitario"),
+// comunes en listas de precios armadas a mano con secciones por categoría.
+function looksLikeGarbagePrice(s: string): boolean {
+  return s.length > 0 && !/\d/.test(s)
+}
 
 export async function importProductosAction(
   _prev: ImportResult | null,
@@ -59,7 +68,7 @@ export async function importProductosAction(
   }
 
   // Skip header row, filter empty rows
-  const productos = rows
+  const parseadas = rows
     .slice(1)
     .filter((r) => r[0])
     .map((r) => ({
@@ -72,12 +81,41 @@ export async function importProductosAction(
     }))
     .filter((p) => p.nombre)
 
+  const productos = parseadas.filter(
+    (p) => !looksLikeGarbagePrice(p.precio_minorista) && !looksLikeGarbagePrice(p.precio_mayorista)
+  )
+  const ignoradas = parseadas.length - productos.length
+
   if (productos.length === 0) return { error: 'El archivo no tiene datos válidos' }
 
-  const { error } = await getSupabaseAdmin().from('productos').insert(productos)
-  if (error) return { error: error.message }
+  const supabase = getSupabaseAdmin()
+
+  // Reimportar la misma lista no debe duplicar productos: los que ya existen
+  // (mismo nombre, sin distinguir mayúsculas) se actualizan en vez de insertarse de nuevo.
+  const { data: existentes, error: fetchError } = await supabase.from('productos').select('id, nombre')
+  if (fetchError) return { error: fetchError.message }
+
+  const idPorNombre = new Map((existentes ?? []).map((p) => [p.nombre.trim().toLowerCase(), p.id as string]))
+
+  const nuevos = productos.filter((p) => !idPorNombre.has(p.nombre.toLowerCase()))
+  const actualizaciones = productos
+    .filter((p) => idPorNombre.has(p.nombre.toLowerCase()))
+    .map((p) => ({ id: idPorNombre.get(p.nombre.toLowerCase())!, data: p }))
+
+  if (nuevos.length > 0) {
+    const { error } = await supabase.from('productos').insert(nuevos)
+    if (error) return { error: error.message }
+  }
+
+  if (actualizaciones.length > 0) {
+    const results = await Promise.all(
+      actualizaciones.map(({ id, data }) => supabase.from('productos').update(data).eq('id', id))
+    )
+    const failed = results.find((r) => r.error)
+    if (failed?.error) return { error: failed.error.message }
+  }
 
   revalidatePath('/admin/productos')
   revalidatePath('/vendedor/productos')
-  return { count: productos.length }
+  return { count: productos.length, nuevos: nuevos.length, actualizados: actualizaciones.length, ignoradas }
 }
