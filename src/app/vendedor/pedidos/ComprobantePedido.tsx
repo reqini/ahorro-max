@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { linkWhatsAppComprobante, telefonoAWhatsApp, type DatosComprobante } from '@/lib/comprobante'
+import { linkWhatsAppComprobante, moneda, telefonoAWhatsApp, type DatosComprobante } from '@/lib/comprobante'
 import { FirmaCanvas, type FirmaCanvasHandle } from './FirmaCanvas'
 import { guardarFirmaAction, marcarEnviadoAction } from './actions'
 
@@ -62,7 +62,7 @@ export function ComprobantePedido({ pedidoId, pedido, telefonoInicial = '', onLi
         <p className="text-green-400 font-bold text-base">✓ Pedido registrado</p>
         <p className="text-white/40 text-xs mt-0.5">
           {pedido.numero ? `N° ${pedido.numero} · ` : ''}
-          {pedido.cliente_nombre || 'Sin nombre'} · Total {pedido.total_estimado}
+          {pedido.cliente_nombre || 'Sin nombre'} · Total {moneda(pedido.total_estimado)}
         </p>
       </div>
 
@@ -127,7 +127,7 @@ export function ComprobantePedido({ pedidoId, pedido, telefonoInicial = '', onLi
             <div>
               <p className="text-white font-semibold text-sm">Firma del cliente</p>
               <p className="text-white/35 text-xs mt-0.5 mb-3">
-                Pasale el celular. Al firmar acepta el pedido y el total de {pedido.total_estimado}.
+                Pasale el celular. Al firmar acepta el pedido y el total de {moneda(pedido.total_estimado)}.
               </p>
             </div>
 

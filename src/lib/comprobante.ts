@@ -44,7 +44,8 @@ export function telefonoAWhatsApp(entrada: string): string {
   return `549${n}`
 }
 
-function moneda(valor: string | number): string {
+/** Formatea un importe como precio argentino: 15750 -> "$15.750". */
+export function moneda(valor: string | number): string {
   const n = typeof valor === 'number' ? valor : Number(String(valor).replace(/[^\d.-]/g, ''))
   if (!Number.isFinite(n)) return String(valor)
   return `$${n.toLocaleString('es-AR')}`
