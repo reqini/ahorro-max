@@ -1,6 +1,9 @@
 'use client'
 
 import { useState, useEffect, useMemo, useCallback, useTransition } from 'react'
+import { ComprobantePedido } from '@/app/vendedor/pedidos/ComprobantePedido'
+import { crearClienteRapido, type DatosClienteRapido } from '@/app/vendedor/clientes/actions'
+import { FormularioClienteNuevo } from './FormularioClienteNuevo'
 import { OfflineBar } from '@/components/ui/OfflineBar'
 
 export interface ProductoCatalogo {
@@ -46,7 +49,7 @@ interface Props {
   modo: ModoCatalogo
   clientes?: ClienteCatalogo[]
   whatsappNumber?: string
-  onCrearPedido?: (data: PedidoPayload) => Promise<{ id?: string | null; error?: string }>
+  onCrearPedido?: (data: PedidoPayload) => Promise<{ id?: string | null; numero?: number; error?: string }>
 }
 
 const fmt = (p: string) => p ? (p.startsWith('$') ? p : `$${p}`) : null
@@ -113,6 +116,12 @@ export function CatalogoCards({ productos, categorias, modo, clientes = [], what
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const [offlineQueued, setOfflineQueued] = useState(false)
+  const [nuevoCliente, setNuevoCliente] = useState(false)
+  const [datosNuevo, setDatosNuevo] = useState<DatosClienteRapido>({ nombre: '' })
+  const [creandoCliente, setCreandoCliente] = useState(false)
+  const [clienteTelefono, setClienteTelefono] = useState('')
+  const [clienteAbierto, setClienteAbierto] = useState(false)
+  const [comprobante, setComprobante] = useState<{ id: string; numero: number | null } | null>(null)
   const [, startTransition] = useTransition()
 
   const filtrados = useMemo(() => {
@@ -124,9 +133,11 @@ export function CatalogoCards({ productos, categorias, modo, clientes = [], what
   }, [productos, catFiltro, busqueda])
 
   const clientesSugeridos = useMemo(() => {
-    if (!clienteQuery.trim() || clientes.length === 0) return []
-    const q = clienteQuery.toLowerCase()
-    return clientes.filter(c => c.nombre.toLowerCase().includes(q)).slice(0, 5)
+    const q = clienteQuery.trim().toLowerCase()
+    // Sin texto se muestra la libreta completa: el vendedor suele reconocer al
+    // cliente de la lista antes que recordar cómo lo escribió.
+    if (!q) return clientes.slice(0, 30)
+    return clientes.filter(c => c.nombre.toLowerCase().includes(q)).slice(0, 30)
   }, [clienteQuery, clientes])
 
   function getPrecio(p: ProductoCatalogo) {
@@ -156,6 +167,10 @@ export function CatalogoCards({ productos, categorias, modo, clientes = [], what
     setShowOrder(false)
     setClienteQuery('')
     setClienteId(undefined)
+    setClienteTelefono('')
+    setClienteAbierto(false)
+    setNuevoCliente(false)
+    setDatosNuevo({ nombre: '' })
     setNotas('')
     setError('')
     setSuccess(false)
@@ -166,9 +181,34 @@ export function CatalogoCards({ productos, categorias, modo, clientes = [], what
   const totalFmt = `$${totalNum.toFixed(0)}`
   const totalItems = cart.reduce((s, i) => s + i.cantidad, 0)
 
+  async function guardarClienteNuevo() {
+    setError('')
+    setCreandoCliente(true)
+    const res = await crearClienteRapido({ ...datosNuevo, nombre: clienteQuery.trim() })
+    setCreandoCliente(false)
+
+    if (res.error || !res.cliente) {
+      setError(res.error ?? 'No se pudo crear el cliente')
+      return
+    }
+
+    setClienteId(res.cliente.id)
+    setClienteQuery(res.cliente.nombre)
+    setClienteTelefono(res.cliente.telefono)
+    setNuevoCliente(false)
+    setDatosNuevo({ nombre: '' })
+  }
+
   async function handleConfirmar() {
     if (cart.length === 0) return
     setError('')
+
+    // El vendedor tiene que elegir o dar de alta el cliente: si no, los pedidos
+    // quedaban con un nombre suelto y sin cliente asociado.
+    if (modo === 'vendedor' && !clienteId) {
+      setError('Elegí el cliente de la lista o agregalo como nuevo antes de confirmar')
+      return
+    }
 
     const payload: PedidoPayload = {
       cliente_nombre: clienteQuery.trim() || 'Sin nombre',
@@ -201,6 +241,14 @@ export function CatalogoCards({ productos, categorias, modo, clientes = [], what
     try {
       const res = await onCrearPedido(payload)
       if (res.error) { setError(res.error); return }
+
+      // El vendedor pasa a dejarle constancia al cliente en el mismo momento de
+      // la venta, en vez de un cartel de "listo" que se va solo.
+      if (modo === 'vendedor' && res.id) {
+        setComprobante({ id: res.id, numero: res.numero ?? null })
+        return
+      }
+
       setSuccess(true)
       setTimeout(resetOrder, 1500)
     } catch {
@@ -212,6 +260,27 @@ export function CatalogoCards({ productos, categorias, modo, clientes = [], what
     } finally {
       setSaving(false)
     }
+  }
+
+  if (comprobante) {
+    return (
+      <ComprobantePedido
+        pedidoId={comprobante.id}
+        telefonoInicial={clienteTelefono}
+        pedido={{
+          numero: comprobante.numero,
+          cliente_nombre: clienteQuery.trim(),
+          items: cart,
+          tipo_precio: tipoPrecio,
+          total_estimado: totalFmt,
+          notas,
+        }}
+        onListo={() => {
+          setComprobante(null)
+          resetOrder()
+        }}
+      />
+    )
   }
 
   if (success) {
@@ -389,32 +458,92 @@ export function CatalogoCards({ productos, categorias, modo, clientes = [], what
               <label className="text-white/40 text-xs uppercase tracking-wide block mb-1.5">
                 {modo === 'publico' ? 'Tu nombre (opcional)' : 'Cliente'}
               </label>
-              <div className="relative">
-                <input
-                  value={clienteQuery}
-                  onChange={e => { setClienteQuery(e.target.value); setClienteId(undefined) }}
-                  placeholder={modo === 'publico' ? 'Tu nombre...' : 'Buscar o escribir cliente...'}
-                  className="w-full bg-[#1a1a1a] border border-white/15 text-white px-3 py-2.5 text-sm focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/20"
-                />
-                {/* Sugerencias */}
-                {clientesSugeridos.length > 0 && !clienteId && (
-                  <div className="absolute top-full left-0 right-0 bg-[#1a1a1a] border border-white/20 border-t-0 z-10 max-h-40 overflow-y-auto">
-                    {clientesSugeridos.map(c => (
-                      <button key={c.id} type="button"
-                        onClick={() => { setClienteQuery(c.nombre); setClienteId(c.id) }}
-                        className="w-full text-left px-3 py-2.5 hover:bg-white/5 border-b border-white/5 last:border-0">
-                        <p className="text-white text-sm font-medium">{c.nombre}</p>
-                        {c.tipo_negocio && <p className="text-white/30 text-xs">{c.tipo_negocio}</p>}
-                      </button>
-                    ))}
+              {/* Autocompletar: al enfocar muestra la lista completa y filtra al tipear,
+                  así el vendedor elige de la libreta en vez de escribir un nombre suelto. */}
+              {clienteId ? (
+                <div className="flex items-center gap-3 border border-green-700/50 bg-green-950/20 px-3 py-2.5">
+                  <span className="w-8 h-8 rounded-full bg-green-900/40 text-green-400 flex items-center justify-center font-black shrink-0">
+                    {clienteQuery.charAt(0).toUpperCase()}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white text-sm font-semibold truncate">{clienteQuery}</p>
+                    <p className="text-green-400/70 text-[11px]">
+                      {clienteTelefono || 'Sin teléfono cargado'}
+                    </p>
                   </div>
-                )}
-              </div>
-              {clienteId && (
-                <p className="text-green-400 text-xs mt-1.5 flex items-center gap-1">
-                  <span>✓</span> Cliente existente seleccionado
-                  <button onClick={() => { setClienteId(undefined) }} className="text-white/30 hover:text-white ml-1 underline">cambiar</button>
-                </p>
+                  <button type="button"
+                    onClick={() => { setClienteId(undefined); setClienteQuery(''); setClienteTelefono(''); setClienteAbierto(true) }}
+                    className="text-white/40 hover:text-white text-xs underline shrink-0">
+                    Cambiar
+                  </button>
+                </div>
+              ) : (
+                <div className="relative">
+                  <input
+                    value={clienteQuery}
+                    onChange={e => { setClienteQuery(e.target.value); setClienteAbierto(true) }}
+                    onFocus={() => setClienteAbierto(true)}
+                    onBlur={() => setClienteAbierto(false)}
+                    placeholder={modo === 'publico' ? 'Tu nombre...' : 'Buscar cliente...'}
+                    className="w-full bg-[#1a1a1a] border border-white/15 text-white px-3 py-2.5 text-sm focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/20"
+                  />
+                  {modo !== 'publico' && clienteAbierto && !nuevoCliente && (
+                    <div className="absolute top-full left-0 right-0 bg-[#1a1a1a] border border-white/20 border-t-0 z-20 max-h-52 overflow-y-auto shadow-2xl shadow-black/80">
+                      {clientesSugeridos.map(c => (
+                        <button key={c.id} type="button"
+                          // onMouseDown en vez de onClick: dispara antes del blur del input.
+                          onMouseDown={e => {
+                            e.preventDefault()
+                            setClienteQuery(c.nombre)
+                            setClienteId(c.id)
+                            setClienteTelefono(c.telefono ?? '')
+                            setClienteAbierto(false)
+                          }}
+                          className="w-full text-left px-3 py-2.5 hover:bg-white/8 border-b border-white/5 last:border-0 flex items-center gap-3">
+                          <span className="w-7 h-7 rounded-full bg-white/5 text-white/50 flex items-center justify-center text-xs font-black shrink-0">
+                            {c.nombre.charAt(0).toUpperCase()}
+                          </span>
+                          <span className="flex-1 min-w-0">
+                            <span className="block text-white text-sm font-medium truncate">{c.nombre}</span>
+                            {(c.tipo_negocio || c.telefono) && (
+                              <span className="block text-white/30 text-xs truncate">
+                                {[c.tipo_negocio, c.telefono].filter(Boolean).join(' · ')}
+                              </span>
+                            )}
+                          </span>
+                        </button>
+                      ))}
+                      {clientesSugeridos.length === 0 && (
+                        <p className="px-3 py-3 text-white/30 text-xs">
+                          {clientes.length === 0
+                            ? 'Todavía no tenés clientes cargados.'
+                            : `Ningún cliente coincide con “${clienteQuery.trim()}”.`}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Alta en el momento: sin esto el pedido quedaba con el nombre suelto
+                  y sin cliente asociado. */}
+              {modo === 'vendedor' && !clienteId && (
+                nuevoCliente ? (
+                  <FormularioClienteNuevo
+                    nombre={clienteQuery}
+                    onNombre={setClienteQuery}
+                    datos={datosNuevo}
+                    onDatos={setDatosNuevo}
+                    guardando={creandoCliente}
+                    onGuardar={guardarClienteNuevo}
+                    onCancelar={() => setNuevoCliente(false)}
+                  />
+                ) : (
+                  <button type="button" onClick={() => setNuevoCliente(true)}
+                    className="w-full mt-2 py-2.5 border border-dashed border-white/25 text-white/60 text-xs font-bold uppercase tracking-wide active:bg-white/5">
+                    + Agregar cliente nuevo{clienteQuery.trim() ? `: “${clienteQuery.trim()}”` : ''}
+                  </button>
+                )
               )}
             </div>
 
