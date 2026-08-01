@@ -25,6 +25,7 @@ const GROUPS: NavGroup[] = [
       { href: '/admin/productos', label: 'Productos' },
       { href: '/admin/precios', label: 'Listas de Precios', mobileLabel: 'Precios' },
       { href: '/admin/vendedores', label: 'Vendedores' },
+      { href: '/admin/recorridos', label: 'Recorridos' },
     ],
   },
   {
@@ -61,7 +62,7 @@ export function AdminNav() {
       </nav>
 
       {/* Mobile horizontal nav */}
-      <div className="md:hidden w-full border-b border-white/10 bg-[#0d0d0d] px-4 py-2 flex items-center gap-1 overflow-x-auto shrink-0 fixed top-[53px] left-0 z-10">
+      <div className="md:hidden w-full border-b border-white/10 bg-[#0d0d0d] px-4 py-2 flex items-center gap-1 overflow-x-auto sin-barra shrink-0 fixed top-[53px] left-0 z-10">
         {GROUPS.map((group, i) => (
           <div key={group.label} className="flex items-center gap-1">
             {i > 0 && <span className="text-white/15 mx-1">|</span>}

@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 const ITEMS = [
   { href: '/vendedor/pedidos', label: 'Pedidos' },
   { href: '/vendedor/clientes', label: 'Clientes' },
+  { href: '/vendedor/recorridos', label: 'Recorridos' },
   { href: '/vendedor/productos', label: 'Precios' },
 ]
 
@@ -18,7 +19,7 @@ export function VendedorNav() {
         const active = pathname?.startsWith(item.href)
         return (
           <Link key={item.href} href={item.href}
-            className={`text-xs px-2.5 py-1.5 border transition-colors ${
+            className={`text-xs px-3 py-1.5 border transition-colors whitespace-nowrap shrink-0 ${
               active
                 ? 'bg-[#CC0000]/15 border-[#CC0000]/60 text-white font-semibold'
                 : 'text-white/50 border-white/10 hover:text-white hover:border-white/30'
