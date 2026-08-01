@@ -2,9 +2,11 @@
 
 import { useState, useEffect, useMemo, useCallback, useTransition } from 'react'
 import { ComprobantePedido } from '@/app/vendedor/pedidos/ComprobantePedido'
+import type { DatosEmpresa } from '@/lib/comprobante'
 import { crearClienteRapido, type DatosClienteRapido } from '@/app/vendedor/clientes/actions'
 import { FormularioClienteNuevo } from './FormularioClienteNuevo'
 import { OfflineBar } from '@/components/ui/OfflineBar'
+import { formatearPrecio, parsearPrecio } from '@/lib/utils'
 
 export interface ProductoCatalogo {
   id: string
@@ -48,12 +50,13 @@ interface Props {
   categorias: string[]
   modo: ModoCatalogo
   clientes?: ClienteCatalogo[]
+  empresa?: DatosEmpresa
   whatsappNumber?: string
   onCrearPedido?: (data: PedidoPayload) => Promise<{ id?: string | null; numero?: number; error?: string }>
 }
 
-const fmt = (p: string) => p ? (p.startsWith('$') ? p : `$${p}`) : null
-const parseNum = (p: string) => parseFloat((p ?? '').replace(/[$,\s]/g, '')) || 0
+const fmt = (p: string) => formatearPrecio(p)
+const parseNum = (p: string) => parsearPrecio(p ?? '') || 0
 
 function calcTotal(items: CartItem[]): number {
   return items.reduce((s, it) => s + parseNum(it.precio) * it.cantidad, 0)
@@ -91,7 +94,7 @@ function loadCartFromStorage(modo: ModoCatalogo): CartItem[] {
   }
 }
 
-export function CatalogoCards({ productos, categorias, modo, clientes = [], whatsappNumber, onCrearPedido }: Props) {
+export function CatalogoCards({ productos, categorias, modo, clientes = [], empresa, whatsappNumber, onCrearPedido }: Props) {
   const [tipoPrecio, setTipoPrecio] = useState<'minorista' | 'mayorista'>('minorista')
   const [busqueda, setBusqueda] = useState('')
   const [catFiltro, setCatFiltro] = useState('')
@@ -179,6 +182,7 @@ export function CatalogoCards({ productos, categorias, modo, clientes = [], what
 
   const totalNum = calcTotal(cart)
   const totalFmt = `$${totalNum.toFixed(0)}`
+  const totalMostrar = formatearPrecio(totalNum) ?? totalFmt
   const totalItems = cart.reduce((s, i) => s + i.cantidad, 0)
 
   async function guardarClienteNuevo() {
@@ -221,7 +225,7 @@ export function CatalogoCards({ productos, categorias, modo, clientes = [], what
 
     if (modo === 'publico' && whatsappNumber) {
       const lines = cart.map(it => `• ${it.cantidad}x ${it.nombre} — ${fmt(it.precio) ?? 'consultar'}`)
-      const msg = `Hola! Quiero hacer un pedido:\n${lines.join('\n')}\n\nTotal estimado: ${totalFmt}${notas ? `\n\nNota: ${notas}` : ''}`
+      const msg = `Hola! Quiero hacer un pedido:\n${lines.join('\n')}\n\nTotal estimado: ${totalMostrar}${notas ? `\n\nNota: ${notas}` : ''}`
       window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank')
       resetOrder()
       return
@@ -267,6 +271,7 @@ export function CatalogoCards({ productos, categorias, modo, clientes = [], what
       <ComprobantePedido
         pedidoId={comprobante.id}
         telefonoInicial={clienteTelefono}
+        empresa={empresa}
         pedido={{
           numero: comprobante.numero,
           cliente_nombre: clienteQuery.trim(),
@@ -296,7 +301,7 @@ export function CatalogoCards({ productos, categorias, modo, clientes = [], what
               Se sincroniza solo cuando vuelva la señal — revisá &quot;Pedidos&quot; para confirmarlo.
             </p>
           )}
-          <p className="text-white/40 text-sm mt-2">Total: {totalFmt}</p>
+          <p className="text-white/40 text-sm mt-2">Total: {totalMostrar}</p>
         </div>
       </div>
     )
@@ -433,7 +438,7 @@ export function CatalogoCards({ productos, categorias, modo, clientes = [], what
               <span className="font-bold text-sm">{totalItems} producto{totalItems !== 1 ? 's' : ''}</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="font-black text-lg">{totalFmt}</span>
+              <span className="font-black text-lg">{totalMostrar}</span>
               <span className="text-white/70 text-sm">→</span>
             </div>
           </button>
@@ -447,7 +452,7 @@ export function CatalogoCards({ productos, categorias, modo, clientes = [], what
           <div className="flex items-center justify-between px-4 py-4 border-b border-white/10 shrink-0">
             <div>
               <h2 className="text-white font-black text-lg">Confirmar pedido</h2>
-              <p className="text-white/30 text-xs">{totalItems} producto{totalItems !== 1 ? 's' : ''} · {totalFmt}</p>
+              <p className="text-white/30 text-xs">{totalItems} producto{totalItems !== 1 ? "s" : ""} · {totalMostrar}</p>
             </div>
             <button onClick={() => setShowOrder(false)} className="text-white/30 hover:text-white text-3xl leading-none w-10 h-10 flex items-center justify-center">×</button>
           </div>
@@ -578,7 +583,7 @@ export function CatalogoCards({ productos, categorias, modo, clientes = [], what
               {/* Total */}
               <div className="flex justify-between items-center mt-4 pt-3 border-t border-white/10">
                 <span className="text-white/50 text-sm uppercase tracking-wide">Total estimado</span>
-                <span className="text-white font-black text-2xl">{totalFmt}</span>
+                <span className="text-white font-black text-2xl">{totalMostrar}</span>
               </div>
             </div>
 
@@ -596,7 +601,7 @@ export function CatalogoCards({ productos, categorias, modo, clientes = [], what
             {error && <p className="text-red-400 text-sm mb-3">{error}</p>}
             <button onClick={handleConfirmar} disabled={saving || cart.length === 0}
               className="w-full bg-[#CC0000] hover:bg-red-700 text-white font-black uppercase tracking-widest py-4 text-sm transition-colors disabled:opacity-40">
-              {saving ? 'Guardando...' : modo === 'publico' ? `Enviar por WhatsApp · ${totalFmt}` : `Confirmar pedido · ${totalFmt}`}
+              {saving ? 'Guardando...' : modo === 'publico' ? `Enviar por WhatsApp · ${totalMostrar}` : `Confirmar pedido · ${totalMostrar}`}
             </button>
           </div>
         </div>

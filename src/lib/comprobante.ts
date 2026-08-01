@@ -66,17 +66,36 @@ export interface DatosComprobante {
   created_at?: string
 }
 
+/** Datos de la distribuidora que encabezan el comprobante. Los carga el admin. */
+export interface DatosEmpresa {
+  razon_social: string
+  cuit: string
+  domicilio: string
+}
+
+/**
+ * Esto NO es una factura: no lleva CAE ni CAI, así que no es un comprobante
+ * fiscal. La leyenda va siempre para que no haya ninguna ambigüedad sobre qué
+ * está recibiendo el cliente.
+ */
+export const LEYENDA_NO_FISCAL = 'Documento no válido como factura'
+
 /**
  * Texto del comprobante que se manda por WhatsApp. Usa el formato de negrita de
  * WhatsApp (*texto*) y va sin sangrías para que se lea bien en el celular.
  */
-export function textoComprobante(pedido: DatosComprobante): string {
+export function textoComprobante(pedido: DatosComprobante, empresa?: DatosEmpresa): string {
   const fecha = pedido.created_at ? new Date(pedido.created_at) : new Date()
   const lineas: string[] = []
 
-  lineas.push('*AHORRA MAX*')
+  lineas.push(`*${empresa?.razon_social?.trim() || 'AHORRA MAX'}*`)
+  if (empresa?.cuit?.trim()) lineas.push(`CUIT ${empresa.cuit.trim()}`)
+  if (empresa?.domicilio?.trim()) lineas.push(empresa.domicilio.trim())
+
+  lineas.push('')
+  lineas.push('*NOTA DE PEDIDO*')
   lineas.push(
-    pedido.numero ? `Pedido N° ${pedido.numero} — ${fecha.toLocaleDateString('es-AR')}` : `Pedido del ${fecha.toLocaleDateString('es-AR')}`
+    pedido.numero ? `N° ${pedido.numero} — ${fecha.toLocaleDateString('es-AR')}` : fecha.toLocaleDateString('es-AR')
   )
   if (pedido.cliente_nombre) lineas.push(`Cliente: ${pedido.cliente_nombre}`)
   lineas.push('')
@@ -96,13 +115,18 @@ export function textoComprobante(pedido: DatosComprobante): string {
 
   lineas.push('')
   lineas.push('Gracias por tu compra. Los precios pueden variar hasta la confirmación del pedido.')
+  lineas.push(`_${LEYENDA_NO_FISCAL}_`)
 
   return lineas.join('\n')
 }
 
 /** Link que abre WhatsApp con el comprobante listo para enviar. */
-export function linkWhatsAppComprobante(telefono: string, pedido: DatosComprobante): string {
+export function linkWhatsAppComprobante(
+  telefono: string,
+  pedido: DatosComprobante,
+  empresa?: DatosEmpresa
+): string {
   const numero = telefonoAWhatsApp(telefono)
-  const texto = encodeURIComponent(textoComprobante(pedido))
+  const texto = encodeURIComponent(textoComprobante(pedido, empresa))
   return numero ? `https://wa.me/${numero}?text=${texto}` : `https://wa.me/?text=${texto}`
 }

@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { editarPedidoAction, eliminarPedidoAction } from './actions'
 import type { Pedido, PedidoItem } from '@/lib/pedidos'
+import { formatearPrecio, parsearPrecio } from '@/lib/utils'
 
 const EDIT_WINDOW_MS = 30 * 60 * 1000
 const CACHE_KEY = 'vendedor_productos_cache'
@@ -16,8 +17,8 @@ interface ProductoCatalogo {
   precio_mayorista: string
 }
 
-const fmt = (p: string) => p ? (p.startsWith('$') ? p : `$${p}`) : null
-const parseNum = (p: string) => parseFloat((p ?? '').replace(/[$,\s]/g, '')) || 0
+const fmt = (p: string) => formatearPrecio(p)
+const parseNum = (p: string) => parsearPrecio(p ?? '') || 0
 
 function useTimer(createdAt: string) {
   const [msLeft, setMsLeft] = useState(() => Math.max(0, EDIT_WINDOW_MS - (Date.now() - new Date(createdAt).getTime())))
@@ -59,6 +60,7 @@ export function PedidoCard({ pedido, serverProductos }: Props) {
   const [expanded, setExpanded] = useState(false)
   const [showEdit, setShowEdit] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
@@ -116,16 +118,19 @@ export function PedidoCard({ pedido, serverProductos }: Props) {
     } finally { setSaving(false) }
   }
 
+  // window.confirm queda bloqueado en varias webviews y PWA: el vendedor tocaba
+  // Eliminar y no pasaba nada. La confirmación va dentro de la propia tarjeta.
   async function handleDelete() {
-    if (!confirm('¿Eliminar este pedido? Esta acción no se puede deshacer.')) return
-    if (!navigator.onLine) { alert('Sin conexión — esperá a tener señal para eliminar el pedido'); return }
+    if (!navigator.onLine) { setError('Sin conexión — esperá a tener señal para eliminar el pedido'); return }
     setDeleting(true)
+    setError('')
     try {
       const res = await eliminarPedidoAction(pedido.id)
-      if (res.error) { alert(res.error); return }
+      if (res.error) { setError(res.error); return }
+      setConfirmDelete(false)
       router.refresh()
     } catch {
-      alert('Sin conexión — no se pudo eliminar. Reintentá cuando vuelva la señal.')
+      setError('Sin conexión — no se pudo eliminar. Reintentá cuando vuelva la señal.')
     } finally {
       setDeleting(false)
     }
@@ -259,30 +264,50 @@ export function PedidoCard({ pedido, serverProductos }: Props) {
               {ESTADO_LABEL[pedido.estado]}
             </span>
             {pedido.total_estimado && (
-              <p className="text-white font-black text-base mt-1">{pedido.total_estimado}</p>
+              <p className="text-white font-black text-base mt-1">{fmt(pedido.total_estimado)}</p>
             )}
           </div>
         </div>
 
         {/* Timer + acciones de edición */}
         {canEdit && (
-          <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-white/8">
-            <div className="flex items-center gap-1.5">
-              <div className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-              <span className="text-amber-400 text-xs font-mono">{formatTime(msLeft)}</span>
-              <span className="text-white/25 text-xs">para editar</span>
+          confirmDelete ? (
+            <div className="mt-3 pt-2.5 border-t border-white/8">
+              <p className="text-white/70 text-xs mb-2">¿Eliminar este pedido? No se puede deshacer.</p>
+              <div className="flex gap-2">
+                <button onClick={() => setConfirmDelete(false)} disabled={deleting}
+                  className="flex-1 text-xs py-2.5 border border-white/20 text-white/60 transition-colors">
+                  Cancelar
+                </button>
+                <button onClick={handleDelete} disabled={deleting}
+                  className="flex-1 text-xs py-2.5 bg-red-800 hover:bg-red-700 text-white font-bold transition-colors disabled:opacity-40">
+                  {deleting ? 'Eliminando...' : 'Sí, eliminar'}
+                </button>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <button onClick={() => setShowEdit(true)}
-                className="text-xs px-3 py-1.5 border border-white/20 text-white/60 hover:text-white hover:border-white/40 transition-colors font-medium">
-                Editar
-              </button>
-              <button onClick={handleDelete} disabled={deleting}
-                className="text-xs px-3 py-1.5 border border-red-900/60 text-red-400/70 hover:text-red-400 hover:border-red-700 transition-colors disabled:opacity-40">
-                {deleting ? '...' : 'Eliminar'}
-              </button>
+          ) : (
+            <div className="flex items-center justify-between gap-3 mt-3 pt-2.5 border-t border-white/8">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <div className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shrink-0" />
+                <span className="text-amber-400 text-xs font-mono">{formatTime(msLeft)}</span>
+                <span className="text-white/25 text-xs truncate">para editar</span>
+              </div>
+              <div className="flex gap-2 shrink-0">
+                <button onClick={() => setShowEdit(true)}
+                  className="text-xs px-3 py-1.5 border border-white/20 text-white/60 hover:text-white hover:border-white/40 transition-colors font-medium">
+                  Editar
+                </button>
+                <button onClick={() => setConfirmDelete(true)}
+                  className="text-xs px-3 py-1.5 border border-red-900/60 text-red-400/70 hover:text-red-400 hover:border-red-700 transition-colors">
+                  Eliminar
+                </button>
+              </div>
             </div>
-          </div>
+          )
+        )}
+
+        {error && !showEdit && (
+          <p className="text-red-400 text-xs mt-2">{error}</p>
         )}
 
         {/* Vista previa expandida */}

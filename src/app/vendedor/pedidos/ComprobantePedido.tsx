@@ -1,13 +1,21 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { linkWhatsAppComprobante, moneda, telefonoAWhatsApp, type DatosComprobante } from '@/lib/comprobante'
+import {
+  LEYENDA_NO_FISCAL,
+  linkWhatsAppComprobante,
+  moneda,
+  telefonoAWhatsApp,
+  type DatosComprobante,
+  type DatosEmpresa,
+} from '@/lib/comprobante'
 import { FirmaCanvas, type FirmaCanvasHandle } from './FirmaCanvas'
 import { guardarFirmaAction, marcarEnviadoAction } from './actions'
 
 interface Props {
   pedidoId: string
   pedido: DatosComprobante
+  empresa?: DatosEmpresa
   telefonoInicial?: string
   onListo: () => void
 }
@@ -17,7 +25,7 @@ interface Props {
  * comprobante por WhatsApp y, si no tiene, firma en el celular del vendedor para
  * que quede asentado qué pidió y a qué precio.
  */
-export function ComprobantePedido({ pedidoId, pedido, telefonoInicial = '', onListo }: Props) {
+export function ComprobantePedido({ pedidoId, pedido, empresa, telefonoInicial = '', onListo }: Props) {
   const [telefono, setTelefono] = useState(telefonoInicial)
   const [modo, setModo] = useState<'elegir' | 'firmar'>('elegir')
   const [hayTrazo, setHayTrazo] = useState(false)
@@ -32,7 +40,7 @@ export function ComprobantePedido({ pedidoId, pedido, telefonoInicial = '', onLi
 
   function enviarPorWhatsApp() {
     // Se abre WhatsApp con el mensaje ya escrito: el vendedor solo toca enviar.
-    window.open(linkWhatsAppComprobante(telefono, pedido), '_blank', 'noopener')
+    window.open(linkWhatsAppComprobante(telefono, pedido, empresa), '_blank', 'noopener')
     setEnviado(true)
     void marcarEnviadoAction(pedidoId, telefono)
   }
@@ -111,29 +119,66 @@ export function ComprobantePedido({ pedidoId, pedido, telefonoInicial = '', onLi
             <div>
               <p className="text-white font-semibold text-sm mb-1">El cliente no tiene WhatsApp</p>
               <p className="text-white/35 text-xs mb-3">
-                Que firme en tu celular y queda asentado el pedido y el precio acordado.
+                Que deje su conformidad firmando en tu celular: queda asentado el pedido y el precio acordado.
               </p>
               <button
                 type="button"
                 onClick={() => setModo('firmar')}
                 className="w-full py-4 border border-white/25 text-white text-sm font-bold uppercase tracking-wide active:bg-white/10 transition-colors"
               >
-                ✍ Firmar en pantalla
+                ✍ Firmar conformidad
               </button>
             </div>
           </>
         ) : (
           <>
+            {/* Lo que el cliente lee antes de firmar: quién emite, qué pidió y por
+                cuánto. Sin esto estaría firmando un recuadro en blanco. */}
+            <div className="border border-white/15 bg-[#111] p-3">
+              <p className="text-white font-bold text-sm">
+                {empresa?.razon_social?.trim() || 'AHORRA MAX'}
+              </p>
+              {(empresa?.cuit?.trim() || empresa?.domicilio?.trim()) && (
+                <p className="text-white/40 text-[11px] mt-0.5">
+                  {[empresa?.cuit?.trim() && `CUIT ${empresa.cuit.trim()}`, empresa?.domicilio?.trim()]
+                    .filter(Boolean)
+                    .join(' · ')}
+                </p>
+              )}
+
+              <p className="text-white/50 text-[10px] uppercase tracking-widest font-bold mt-3">
+                Nota de pedido{pedido.numero ? ` N° ${pedido.numero}` : ''}
+              </p>
+
+              <div className="mt-2 space-y-1 max-h-40 overflow-y-auto">
+                {pedido.items.map((item) => (
+                  <div key={item.producto_id} className="flex justify-between gap-3 text-xs">
+                    <span className="text-white/70 min-w-0 truncate">
+                      {item.nombre} <span className="text-white/35">x{item.cantidad}</span>
+                    </span>
+                    <span className="text-white/50 shrink-0">{moneda(item.precio)}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex justify-between items-baseline border-t border-white/10 mt-2 pt-2">
+                <span className="text-white/50 text-xs">Total</span>
+                <span className="text-white font-bold">{moneda(pedido.total_estimado)}</span>
+              </div>
+
+              <p className="text-white/30 text-[10px] mt-2 italic">{LEYENDA_NO_FISCAL}</p>
+            </div>
+
             <div>
-              <p className="text-white font-semibold text-sm">Firma del cliente</p>
-              <p className="text-white/35 text-xs mt-0.5 mb-3">
+              <p className="text-white font-semibold text-sm">Conformidad del cliente</p>
+              <p className="text-white/35 text-xs mt-0.5">
                 Pasale el celular. Al firmar acepta el pedido y el total de {moneda(pedido.total_estimado)}.
               </p>
             </div>
 
             {firmado ? (
               <div className="border border-green-700/50 bg-green-950/20 px-4 py-6 text-center">
-                <p className="text-green-400 font-bold text-sm">✓ Firma guardada</p>
+                <p className="text-green-400 font-bold text-sm">✓ Conformidad registrada</p>
                 <p className="text-white/40 text-xs mt-1">Quedó adjunta al pedido.</p>
               </div>
             ) : (
@@ -171,7 +216,7 @@ export function ComprobantePedido({ pedidoId, pedido, telefonoInicial = '', onLi
                   disabled={guardando || !hayTrazo}
                   className="w-full py-4 bg-[#CC0000] hover:bg-red-700 text-white text-sm font-bold uppercase tracking-wide transition-colors disabled:opacity-30"
                 >
-                  {guardando ? 'Guardando...' : 'Guardar firma'}
+                  {guardando ? 'Guardando...' : 'Guardar conformidad'}
                 </button>
               </>
             )}

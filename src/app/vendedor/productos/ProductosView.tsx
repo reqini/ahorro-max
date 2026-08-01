@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
+import { formatearPrecio } from '@/lib/utils'
 
 const CACHE_KEY = 'vendedor_productos_cache'
 const CACHE_TS_KEY = 'vendedor_productos_cache_ts'
@@ -23,7 +24,7 @@ interface Props {
   catFiltro?: string
 }
 
-const fmt = (p: string) => p ? (p.startsWith('$') ? p : `$${p}`) : null
+const fmt = (p: string) => formatearPrecio(p)
 
 function readCache(): ProductoItem[] {
   try {

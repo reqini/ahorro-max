@@ -21,6 +21,45 @@ export default async function ConfigPage({ searchParams }: ConfigPageProps) {
 
       <div className="border border-white/20 bg-[#131313] p-6 max-w-xl shadow-xl shadow-black/60">
         <form action={saveConfig} className="flex flex-col gap-5">
+          {/* Encabezan la nota de pedido que el vendedor le manda al cliente. */}
+          <div className="border-b border-white/10 pb-5">
+            <h2 className="text-white font-semibold text-sm mb-1">Datos para la nota de pedido</h2>
+            <p className="text-white/35 text-xs mb-4">
+              Aparecen arriba del comprobante que el vendedor le envía al cliente por WhatsApp o le
+              hace firmar. No convierten el documento en una factura.
+            </p>
+
+            <label className="text-white/75 text-xs uppercase tracking-wide block mb-1.5 font-medium">
+              Razón social
+            </label>
+            <input
+              name="empresa_razon_social"
+              defaultValue={config.empresa_razon_social ?? ''}
+              placeholder="Ej: Distribuidora Ahorra Max S.R.L."
+              className="w-full bg-[#1a1a1a] border border-white/30 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/45 mb-4"
+            />
+
+            <label className="text-white/75 text-xs uppercase tracking-wide block mb-1.5 font-medium">
+              CUIT
+            </label>
+            <input
+              name="empresa_cuit"
+              defaultValue={config.empresa_cuit ?? ''}
+              placeholder="Ej: 30-71234567-8"
+              className="w-full bg-[#1a1a1a] border border-white/30 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/45 mb-4"
+            />
+
+            <label className="text-white/75 text-xs uppercase tracking-wide block mb-1.5 font-medium">
+              Domicilio
+            </label>
+            <input
+              name="empresa_domicilio"
+              defaultValue={config.empresa_domicilio ?? ''}
+              placeholder="Ej: 25 de Mayo 108, Ciudadela, Buenos Aires"
+              className="w-full bg-[#1a1a1a] border border-white/30 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/45"
+            />
+          </div>
+
           <div>
             <label className="text-white/75 text-xs uppercase tracking-wide block mb-1.5 font-medium">
               Teléfono de display

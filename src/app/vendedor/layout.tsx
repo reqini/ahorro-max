@@ -48,7 +48,7 @@ export default async function VendedorLayout({ children }: { children: React.Rea
         </nav>
       </header>
 
-      <main className="flex-1 relative overflow-y-auto">{children}</main>
+      <main className="flex-1 relative overflow-y-auto barra-sutil">{children}</main>
     </div>
   )
 }
