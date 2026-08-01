@@ -35,9 +35,9 @@ export default async function ClienteDetailPage({ params }: Props) {
   const boundDelete = deleteCliente.bind(null, cliente.id)
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col">
       {/* Header */}
-      <div className="sticky top-[53px] z-20 bg-[#0d0d0d] border-b border-white/10 px-4 py-3 flex items-center justify-between gap-3">
+      <div className="sticky top-0 z-20 bg-[#0d0d0d] border-b border-white/10 px-4 py-3 flex items-center justify-between gap-3">
         <Link href="/vendedor/clientes" className="text-white/40 hover:text-white transition-colors text-sm flex items-center gap-1">
           ← Clientes
         </Link>

@@ -37,7 +37,7 @@ export default async function ClientesPage({ searchParams }: PageProps) {
       <SyncPending />
 
       {/* Search + filters */}
-      <div className="sticky top-[53px] z-30 bg-[#0d0d0d] border-b border-white/10 px-4 pt-3 pb-3 flex flex-col gap-2">
+      <div className="sticky top-0 z-30 bg-[#0d0d0d] border-b border-white/10 px-4 pt-3 pb-3 flex flex-col gap-2">
         <form method="GET" className="relative">
           <input
             name="q"
@@ -50,7 +50,7 @@ export default async function ClientesPage({ searchParams }: PageProps) {
           </button>
         </form>
 
-        <div className="flex gap-2 overflow-x-auto pb-0.5">
+        <div className="flex gap-2 overflow-x-auto pb-0.5 sin-barra">
           {[
             { label: `Todos (${counts.total})`, value: undefined },
             { label: `Minorista (${counts.minorista})`, value: 'minorista' },

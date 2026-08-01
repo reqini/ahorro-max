@@ -82,7 +82,7 @@ export function ProductosView({ serverProductos, allCount, categorias, busqueda,
       )}
 
       {/* Search */}
-      <div className="sticky top-[53px] z-30 bg-[#0d0d0d] border-b border-white/10 px-4 pt-3 pb-3 flex flex-col gap-2">
+      <div className="sticky top-0 z-30 bg-[#0d0d0d] border-b border-white/10 px-4 pt-3 pb-3 flex flex-col gap-2">
         <form method="GET" className="relative">
           <input
             name="q"
@@ -95,7 +95,7 @@ export function ProductosView({ serverProductos, allCount, categorias, busqueda,
         </form>
 
         {categorias.length > 0 && (
-          <div className="flex gap-2 overflow-x-auto pb-0.5 no-scrollbar">
+          <div className="flex gap-2 overflow-x-auto pb-0.5 sin-barra no-scrollbar">
             <a href={`/vendedor/productos${busqueda ? `?q=${busqueda}` : ''}`}
               className={`px-3 py-1 text-xs font-bold uppercase tracking-wide whitespace-nowrap border transition-colors ${!catFiltro ? 'bg-[#CC0000] border-[#CC0000] text-white' : 'border-white/20 text-white/50 hover:text-white'}`}>
               Todos ({totalCount})
