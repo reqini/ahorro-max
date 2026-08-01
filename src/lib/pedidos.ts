@@ -20,6 +20,38 @@ export interface Pedido {
   estado: 'pendiente' | 'confirmado' | 'entregado' | 'cancelado'
   notas: string
   created_at: string
+  /** Teléfono al que se le mandó el comprobante. */
+  cliente_telefono: string
+  /** Firma del cliente como data URL PNG; vacío si no firmó. */
+  firma: string
+  firma_aclaracion: string
+  firmado_at: string | null
+  comprobante_enviado_at: string | null
+}
+
+/** Guarda la firma del cliente como constancia del pedido y el precio. */
+export async function guardarFirmaPedido(
+  id: string,
+  firma: string,
+  aclaracion: string
+): Promise<boolean> {
+  try {
+    const { error } = await getSupabaseAdmin()
+      .from('pedidos')
+      .update({ firma, firma_aclaracion: aclaracion, firmado_at: new Date().toISOString() })
+      .eq('id', id)
+    return !error
+  } catch { return false }
+}
+
+export async function marcarComprobanteEnviado(id: string, telefono: string): Promise<boolean> {
+  try {
+    const { error } = await getSupabaseAdmin()
+      .from('pedidos')
+      .update({ cliente_telefono: telefono, comprobante_enviado_at: new Date().toISOString() })
+      .eq('id', id)
+    return !error
+  } catch { return false }
 }
 
 export async function getPedidos(filtro?: { vendedor?: string; estado?: string }): Promise<Pedido[]> {
@@ -47,15 +79,16 @@ export async function createPedido(pedido: {
   tipo_precio: 'minorista' | 'mayorista'
   total_estimado: string
   notas?: string
-}): Promise<string | null> {
+}): Promise<{ id: string; numero: number } | null> {
   try {
     const { data, error } = await getSupabaseAdmin()
-      .from('pedidos')
+      .from("pedidos")
       .insert(pedido)
-      .select('id')
+      .select('id, numero')
       .single()
     if (error) return null
-    return data.id
+    // Se devuelve también el número: el comprobante que ve el cliente lo lleva.
+    return { id: data.id as string, numero: data.numero as number }
   } catch { return null }
 }
 

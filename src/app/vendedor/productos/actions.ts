@@ -11,7 +11,7 @@ export async function crearPedidoDesdeVendedor(data: {
   tipo_precio: 'minorista' | 'mayorista'
   total_estimado: string
   notas: string
-}): Promise<{ id?: string | null; error?: string }> {
+}): Promise<{ id?: string | null; numero?: number; error?: string }> {
   const vendedor = await getVendedorUsername()
   if (!vendedor) return { error: 'Sin sesión' }
 
@@ -25,9 +25,9 @@ export async function crearPedidoDesdeVendedor(data: {
     cantidad: it.cantidad,
   }))
 
-  const id = await createPedido({
+  const creado = await createPedido({
     vendedor,
-    cliente_nombre: data.cliente_nombre || 'Sin nombre',
+    cliente_nombre: data.cliente_nombre || "Sin nombre",
     cliente_id: data.cliente_id,
     items,
     tipo_precio: data.tipo_precio,
@@ -35,9 +35,9 @@ export async function crearPedidoDesdeVendedor(data: {
     notas: data.notas || undefined,
   })
 
-  if (!id) return { error: 'Error al guardar el pedido' }
+  if (!creado) return { error: "Error al guardar el pedido" }
 
-  revalidatePath('/vendedor/pedidos')
-  revalidatePath('/admin/pedidos')
-  return { id }
+  revalidatePath("/vendedor/pedidos")
+  revalidatePath("/admin/pedidos")
+  return { id: creado.id, numero: creado.numero }
 }

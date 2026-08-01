@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from 'react'
 import { crearPedidoAction, syncPedidoOffline } from './actions'
+import { ComprobantePedido } from './ComprobantePedido'
+import type { DatosComprobante } from '@/lib/comprobante'
 import type { PedidoItem } from '@/lib/pedidos'
 
 const STORAGE_KEY = 'vendedor_pending_pedidos'
@@ -40,6 +42,7 @@ export function NuevoPedidoForm({ onClose, serverProductos }: Props) {
   const [items, setItems] = useState<PedidoItem[]>([])
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const [comprobante, setComprobante] = useState<{ id: string; datos: DatosComprobante } | null>(null)
 
   const productos = serverProductos.length > 0 ? serverProductos : readProductosCache()
 
@@ -104,10 +107,37 @@ export function NuevoPedidoForm({ onClose, serverProductos }: Props) {
     try {
       const result = await crearPedidoAction(fd)
       if (result.error) { setError(result.error); return }
+
+      // En vez de cerrar, se pasa al comprobante: mandarle la copia al cliente
+      // o hacerlo firmar es parte del mismo momento de la venta.
+      if (result.id) {
+        setComprobante({
+          id: result.id,
+          datos: {
+            numero: result.numero ?? null,
+            cliente_nombre: String(fd.get('cliente_nombre') ?? ''),
+            items,
+            tipo_precio: tipoPrecio,
+            total_estimado: formatTotal(items),
+            notas: String(fd.get('notas') ?? ''),
+          },
+        })
+        return
+      }
       onClose()
     } finally {
       setSaving(false)
     }
+  }
+
+  if (comprobante) {
+    return (
+      <ComprobantePedido
+        pedidoId={comprobante.id}
+        pedido={comprobante.datos}
+        onListo={onClose}
+      />
+    )
   }
 
   const total = formatTotal(items)
