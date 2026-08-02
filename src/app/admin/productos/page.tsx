@@ -2,6 +2,7 @@ import { getAllProductos } from '@/lib/productos'
 import { addProducto, deleteProducto, toggleProducto } from './actions'
 import { DeleteButton } from '@/app/admin/components/DeleteButton'
 import { ImportExcel } from './ImportExcel'
+import { EditarCatalogo } from './EditarCatalogo'
 
 const INPUT = "w-full bg-[#1a1a1a] border border-white/20 text-white px-3 py-2.5 text-sm focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/30"
 
@@ -44,30 +45,33 @@ export default async function ProductosAdminPage() {
                   const boundDelete = deleteProducto.bind(null, p.id)
                   const boundToggle = toggleProducto.bind(null, p.id, !p.activo)
                   return (
-                    <div key={p.id} className={`flex items-center gap-3 px-4 py-3 ${!p.activo ? 'opacity-40' : ''}`}>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-white text-sm font-medium truncate">{p.nombre}</p>
-                        {p.descripcion && <p className="text-white/30 text-xs truncate">{p.descripcion}</p>}
-                      </div>
-                      <div className="flex items-center gap-4 shrink-0 text-right">
-                        {p.precio_minorista && (
-                          <div>
-                            <p className="text-[10px] text-white/30 uppercase">Minorista</p>
-                            <p className="text-white/80 text-sm font-semibold">${p.precio_minorista}</p>
-                          </div>
-                        )}
-                        {p.precio_mayorista && (
-                          <div>
-                            <p className="text-[10px] text-[#F5C000]/60 uppercase">Mayorista</p>
-                            <p className="text-[#F5C000] text-sm font-semibold">${p.precio_mayorista}</p>
-                          </div>
-                        )}
-                        <form action={boundToggle}>
-                          <button type="submit" className="text-xs px-2 py-1 border border-white/10 text-white/30 hover:text-white hover:border-white/30 transition-colors">
-                            {p.activo ? 'Ocultar' : 'Mostrar'}
-                          </button>
-                        </form>
-                        <DeleteButton action={boundDelete} label={`¿Eliminar ${p.nombre}?`} />
+                    <div key={p.id} className={`px-4 py-3 ${!p.activo ? 'opacity-40' : ''}`}>
+                      <div className="flex items-center gap-3">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-white text-sm font-medium truncate">{p.nombre}</p>
+                          {p.descripcion && <p className="text-white/30 text-xs truncate">{p.descripcion}</p>}
+                        </div>
+                        <div className="flex items-center gap-4 shrink-0 text-right">
+                          {p.precio_minorista && (
+                            <div>
+                              <p className="text-[10px] text-white/30 uppercase">Minorista</p>
+                              <p className="text-white/80 text-sm font-semibold">${p.precio_minorista}</p>
+                            </div>
+                          )}
+                          {p.precio_mayorista && (
+                            <div>
+                              <p className="text-[10px] text-[#F5C000]/60 uppercase">Mayorista</p>
+                              <p className="text-[#F5C000] text-sm font-semibold">${p.precio_mayorista}</p>
+                            </div>
+                          )}
+                          <EditarCatalogo producto={p} />
+                          <form action={boundToggle}>
+                            <button type="submit" className="text-xs px-2 py-1 border border-white/10 text-white/30 hover:text-white hover:border-white/30 transition-colors">
+                              {p.activo ? 'Ocultar' : 'Mostrar'}
+                            </button>
+                          </form>
+                          <DeleteButton action={boundDelete} label={`¿Eliminar ${p.nombre}?`} />
+                        </div>
                       </div>
                     </div>
                   )

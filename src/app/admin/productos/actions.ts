@@ -19,6 +19,8 @@ export async function addProducto(formData: FormData) {
     precio_mayorista: str(formData, 'precio_mayorista'),
     categoria:        str(formData, 'categoria'),
     descripcion:      str(formData, 'descripcion'),
+    marca:            str(formData, 'marca'),
+    imagen_url:       str(formData, 'imagen_url'),
     activo: true,
   })
 
@@ -31,6 +33,46 @@ export async function deleteProducto(id: string) {
   await getSupabaseAdmin().from('productos').delete().eq('id', id)
   revalidatePath('/admin/productos')
   revalidatePath('/vendedor/productos')
+}
+
+/**
+ * Guarda los datos de catálogo de un producto: marca, foto y las comparaciones
+ * de precio contra otras cadenas (cargadas a mano, con link al ecommerce).
+ */
+export async function updateCatalogoProducto(
+  id: string,
+  data: {
+    marca: string
+    imagen_url: string
+    comparaciones: { cadena: string; precio: string; url: string; fecha: string }[]
+  }
+): Promise<{ error?: string }> {
+  const limpias = data.comparaciones
+    .map((c) => ({
+      cadena: c.cadena.trim(),
+      precio: c.precio.trim(),
+      url: c.url.trim(),
+      // Se sella la fecha en que se guarda la referencia, para poder mostrar
+      // "actualizado el ..." y saber cuándo conviene revisarla.
+      fecha: c.fecha?.trim() || new Date().toISOString().slice(0, 10),
+    }))
+    .filter((c) => c.cadena && c.precio)
+
+  const { error } = await getSupabaseAdmin()
+    .from('productos')
+    .update({
+      marca: data.marca.trim(),
+      imagen_url: data.imagen_url.trim(),
+      comparaciones: limpias,
+    })
+    .eq('id', id)
+
+  if (error) return { error: error.message }
+
+  revalidatePath('/admin/productos')
+  revalidatePath('/vendedor/productos')
+  revalidatePath('/catalogo')
+  return {}
 }
 
 export async function toggleProducto(id: string, activo: boolean) {
