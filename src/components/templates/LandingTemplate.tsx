@@ -1,37 +1,33 @@
 import {
-  Navbar,
-  Hero,
-  SectionMinorista,
-  SectionMayorista,
-  OfertasSection,
-  InfoSection,
+  NavbarVenta,
+  HeroVenta,
+  Beneficios,
+  ZonasEntrega,
+  MayoristaWhatsApp,
   FAQSection,
-  ContactForm,
   Footer,
   PromoModal,
 } from "@/components/organisms"
 import { getPromoFlash } from "@/lib/promo"
-import { getSiteConfig } from "@/lib/config"
-import { CATALOGO_MINORISTA_URL, LISTA_MAYORISTA_URL } from "@/constants"
 
+/**
+ * Landing orientada a la venta minorista: el consumidor final llega, ve la
+ * propuesta y entra al catálogo a comprar. El mayorista tiene su bloque aparte
+ * que lo lleva a pedir la lista por WhatsApp.
+ */
 export async function LandingTemplate() {
-  const [promo, config] = await Promise.all([getPromoFlash(), getSiteConfig()])
-
-  const minoristaUrl = config.lista_minorista_url || CATALOGO_MINORISTA_URL
-  const mayoristaUrl = config.lista_mayorista_url || LISTA_MAYORISTA_URL
+  const promo = await getPromoFlash()
 
   return (
     <>
       {promo.activa && <PromoModal promo={promo} />}
-      <Navbar />
+      <NavbarVenta />
       <main>
-        <Hero />
-        <SectionMinorista catalogoUrl={minoristaUrl} />
-        <SectionMayorista listaUrl={mayoristaUrl} />
-        <OfertasSection />
-        <InfoSection />
+        <HeroVenta />
+        <Beneficios />
+        <ZonasEntrega />
+        <MayoristaWhatsApp />
         <FAQSection />
-        <ContactForm />
       </main>
       <Footer />
     </>
