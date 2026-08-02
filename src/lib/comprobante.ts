@@ -64,6 +64,15 @@ export interface DatosComprobante {
   total_estimado: string
   notas?: string
   created_at?: string
+  /** Día pactado de entrega, en formato YYYY-MM-DD. */
+  fecha_entrega?: string | null
+}
+
+/** Muestra una fecha YYYY-MM-DD como DD/MM/AAAA, sin corrimientos por zona horaria. */
+export function formatearFecha(fechaISO: string): string {
+  const [a, m, d] = fechaISO.split('-').map(Number)
+  if (!a || !m || !d) return fechaISO
+  return new Date(a, m - 1, d).toLocaleDateString('es-AR')
 }
 
 /** Datos de la distribuidora que encabezan el comprobante. Los carga el admin. */
@@ -88,8 +97,9 @@ export function textoComprobante(pedido: DatosComprobante, empresa?: DatosEmpres
   const fecha = pedido.created_at ? new Date(pedido.created_at) : new Date()
   const lineas: string[] = []
 
+  // El CUIT queda fuera del mensaje a propósito: no es una factura y al cliente
+  // no le aporta nada. Sigue estando en la pantalla de conformidad que firma.
   lineas.push(`*${empresa?.razon_social?.trim() || 'AHORRA MAX'}*`)
-  if (empresa?.cuit?.trim()) lineas.push(`CUIT ${empresa.cuit.trim()}`)
   if (empresa?.domicilio?.trim()) lineas.push(empresa.domicilio.trim())
 
   lineas.push('')
@@ -98,6 +108,7 @@ export function textoComprobante(pedido: DatosComprobante, empresa?: DatosEmpres
     pedido.numero ? `N° ${pedido.numero} — ${fecha.toLocaleDateString('es-AR')}` : fecha.toLocaleDateString('es-AR')
   )
   if (pedido.cliente_nombre) lineas.push(`Cliente: ${pedido.cliente_nombre}`)
+  if (pedido.fecha_entrega) lineas.push(`Entrega: ${formatearFecha(pedido.fecha_entrega)}`)
   lineas.push('')
 
   for (const item of pedido.items) {
@@ -118,6 +129,65 @@ export function textoComprobante(pedido: DatosComprobante, empresa?: DatosEmpres
   lineas.push(`_${LEYENDA_NO_FISCAL}_`)
 
   return lineas.join('\n')
+}
+
+/**
+ * Aviso de entrega. Si además quedó pagado lo deja asentado en el mismo mensaje;
+ * si no, le recuerda al cliente el saldo pendiente.
+ */
+export function textoEntrega(
+  pedido: DatosComprobante,
+  empresa: DatosEmpresa | undefined,
+  pagado: boolean
+): string {
+  const lineas: string[] = []
+
+  lineas.push(`*${empresa?.razon_social?.trim() || 'AHORRA MAX'}*`)
+  lineas.push('')
+  lineas.push(
+    pedido.numero ? `Tu pedido N° ${pedido.numero} fue entregado.` : 'Tu pedido fue entregado.'
+  )
+  lineas.push(`Fecha: ${new Date().toLocaleDateString('es-AR')}`)
+  lineas.push('')
+
+  if (pagado) {
+    lineas.push(`*Total abonado: ${moneda(pedido.total_estimado)}*`)
+    lineas.push('Pedido entregado y pagado. ¡Gracias!')
+  } else {
+    lineas.push(`*Total a abonar: ${moneda(pedido.total_estimado)}*`)
+    lineas.push('Queda pendiente el pago. ¡Gracias por tu compra!')
+  }
+
+  lineas.push('')
+  lineas.push(`_${LEYENDA_NO_FISCAL}_`)
+  return lineas.join('\n')
+}
+
+/** Aviso de que se registró el pago de un pedido que había quedado a cuenta. */
+export function textoPago(pedido: DatosComprobante, empresa?: DatosEmpresa): string {
+  const lineas: string[] = []
+
+  lineas.push(`*${empresa?.razon_social?.trim() || 'AHORRA MAX'}*`)
+  lineas.push('')
+  lineas.push(
+    pedido.numero
+      ? `Registramos el pago de tu pedido N° ${pedido.numero}.`
+      : 'Registramos el pago de tu pedido.'
+  )
+  lineas.push(`Fecha: ${new Date().toLocaleDateString('es-AR')}`)
+  lineas.push('')
+  lineas.push(`*Total pagado: ${moneda(pedido.total_estimado)}*`)
+  lineas.push('Cuenta saldada. ¡Gracias!')
+  lineas.push('')
+  lineas.push(`_${LEYENDA_NO_FISCAL}_`)
+  return lineas.join('\n')
+}
+
+/** Arma el link de WhatsApp para cualquiera de los mensajes de arriba. */
+export function linkWhatsApp(telefono: string, texto: string): string {
+  const numero = telefonoAWhatsApp(telefono)
+  const mensaje = encodeURIComponent(texto)
+  return numero ? `https://wa.me/${numero}?text=${mensaje}` : `https://wa.me/?text=${mensaje}`
 }
 
 /** Link que abre WhatsApp con el comprobante listo para enviar. */

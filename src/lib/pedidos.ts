@@ -27,6 +27,11 @@ export interface Pedido {
   firma_aclaracion: string
   firmado_at: string | null
   comprobante_enviado_at: string | null
+  /** Día pactado de entrega (YYYY-MM-DD). */
+  fecha_entrega: string | null
+  entregado_at: string | null
+  pagado: boolean
+  pagado_at: string | null
 }
 
 /** Guarda la firma del cliente como constancia del pedido y el precio. */
@@ -124,6 +129,44 @@ export async function deletePedido(id: string): Promise<boolean> {
     const { error } = await getSupabaseAdmin()
       .from('pedidos')
       .delete()
+      .eq('id', id)
+    return !error
+  } catch { return false }
+}
+
+/** Marca el pedido como entregado; si además se pagó, deja el pago asentado en el mismo acto. */
+export async function marcarEntregado(id: string, pagado: boolean): Promise<boolean> {
+  try {
+    const ahora = new Date().toISOString()
+    const update: Record<string, unknown> = {
+      estado: 'entregado',
+      entregado_at: ahora,
+    }
+    if (pagado) {
+      update.pagado = true
+      update.pagado_at = ahora
+    }
+    const { error } = await getSupabaseAdmin().from('pedidos').update(update).eq('id', id)
+    return !error
+  } catch { return false }
+}
+
+/** Registra el pago de un pedido que había quedado a cuenta. */
+export async function marcarPagado(id: string): Promise<boolean> {
+  try {
+    const { error } = await getSupabaseAdmin()
+      .from('pedidos')
+      .update({ pagado: true, pagado_at: new Date().toISOString() })
+      .eq('id', id)
+    return !error
+  } catch { return false }
+}
+
+export async function guardarFechaEntrega(id: string, fecha: string): Promise<boolean> {
+  try {
+    const { error } = await getSupabaseAdmin()
+      .from('pedidos')
+      .update({ fecha_entrega: fecha || null })
       .eq('id', id)
     return !error
   } catch { return false }

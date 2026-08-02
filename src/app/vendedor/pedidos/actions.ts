@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { getVendedorUsername } from '@/lib/admin-auth'
-import { createPedido, updateEstadoPedido, updatePedido, deletePedido, getPedidos, guardarFirmaPedido, marcarComprobanteEnviado, type PedidoItem } from '@/lib/pedidos'
+import { createPedido, updateEstadoPedido, updatePedido, deletePedido, getPedidos, guardarFirmaPedido, marcarComprobanteEnviado, marcarEntregado, marcarPagado, guardarFechaEntrega, type PedidoItem } from '@/lib/pedidos'
 
 const EDIT_WINDOW_MS = 30 * 60 * 1000 // 30 minutos
 
@@ -127,4 +127,47 @@ export async function marcarEnviadoAction(pedidoId: string, telefono: string): P
   await marcarComprobanteEnviado(pedidoId, telefono.trim().slice(0, 40))
   revalidatePath('/vendedor/pedidos')
   revalidatePath('/admin/pedidos')
+}
+
+/** Registra la entrega del pedido; si `pagado`, deja el pago asentado en el mismo acto. */
+export async function marcarEntregadoAction(
+  pedidoId: string,
+  pagado: boolean
+): Promise<{ error?: string }> {
+  if (!(await esPedidoPropio(pedidoId))) return { error: 'Sin permiso' }
+
+  const ok = await marcarEntregado(pedidoId, pagado)
+  if (!ok) return { error: 'No se pudo registrar la entrega' }
+
+  revalidatePath('/vendedor/pedidos')
+  revalidatePath('/admin/pedidos')
+  return {}
+}
+
+/** Registra el pago de un pedido que se había entregado a cuenta. */
+export async function marcarPagadoAction(pedidoId: string): Promise<{ error?: string }> {
+  if (!(await esPedidoPropio(pedidoId))) return { error: 'Sin permiso' }
+
+  const ok = await marcarPagado(pedidoId)
+  if (!ok) return { error: 'No se pudo registrar el pago' }
+
+  revalidatePath('/vendedor/pedidos')
+  revalidatePath('/admin/pedidos')
+  return {}
+}
+
+/** Guarda o cambia el día pactado de entrega. */
+export async function guardarFechaEntregaAction(
+  pedidoId: string,
+  fecha: string
+): Promise<{ error?: string }> {
+  if (!(await esPedidoPropio(pedidoId))) return { error: 'Sin permiso' }
+  if (fecha && !/^\d{4}-\d{2}-\d{2}$/.test(fecha)) return { error: 'Fecha inválida' }
+
+  const ok = await guardarFechaEntrega(pedidoId, fecha)
+  if (!ok) return { error: 'No se pudo guardar la fecha' }
+
+  revalidatePath('/vendedor/pedidos')
+  revalidatePath('/admin/pedidos')
+  return {}
 }

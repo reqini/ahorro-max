@@ -2,8 +2,22 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { editarPedidoAction, eliminarPedidoAction } from './actions'
+import {
+  editarPedidoAction,
+  eliminarPedidoAction,
+  guardarFechaEntregaAction,
+  marcarEntregadoAction,
+  marcarPagadoAction,
+} from './actions'
 import type { Pedido, PedidoItem } from '@/lib/pedidos'
+import {
+  formatearFecha,
+  linkWhatsApp,
+  textoEntrega,
+  textoPago,
+  type DatosComprobante,
+  type DatosEmpresa,
+} from '@/lib/comprobante'
 import { formatearPrecio, parsearPrecio } from '@/lib/utils'
 
 const EDIT_WINDOW_MS = 30 * 60 * 1000
@@ -51,9 +65,10 @@ const ESTADO_LABEL: Record<string, string> = { pendiente: 'Pendiente', confirmad
 interface Props {
   pedido: Pedido
   serverProductos: ProductoCatalogo[]
+  empresa: DatosEmpresa
 }
 
-export function PedidoCard({ pedido, serverProductos }: Props) {
+export function PedidoCard({ pedido, serverProductos, empresa }: Props) {
   const router = useRouter()
   const msLeft = useTimer(pedido.created_at)
   const canEdit = msLeft > 0
@@ -310,6 +325,9 @@ export function PedidoCard({ pedido, serverProductos }: Props) {
           <p className="text-red-400 text-xs mt-2">{error}</p>
         )}
 
+        {/* Entrega y cobro */}
+        <EntregaCobro pedido={pedido} empresa={empresa} onError={setError} />
+
         {/* Vista previa expandida */}
         {expanded && (
           <div className="mt-3 pt-3 border-t border-white/8">
@@ -323,7 +341,10 @@ export function PedidoCard({ pedido, serverProductos }: Props) {
                 </div>
               ))}
             </div>
-            {pedido.notas && <p className="text-white/30 text-xs italic">{pedido.notas}</p>}
+            {pedido.fecha_entrega && (
+              <p className="text-white/40 text-xs">Entrega pactada: {formatearFecha(pedido.fecha_entrega)}</p>
+            )}
+            {pedido.notas && <p className="text-white/30 text-xs italic mt-1">{pedido.notas}</p>}
           </div>
         )}
 
@@ -340,5 +361,159 @@ export function PedidoCard({ pedido, serverProductos }: Props) {
         )}
       </div>
     </>
+  )
+}
+
+/**
+ * Entrega y cobro del pedido. El vendedor pacta el día de entrega, y al entregar
+ * elige si el cliente pagó o quedó a cuenta; en ambos casos se le avisa por
+ * WhatsApp. Si quedó a cuenta, después puede registrar el pago y avisar de nuevo.
+ */
+function EntregaCobro({
+  pedido,
+  empresa,
+  onError,
+}: {
+  pedido: Pedido
+  empresa: DatosEmpresa
+  onError: (msg: string) => void
+}) {
+  const router = useRouter()
+  const [fecha, setFecha] = useState(pedido.fecha_entrega ?? '')
+  const [guardandoFecha, setGuardandoFecha] = useState(false)
+  const [confirmando, setConfirmando] = useState(false)
+  const [procesando, setProcesando] = useState(false)
+
+  const cancelado = pedido.estado === 'cancelado'
+  const entregado = pedido.estado === 'entregado'
+
+  const datos: DatosComprobante = {
+    numero: pedido.numero,
+    cliente_nombre: pedido.cliente_nombre,
+    items: pedido.items ?? [],
+    tipo_precio: pedido.tipo_precio,
+    total_estimado: pedido.total_estimado,
+    notas: pedido.notas,
+    created_at: pedido.created_at,
+    fecha_entrega: pedido.fecha_entrega,
+  }
+
+  function avisar(texto: string) {
+    // Solo si hay teléfono válido; si no, se registra igual y el vendedor avisa aparte.
+    const link = linkWhatsApp(pedido.cliente_telefono, texto)
+    window.open(link, '_blank', 'noopener')
+  }
+
+  async function guardarFecha(nueva: string) {
+    setFecha(nueva)
+    setGuardandoFecha(true)
+    const res = await guardarFechaEntregaAction(pedido.id, nueva)
+    setGuardandoFecha(false)
+    if (res.error) onError(res.error)
+    else router.refresh()
+  }
+
+  async function entregar(pagado: boolean) {
+    if (!navigator.onLine) { onError('Sin conexión — reintentá con señal'); return }
+    setProcesando(true)
+    onError('')
+    const res = await marcarEntregadoAction(pedido.id, pagado)
+    setProcesando(false)
+    if (res.error) { onError(res.error); return }
+    setConfirmando(false)
+    avisar(textoEntrega(datos, empresa, pagado))
+    router.refresh()
+  }
+
+  async function registrarPago() {
+    if (!navigator.onLine) { onError('Sin conexión — reintentá con señal'); return }
+    setProcesando(true)
+    onError('')
+    const res = await marcarPagadoAction(pedido.id)
+    setProcesando(false)
+    if (res.error) { onError(res.error); return }
+    avisar(textoPago(datos, empresa))
+    router.refresh()
+  }
+
+  if (cancelado) return null
+
+  // Pedido ya entregado: mostrar estado de cobro y, si quedó a cuenta, cobrar.
+  if (entregado) {
+    return (
+      <div className="mt-3 pt-2.5 border-t border-white/8 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span className="text-green-400 text-xs">✓ Entregado</span>
+          {pedido.pagado ? (
+            <span className="text-green-400/70 text-xs">· pagado</span>
+          ) : (
+            <span className="text-amber-400/80 text-xs">· a cuenta</span>
+          )}
+        </div>
+        {!pedido.pagado && (
+          <button
+            onClick={registrarPago}
+            disabled={procesando}
+            className="text-xs px-3 py-1.5 border border-green-700/60 text-green-400 hover:bg-green-950/40 transition-colors disabled:opacity-40 shrink-0"
+          >
+            {procesando ? '...' : '$ Registrar pago'}
+          </button>
+        )}
+      </div>
+    )
+  }
+
+  // Confirmación de entrega: pagó o quedó a cuenta.
+  if (confirmando) {
+    return (
+      <div className="mt-3 pt-2.5 border-t border-white/8">
+        <p className="text-white/70 text-xs mb-2">¿Cómo se entregó el pedido?</p>
+        <div className="flex gap-2">
+          <button
+            onClick={() => entregar(true)}
+            disabled={procesando}
+            className="flex-1 text-xs py-2.5 bg-green-700 hover:bg-green-600 text-white font-bold transition-colors disabled:opacity-40"
+          >
+            Entregado y pagado
+          </button>
+          <button
+            onClick={() => entregar(false)}
+            disabled={procesando}
+            className="flex-1 text-xs py-2.5 border border-amber-700/60 text-amber-400 hover:bg-amber-950/30 transition-colors disabled:opacity-40"
+          >
+            Entregado, a cuenta
+          </button>
+        </div>
+        <button
+          onClick={() => setConfirmando(false)}
+          disabled={procesando}
+          className="w-full text-white/35 text-xs mt-2 py-1"
+        >
+          Cancelar
+        </button>
+      </div>
+    )
+  }
+
+  // Pedido activo: fecha de entrega + botón para entregar.
+  return (
+    <div className="mt-3 pt-2.5 border-t border-white/8 flex items-center justify-between gap-3 flex-wrap">
+      <label className="flex items-center gap-2 text-xs text-white/40 min-w-0">
+        <span className="shrink-0">Entrega:</span>
+        <input
+          type="date"
+          value={fecha}
+          onChange={(e) => guardarFecha(e.target.value)}
+          disabled={guardandoFecha}
+          className="bg-[#1a1a1a] border border-white/20 text-white text-xs px-2 py-1.5 focus:outline-none focus:border-[#CC0000] disabled:opacity-50"
+        />
+      </label>
+      <button
+        onClick={() => setConfirmando(true)}
+        className="text-xs px-3 py-1.5 bg-green-700 hover:bg-green-600 text-white font-bold transition-colors shrink-0"
+      >
+        ✓ Entregar
+      </button>
+    </div>
   )
 }

@@ -11,3 +11,10 @@ ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS firma_aclaracion text NOT NULL DEFA
 ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS firmado_at timestamptz;
 
 ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS comprobante_enviado_at timestamptz;
+
+-- Entrega y cobro: el vendedor avisa por WhatsApp cuando entrega, aclarando si
+-- además quedó pagado, y puede registrar el pago más tarde si quedó a cuenta.
+ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS fecha_entrega date;
+ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS entregado_at timestamptz;
+ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS pagado boolean NOT NULL DEFAULT false;
+ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS pagado_at timestamptz;

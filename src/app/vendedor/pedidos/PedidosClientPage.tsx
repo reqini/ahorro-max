@@ -5,6 +5,7 @@ import { PedidoCard } from './PedidoCard'
 import { OfflineBar } from '@/components/ui/OfflineBar'
 import { agruparPedidosPorFecha, resumenDelMes } from './groupPedidos'
 import type { Pedido } from '@/lib/pedidos'
+import type { DatosEmpresa } from '@/lib/comprobante'
 
 function formatARS(n: number): string {
   return '$' + Math.round(n).toLocaleString('es-AR')
@@ -21,9 +22,10 @@ interface ProductoCatalogo {
 interface Props {
   pedidos: Pedido[]
   serverProductos: ProductoCatalogo[]
+  empresa: DatosEmpresa
 }
 
-export function PedidosClientPage({ pedidos, serverProductos }: Props) {
+export function PedidosClientPage({ pedidos, serverProductos, empresa }: Props) {
   const grupos = agruparPedidosPorFecha(pedidos)
   const resumen = resumenDelMes(pedidos)
 
@@ -76,7 +78,7 @@ export function PedidosClientPage({ pedidos, serverProductos }: Props) {
                 {grupo.label} · {grupo.pedidos.length}
               </p>
               {grupo.pedidos.map(p => (
-                <PedidoCard key={p.id} pedido={p} serverProductos={serverProductos} />
+                <PedidoCard key={p.id} pedido={p} serverProductos={serverProductos} empresa={empresa} />
               ))}
             </div>
           ))}
