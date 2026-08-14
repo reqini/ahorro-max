@@ -1,10 +1,9 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { WHATSAPP_MAYORISTA_URL } from '@/constants'
 
 /**
  * Hero orientado a la venta minorista: lo primero que ve el consumidor final es
- * la invitación a comprar. El mayorista tiene un acceso secundario, más abajo.
+ * la invitación a comprar. El mayorista tiene un acceso equivalente al lado.
  */
 export function HeroVenta() {
   return (
@@ -51,29 +50,39 @@ export function HeroVenta() {
           llevamos sin cargo en la zona.
         </p>
 
-        {/* CTA principal: comprar */}
-        <div className="w-full max-w-md flex flex-col gap-3 mt-2">
+        {/* Selector: para casa / para tu comercio */}
+        <div className="w-full max-w-2xl grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
           <Link
             href="/catalogo"
-            className="group w-full py-5 bg-[#CC0000] hover:bg-red-700 text-white text-lg font-black uppercase tracking-wide transition-colors flex items-center justify-center gap-3 shadow-xl shadow-[#CC0000]/20"
+            className="group flex flex-col gap-2 p-5 bg-[#141414] border border-white/10 hover:border-[#CC0000]/60 transition-colors text-left"
           >
-            <span>🛒 Ver productos y pedir</span>
-            <span className="transition-transform group-hover:translate-x-1">→</span>
+            <span className="text-white font-black text-lg uppercase tracking-wide">🏠 Para casa</span>
+            <span className="text-white/50 text-sm leading-snug">
+              Sin mínimo, precio de distribuidora directo.
+            </span>
+            <span className="mt-1 inline-flex items-center gap-2 text-[#CC0000] font-bold text-sm">
+              🛒 Ver productos y pedir
+              <span className="transition-transform group-hover:translate-x-1">→</span>
+            </span>
           </Link>
-          <p className="text-white/35 text-xs">
-            Precios actualizados · Pedido por WhatsApp · Sin mínimo de compra
-          </p>
-        </div>
 
-        {/* Acceso secundario mayorista */}
-        <a
-          href={WHATSAPP_MAYORISTA_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-white/50 hover:text-[#F5C000] text-sm transition-colors border-b border-white/15 hover:border-[#F5C000] pb-0.5 mt-1"
-        >
-          ¿Comprás por mayor? Pedí la lista mayorista →
-        </a>
+          <a
+            href="#mayorista"
+            className="group flex flex-col gap-2 p-5 bg-[#141414] border border-white/10 hover:border-[#F5C000]/60 transition-colors text-left"
+          >
+            <span className="text-white font-black text-lg uppercase tracking-wide">🏪 Para tu comercio</span>
+            <span className="text-white/50 text-sm leading-snug">
+              Precio por volumen desde $300.000.
+            </span>
+            <span className="mt-1 inline-flex items-center gap-2 text-[#F5C000] font-bold text-sm">
+              Pedí precios mayoristas
+              <span className="transition-transform group-hover:translate-x-1">→</span>
+            </span>
+          </a>
+        </div>
+        <p className="text-white/35 text-xs -mt-2">
+          Precios actualizados · Pedido por WhatsApp · Envío sin cargo en tu zona
+        </p>
       </div>
     </section>
   )

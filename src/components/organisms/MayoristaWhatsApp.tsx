@@ -1,4 +1,7 @@
-import { WHATSAPP_MAYORISTA_URL } from '@/constants'
+'use client'
+
+import { useState, type FormEvent } from 'react'
+import { WHATSAPP_NUMBER, MAYORISTA_CONTENT, MAYORISTA_MIN_MONTO } from '@/constants'
 import { WhatsAppIcon } from '@/components/atoms/WhatsAppIcon'
 
 const VENTAJAS = [
@@ -7,11 +10,27 @@ const VENTAJAS = [
   'Entrega programada a tu comercio',
 ]
 
+const TIPOS_COMERCIO = ['Almacén', 'Kiosco', 'Supermercado', 'Restaurante', 'Otro']
+
+const inputClass =
+  'w-full bg-[#1a1a1a] border border-white/30 text-white text-sm px-3 py-2.5 focus:outline-none focus:border-[#F5C000] transition-colors placeholder-white/45'
+
 /**
  * Bloque mayorista, diferenciado del resto por el dorado. No muestra precios ni
- * catálogo: el mayorista pide la lista por privado, que es como trabaja el negocio.
+ * catálogo: antes de ir a WhatsApp, pedimos nombre/tipo de comercio/zona para
+ * llegar con el mensaje ya calificado.
  */
 export function MayoristaWhatsApp() {
+  const [nombre, setNombre] = useState('')
+  const [tipoComercio, setTipoComercio] = useState('')
+  const [zona, setZona] = useState('')
+
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    const msg = `Hola! Soy ${nombre}, tengo un/a ${tipoComercio} en ${zona} y quiero pedir la lista de precios mayoristas (mínimo ${MAYORISTA_MIN_MONTO} por pedido) 📦`
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener')
+  }
+
   return (
     <section id="mayorista" className="relative overflow-hidden bg-[#0a0800] py-16 md:py-24">
       {/* Acentos dorados */}
@@ -37,6 +56,10 @@ export function MayoristaWhatsApp() {
           comprobá por qué somos la distribuidora de la zona.
         </p>
 
+        <p className="text-[#F5C000] font-bold text-sm md:text-base mt-3">
+          {MAYORISTA_CONTENT.minimoTexto}
+        </p>
+
         <ul className="flex flex-col gap-2.5 max-w-md mx-auto mt-7 text-left">
           {VENTAJAS.map((v) => (
             <li key={v} className="flex items-start gap-3 text-white/75 text-sm">
@@ -46,15 +69,45 @@ export function MayoristaWhatsApp() {
           ))}
         </ul>
 
-        <a
-          href={WHATSAPP_MAYORISTA_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-3 mt-8 px-8 py-4 bg-[#F5C000] hover:bg-[#ffd400] text-black text-base font-black uppercase tracking-wide transition-colors shadow-xl shadow-[#F5C000]/15"
-        >
-          <WhatsAppIcon className="w-5 h-5" />
-          Pedí la lista mayorista
-        </a>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3 max-w-md mx-auto mt-8 text-left">
+          <input
+            required
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+            placeholder="Nombre"
+            className={inputClass}
+          />
+          <select
+            required
+            value={tipoComercio}
+            onChange={(e) => setTipoComercio(e.target.value)}
+            className={inputClass}
+          >
+            <option value="" disabled>
+              Tipo de comercio
+            </option>
+            {TIPOS_COMERCIO.map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            ))}
+          </select>
+          <input
+            required
+            value={zona}
+            onChange={(e) => setZona(e.target.value)}
+            placeholder="Zona (ej: Ciudadela, Villa Devoto...)"
+            className={inputClass}
+          />
+
+          <button
+            type="submit"
+            className="inline-flex items-center justify-center gap-3 mt-2 px-8 py-4 bg-[#F5C000] hover:bg-[#ffd400] text-black text-base font-black uppercase tracking-wide transition-colors shadow-xl shadow-[#F5C000]/15"
+          >
+            <WhatsAppIcon className="w-5 h-5" />
+            Pedí la lista mayorista
+          </button>
+        </form>
 
         <p className="text-white/30 text-xs mt-3">Te respondemos con la lista y las condiciones.</p>
       </div>

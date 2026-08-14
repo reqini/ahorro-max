@@ -119,7 +119,7 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-white/40 text-xs">{FOOTER_CONTENT.copyright}</p>
+          <p className="text-white/40 text-xs">© {new Date().getFullYear()} Distribuidora Ahorra Max. Todos los derechos reservados.</p>
           <p className="text-white/40 text-xs">{FOOTER_CONTENT.tagline}</p>
         </div>
       </div>

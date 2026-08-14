@@ -1,14 +1,10 @@
-import { getZonasEntrega } from '@/lib/zonas'
-import { WHATSAPP_MINORISTA_URL } from '@/constants'
+import { ZONAS_DETALLE, WHATSAPP_MINORISTA_URL } from '@/constants'
 
-/** Zonas donde se entrega sin cargo. La lista la administra el admin. */
-export async function ZonasEntrega() {
-  const zonas = await getZonasEntrega()
-  if (zonas.length === 0) return null
-
+/** Zonas de reparto sin cargo, agrupadas por región y día. Fijo en código. */
+export function ZonasEntrega() {
   return (
     <section className="bg-[#0a0a0a] py-14 md:py-20">
-      <div className="max-w-3xl mx-auto px-5 text-center">
+      <div className="max-w-4xl mx-auto px-5 text-center">
         <span className="text-[#F5C000] text-xs font-bold uppercase tracking-[0.25em]">
           Envío gratis
         </span>
@@ -16,19 +12,31 @@ export async function ZonasEntrega() {
           Entregamos sin cargo en tu zona
         </h2>
 
-        <div className="flex flex-wrap justify-center gap-2 mt-6">
-          {zonas.map((zona) => (
-            <span
-              key={zona}
-              className="inline-flex items-center gap-2 border border-white/15 bg-[#131313] text-white/80 text-sm px-4 py-2"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#CC0000]" />
-              {zona}
-            </span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-8 text-left">
+          {ZONAS_DETALLE.map((z) => (
+            <div key={z.region} className="border border-white/15 bg-[#131313] p-5">
+              <div className="flex items-center justify-between gap-3">
+                <h3 className="text-white font-black text-base uppercase tracking-wide">{z.region}</h3>
+                <span className="text-[#F5C000] text-xs font-bold uppercase tracking-wide shrink-0">
+                  {z.dias}
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-2 mt-4">
+                {z.barrios.map((barrio) => (
+                  <span
+                    key={barrio}
+                    className="inline-flex items-center gap-1.5 border border-white/15 bg-[#1a1a1a] text-white/75 text-xs px-3 py-1.5"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#CC0000]" />
+                    {barrio}
+                  </span>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
 
-        <p className="text-white/35 text-xs mt-5">
+        <p className="text-white/35 text-xs mt-6">
           ¿No ves tu zona?{' '}
           <a
             href={WHATSAPP_MINORISTA_URL}

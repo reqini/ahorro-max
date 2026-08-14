@@ -34,9 +34,9 @@ export function NavbarVenta() {
         <div className="flex items-center gap-2 sm:gap-3">
           <a
             href="#mayorista"
-            className="text-white/55 hover:text-[#F5C000] text-xs sm:text-sm transition-colors px-2 py-1.5"
+            className="border border-[#F5C000]/50 text-[#F5C000] hover:bg-[#F5C000]/10 text-xs sm:text-sm font-bold uppercase tracking-wide px-3 sm:px-4 py-2.5 transition-colors"
           >
-            Mayorista
+            Soy comercio
           </a>
           <Link
             href="/catalogo"

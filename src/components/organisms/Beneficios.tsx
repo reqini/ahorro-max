@@ -6,21 +6,26 @@ const PILARES = [
   },
   {
     icono: '🚚',
-    titulo: 'Entrega sin cargo',
+    titulo: 'Envío sin cargo',
     detalle: 'Te lo llevamos a tu casa o comercio en la zona, sin costo de envío.',
   },
   {
     icono: '✅',
-    titulo: 'Sin mínimo de compra',
+    titulo: 'Sin mínimo para tu casa',
     detalle: 'Comprá lo que necesitás, poco o mucho. Armás el pedido a tu medida.',
+  },
+  {
+    icono: '💬',
+    titulo: 'Atención por WhatsApp en el día',
+    detalle: 'Consultás precios y stock, y te respondemos el mismo día.',
   },
 ]
 
-/** Tres razones para comprar, apenas debajo del hero. */
+/** Cuatro razones para comprar, apenas debajo del hero. */
 export function Beneficios() {
   return (
     <section className="bg-[#0d0d0d] border-y border-white/10 py-12 md:py-16">
-      <div className="max-w-5xl mx-auto px-5 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+      <div className="max-w-5xl mx-auto px-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
         {PILARES.map((p) => (
           <div key={p.titulo} className="flex flex-col items-center text-center gap-2">
             <span className="text-4xl" aria-hidden="true">

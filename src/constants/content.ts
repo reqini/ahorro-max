@@ -27,6 +27,7 @@ export const MAYORISTA_CONTENT = {
   headline: "Precios mayoristas que marcan la diferencia",
   description:
     "Si tenés un almacén, kiosco, maxikiosco o sos revendedor, acá encontrás los mejores precios del mercado. Volúmenes grandes, precios chicos. Así trabajamos.",
+  minimoTexto: "Precios mayoristas en pedidos desde $300.000",
   features: [
     "Precios por volumen",
     "Entrega programada",
@@ -36,6 +37,9 @@ export const MAYORISTA_CONTENT = {
   ctaLista: "Descargar Catálogo",
 } as const
 
+/** Monto mínimo de pedido mayorista, compartido entre la sección mayorista, el FAQ y el mensaje de WhatsApp. */
+export const MAYORISTA_MIN_MONTO = "$300.000"
+
 export const INFO_CONTENT = {
   headline: "Dónde Encontrarnos",
   subheadline: "Venís, pedís, llevás. Simple como siempre.",
@@ -43,10 +47,10 @@ export const INFO_CONTENT = {
 } as const
 
 export const NAVBAR_LINKS = [
-  { label: "Minorista", href: "#minorista" },
+  { label: "Minorista", href: "/catalogo" },
   { label: "Mayorista", href: "#mayorista" },
-  { label: "Ofertas", href: "#ofertas" },
-  { label: "Contacto", href: "#contacto" },
+  { label: "Destacados", href: "#destacados" },
+  { label: "Preguntas frecuentes", href: "#faq" },
 ] as const
 
 export const OFERTAS_CONTENT = {
@@ -81,6 +85,40 @@ export const ZONAS_ENTREGA = {
   zonas: ["Ciudadela", "Ramos Mejía", "Luzuriaga", "Lomas del Mirador", "Villa Sarmiento"],
   nota: "Consultá condiciones mínimas de compra por WhatsApp",
 } as const
+
+/** Zonas de reparto agrupadas por región y día. Fijo en código (no editable desde el admin). */
+export const ZONAS_DETALLE = [
+  {
+    region: "Zona Oeste",
+    dias: "Miércoles y Sábado",
+    barrios: [
+      "Ciudadela",
+      "Ramos Mejía",
+      "Lomas del Mirador",
+      "San Justo",
+      "Villa Luzuriaga",
+      "Morón",
+      "Villa Sarmiento",
+      "Haedo",
+    ],
+  },
+  {
+    region: "Zona CABA",
+    dias: "Martes y Viernes",
+    barrios: [
+      "Villa Devoto",
+      "Agronomía",
+      "Villa del Parque",
+      "Villa Real",
+      "Monte Castro",
+      "Villa Santa Rita",
+      "Versalles",
+      "Liniers",
+      "Villa Luro",
+      "Floresta",
+    ],
+  },
+] as const
 
 export const CONTACTO_CONTENT = {
   badge: "Escribinos",
