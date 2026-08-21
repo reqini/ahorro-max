@@ -35,6 +35,15 @@ export async function deleteProducto(id: string) {
   revalidatePath('/vendedor/productos')
 }
 
+/** Vacía el catálogo completo, para reemplazarlo por una lista nueva (ej: importar la lista minorista). */
+export async function deleteAllProductos() {
+  await getSupabaseAdmin().from('productos').delete().not('id', 'is', null)
+  revalidatePath('/admin/productos')
+  revalidatePath('/vendedor/productos')
+  revalidatePath('/catalogo')
+  revalidatePath('/')
+}
+
 /**
  * Guarda los datos de catálogo de un producto: marca, foto y las comparaciones
  * de precio contra otras cadenas (cargadas a mano, con link al ecommerce).

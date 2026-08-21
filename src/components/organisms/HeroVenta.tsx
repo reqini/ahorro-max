@@ -46,8 +46,8 @@ export function HeroVenta() {
         </h1>
 
         <p className="text-white/60 text-base md:text-lg max-w-xl leading-relaxed">
-          Almacén, limpieza, bebidas y más al precio de distribuidora. Armá tu pedido online y te lo
-          llevamos sin cargo en la zona.
+          Bebidas, bebidas con alcohol, almacén y productos de kiosco al precio de distribuidora. Armá
+          tu pedido online y te lo llevamos sin cargo en la zona.
         </p>
 
         {/* Selector: para casa / para tu comercio */}

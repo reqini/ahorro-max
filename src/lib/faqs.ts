@@ -11,7 +11,7 @@ export const FAQS_DEFAULT: FaqItem[] = [
   { id: '1', q: '¿Dónde están ubicados?', a: 'En Ciudadela, Partido de Tres de Febrero, zona oeste del Gran Buenos Aires.' },
   { id: '2', q: '¿Venden al por mayor y al por menor?', a: `Sí. Atendemos a consumidores finales sin mínimo de compra y a revendedores, almacenes y kioscos con precios por volumen a partir de ${MAYORISTA_MIN_MONTO} por pedido.` },
   { id: '3', q: '¿Cuál es el WhatsApp?', a: '+54 11 5020-3114. Podés escribirnos para consultar precios, catálogo y disponibilidad de stock.' },
-  { id: '4', q: '¿Qué productos tienen?', a: 'Productos de consumo masivo: alimentos secos, bebidas, limpieza, higiene personal y del hogar.' },
+  { id: '4', q: '¿Qué productos tienen?', a: 'Bebidas, bebidas con alcohol, almacén y productos de kiosco.' },
   { id: '5', q: '¿Cuáles son los horarios?', a: 'Lunes a Viernes de 8:00 a 18:00 hs. Sábados de 8:00 a 13:00 hs. Domingos cerrado.' },
   { id: '6', q: '¿Tienen lista de precios mayoristas?', a: 'Sí, tenemos catálogo descargable en esta página. También podés pedirla por WhatsApp.' },
   { id: '7', q: '¿Hay mínimo de compra?', a: `Para compras minoristas no hay mínimo. Para precio mayorista, el mínimo es de ${MAYORISTA_MIN_MONTO} por pedido.` },

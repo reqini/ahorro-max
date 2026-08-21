@@ -1,5 +1,5 @@
 import { getAllProductos } from '@/lib/productos'
-import { addProducto, deleteProducto, toggleProducto } from './actions'
+import { addProducto, deleteProducto, deleteAllProductos, toggleProducto } from './actions'
 import { DeleteButton } from '@/app/admin/components/DeleteButton'
 import { ImportExcel } from './ImportExcel'
 import { EditarCatalogo } from './EditarCatalogo'
@@ -28,9 +28,25 @@ export default async function ProductosAdminPage() {
       </div>
 
       {/* Import */}
-      <div className="mb-6">
+      <div className="mb-2">
         <ImportExcel />
       </div>
+
+      {/* Vaciar catálogo, para reemplazarlo por una lista nueva */}
+      {productos.length > 0 && (
+        <div className="mb-6 flex items-center justify-between gap-4 flex-wrap px-1">
+          <p className="text-white/30 text-xs">
+            Para reemplazar todo el catálogo por una lista nueva: vaciá primero y después importá el archivo.
+          </p>
+          <DeleteButton
+            action={deleteAllProductos}
+            label={`¿Eliminar los ${productos.length} productos cargados? Esta acción no se puede deshacer. Importá la lista nueva justo después.`}
+            className="text-xs px-3 py-1.5 border border-red-900/50 text-red-500/70 hover:text-red-400 hover:bg-red-950/30 transition-colors uppercase tracking-wide font-bold shrink-0"
+          >
+            Vaciar catálogo completo
+          </DeleteButton>
+        </div>
+      )}
 
       {/* Product list */}
       {productos.length === 0 ? (
