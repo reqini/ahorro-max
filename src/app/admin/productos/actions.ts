@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import * as XLSX from 'xlsx'
+import { esListaDePrecios, parsearListaMinorista, type FilaLista } from '@/lib/lista-precios'
 
 function str(fd: FormData, key: string) {
   return (fd.get(key) as string | null)?.trim() ?? ''
@@ -21,6 +22,8 @@ export async function addProducto(formData: FormData) {
     descripcion:      str(formData, 'descripcion'),
     marca:            str(formData, 'marca'),
     imagen_url:       str(formData, 'imagen_url'),
+    presentacion:     str(formData, 'presentacion'),
+    precio_pack:      str(formData, 'precio_pack'),
     activo: true,
   })
 
@@ -90,6 +93,15 @@ export async function toggleProducto(id: string, activo: boolean) {
   revalidatePath('/vendedor/productos')
 }
 
+/** Producto listo para guardar, venga del formato que venga. */
+type FilaProducto = Partial<FilaLista> & {
+  nombre: string
+  precio_minorista: string
+  precio_mayorista: string
+  categoria: string
+  activo: boolean
+}
+
 export type ImportResult =
   | { count: number; nuevos: number; actualizados: number; ignoradas: number; error?: never }
   | { error: string; count?: never; nuevos?: never; actualizados?: never; ignoradas?: never }
@@ -118,24 +130,36 @@ export async function importProductosAction(
     return { error: 'No se pudo leer el archivo. Usá formato .xlsx o .csv' }
   }
 
-  // Skip header row, filter empty rows
-  const parseadas = rows
-    .slice(1)
-    .filter((r) => r[0])
-    .map((r) => ({
-      nombre:           String(r[0] ?? '').trim(),
-      precio_minorista: String(r[1] ?? '').trim(),
-      precio_mayorista: String(r[2] ?? '').trim(),
-      categoria:        String(r[3] ?? '').trim(),
-      descripcion:      String(r[4] ?? '').trim(),
-      activo: true,
-    }))
-    .filter((p) => p.nombre)
+  // La lista de precios del negocio (secciones por categoría, presentación y
+  // precio por pack y por unidad) se lee tal cual sale; cualquier otra planilla
+  // sigue leyéndose con las cinco columnas simples de la plantilla.
+  let productos: FilaProducto[]
+  let ignoradas: number
 
-  const productos = parseadas.filter(
-    (p) => !looksLikeGarbagePrice(p.precio_minorista) && !looksLikeGarbagePrice(p.precio_mayorista)
-  )
-  const ignoradas = parseadas.length - productos.length
+  if (esListaDePrecios(rows)) {
+    productos = parsearListaMinorista(rows).map((p) => ({ ...p, activo: true }))
+    // En este formato las filas que no son artículos (título, categorías,
+    // encabezados) no son errores del archivo: se descartan sin avisar.
+    ignoradas = 0
+  } else {
+    const parseadas = rows
+      .slice(1)
+      .filter((r) => r[0])
+      .map((r) => ({
+        nombre:           String(r[0] ?? '').trim(),
+        precio_minorista: String(r[1] ?? '').trim(),
+        precio_mayorista: String(r[2] ?? '').trim(),
+        categoria:        String(r[3] ?? '').trim(),
+        descripcion:      String(r[4] ?? '').trim(),
+        activo: true,
+      }))
+      .filter((p) => p.nombre)
+
+    productos = parseadas.filter(
+      (p) => !looksLikeGarbagePrice(p.precio_minorista) && !looksLikeGarbagePrice(p.precio_mayorista)
+    )
+    ignoradas = parseadas.length - productos.length
+  }
 
   if (productos.length === 0) return { error: 'El archivo no tiene datos válidos' }
 
@@ -168,5 +192,9 @@ export async function importProductosAction(
 
   revalidatePath('/admin/productos')
   revalidatePath('/vendedor/productos')
+  // La lista de precios se muestra en el home y en el catálogo: importar tiene que
+  // verse ahí enseguida, no dentro de un minuto.
+  revalidatePath('/')
+  revalidatePath('/catalogo')
   return { count: productos.length, nuevos: nuevos.length, actualizados: actualizaciones.length, ignoradas }
 }

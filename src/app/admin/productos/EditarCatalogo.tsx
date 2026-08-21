@@ -22,8 +22,45 @@ export function EditarCatalogo({ producto }: { producto: Producto }) {
   const [imagenUrl, setImagenUrl] = useState(producto.imagen_url)
   const [comparaciones, setComparaciones] = useState<ComparacionPrecio[]>(producto.comparaciones)
   const [guardando, setGuardando] = useState(false)
+  const [subiendoFoto, setSubiendoFoto] = useState(false)
   const [ok, setOk] = useState(false)
   const [error, setError] = useState('')
+
+  /**
+   * Sube la foto real del producto y deja la URL cargada en el campo. Se guarda
+   * sola: si el admin sube la foto y cierra el panel sin apretar "Guardar", la
+   * foto igual quedó puesta, que es lo que esperaba que pasara.
+   */
+  async function subirFoto(archivo: File | undefined) {
+    if (!archivo) return
+    setSubiendoFoto(true)
+    setError('')
+    const body = new FormData()
+    body.append('files', archivo)
+    body.append('producto_id', producto.id)
+    try {
+      const res = await fetch('/api/admin/upload-foto', { method: 'POST', body })
+      const data = await res.json()
+      if (!res.ok) {
+        setError(data.error ?? 'No se pudo subir la foto')
+      } else if (data.rechazadas?.length) {
+        setError(data.rechazadas.join(' · '))
+      } else if (data.asignadas?.[0]?.url) {
+        // El servidor ya dejó la foto guardada en el producto y devuelve su URL:
+        // se refleja en el campo para ver el resultado sin cerrar el panel.
+        setImagenUrl(data.asignadas[0].url)
+        router.refresh()
+        setOk(true)
+        setTimeout(() => setOk(false), 2000)
+      } else {
+        setError('No se pudo asignar la foto a este producto')
+      }
+    } catch {
+      setError('No se pudo subir la foto. Revisá la conexión e intentá de nuevo.')
+    } finally {
+      setSubiendoFoto(false)
+    }
+  }
 
   function setComp(i: number, campo: keyof ComparacionPrecio, valor: string) {
     setComparaciones((prev) => prev.map((c, j) => (j === i ? { ...c, [campo]: valor } : c)))
@@ -84,10 +121,23 @@ export function EditarCatalogo({ producto }: { producto: Producto }) {
         </div>
       </div>
 
-      {imagenUrl && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={imagenUrl} alt="" className="w-20 h-20 object-contain bg-white/5 border border-white/10 p-1" />
-      )}
+      <div className="flex items-center gap-3 flex-wrap">
+        {imagenUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={imagenUrl} alt="" className="w-20 h-20 object-contain bg-white/5 border border-white/10 p-1" />
+        )}
+        <div>
+          <label className="text-white/50 text-xs uppercase tracking-wide block mb-1">o subí la foto real</label>
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/avif"
+            disabled={subiendoFoto}
+            onChange={(e) => subirFoto(e.target.files?.[0])}
+            className="text-xs text-white/50 file:mr-3 file:px-3 file:py-1.5 file:border file:border-white/20 file:bg-white/5 file:text-white/70 file:text-xs hover:file:bg-white/10 file:transition-colors cursor-pointer disabled:opacity-50"
+          />
+          {subiendoFoto && <p className="text-white/40 text-xs mt-1">Subiendo foto...</p>}
+        </div>
+      </div>
 
       <div>
         <div className="flex items-center justify-between mb-2">

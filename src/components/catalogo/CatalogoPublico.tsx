@@ -159,7 +159,7 @@ export function CatalogoPublico({ productos, categorias, whatsappNumber }: Props
                   className="shrink-0 w-40 border border-[#F5C000]/25 bg-[#131313] text-left overflow-hidden hover:border-[#F5C000]/50 transition-colors"
                 >
                   <div className="relative">
-                    <ProductoImagen src={p.imagen_url} nombre={p.nombre} className="w-full h-28" />
+                    <ProductoImagen src={p.imagen_url} nombre={p.nombre} marca={p.marca} className="w-full h-28" />
                     <span className="absolute top-1.5 left-1.5 bg-[#F5C000] text-black text-[10px] font-black px-1.5 py-0.5">
                       -{ahorro.ahorroPorcentaje}%
                     </span>
@@ -201,7 +201,7 @@ export function CatalogoPublico({ productos, categorias, whatsappNumber }: Props
                     className="relative aspect-square w-full"
                     aria-label={`Ver ${p.nombre}`}
                   >
-                    <ProductoImagen src={p.imagen_url} nombre={p.nombre} className="w-full h-full" />
+                    <ProductoImagen src={p.imagen_url} nombre={p.nombre} marca={p.marca} className="w-full h-full" />
                     {ahorro && (
                       <span className="absolute top-2 left-2 bg-[#F5C000] text-black text-[10px] font-black px-1.5 py-0.5 uppercase">
                         -{ahorro.ahorroPorcentaje}% vs {ahorro.referencia.cadena}
@@ -220,9 +220,18 @@ export function CatalogoPublico({ productos, categorias, whatsappNumber }: Props
                     >
                       {p.nombre}
                     </button>
+                    {p.presentacion && (
+                      <span className="text-white/40 text-[11px] leading-tight">{p.presentacion}</span>
+                    )}
                     <p className="text-white font-black text-lg leading-none">
                       {formatearPrecio(p.precio_minorista)}
+                      <span className="text-white/40 text-[11px] font-medium"> /u</span>
                     </p>
+                    {p.precio_pack && (
+                      <span className="text-[#F5C000] text-[11px] font-bold leading-none">
+                        Pack cerrado {formatearPrecio(p.precio_pack)}
+                      </span>
+                    )}
 
                     {cant > 0 ? (
                       <div className="flex items-center justify-between border border-[#CC0000]/50 mt-1">
@@ -329,7 +338,12 @@ function DetalleProducto({
       </div>
 
       <div className="flex-1 overflow-y-auto max-w-2xl mx-auto w-full">
-        <ProductoImagen src={producto.imagen_url} nombre={producto.nombre} className="w-full aspect-square max-h-80" />
+        <ProductoImagen
+          src={producto.imagen_url}
+          nombre={producto.nombre}
+          marca={producto.marca}
+          className="w-full aspect-square max-h-80"
+        />
 
         <div className="p-5 space-y-4">
           <div>
@@ -337,17 +351,40 @@ function DetalleProducto({
               <p className="text-white/40 text-xs uppercase tracking-wide">{producto.marca}</p>
             )}
             <h2 className="text-white text-xl font-bold mt-0.5">{producto.nombre}</h2>
+            {producto.presentacion && (
+              <p className="text-white/50 text-sm mt-1">{producto.presentacion}</p>
+            )}
             {producto.descripcion && <p className="text-white/50 text-sm mt-1">{producto.descripcion}</p>}
           </div>
 
           <div className="flex items-end gap-3">
-            <p className="text-white font-black text-3xl">{formatearPrecio(producto.precio_minorista)}</p>
+            <p className="text-white font-black text-3xl">
+              {formatearPrecio(producto.precio_minorista)}
+              <span className="text-white/40 text-base font-medium"> por unidad</span>
+            </p>
             {ahorro && (
               <span className="text-[#F5C000] text-sm font-bold pb-1">
                 Ahorrás {formatearPrecio(ahorro.ahorroPesos)}
               </span>
             )}
           </div>
+
+          {producto.precio_pack && (
+            <div className="border border-[#F5C000]/25 bg-[#F5C000]/5 px-4 py-3 flex items-center justify-between gap-3">
+              <span className="text-white/70 text-sm">
+                Llevando el pack cerrado
+                {producto.presentacion ? ` (${producto.presentacion})` : ''}
+              </span>
+              <span className="text-right shrink-0">
+                <span className="text-[#F5C000] font-black block leading-none">
+                  {formatearPrecio(producto.precio_pack)}
+                </span>
+                <span className="text-white/40 text-[11px]">
+                  {formatearPrecio(producto.precio_mayorista)} por unidad
+                </span>
+              </span>
+            </div>
+          )}
 
           {/* Comparación con cadenas */}
           {producto.comparaciones.length > 0 && (

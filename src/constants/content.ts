@@ -49,7 +49,7 @@ export const INFO_CONTENT = {
 export const NAVBAR_LINKS = [
   { label: "Minorista", href: "/catalogo" },
   { label: "Mayorista", href: "#mayorista" },
-  { label: "Destacados", href: "#destacados" },
+  { label: "Lista de precios", href: "#destacados" },
   { label: "Preguntas frecuentes", href: "#faq" },
 ] as const
 

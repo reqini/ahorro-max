@@ -28,7 +28,8 @@ export function ImportExcel() {
         <div>
           <h2 className="text-white font-semibold text-sm">Importar desde Excel / CSV</h2>
           <p className="text-white/30 text-xs mt-0.5">
-            Columnas: Nombre | Precio Minorista | Precio Mayorista | Categoría | Descripción
+            Subí la lista de precios tal cual la armás (Producto | Presentación | Precio pack | Unitario
+            pack | Unitario por menor) o una planilla simple con las columnas de la plantilla.
           </p>
         </div>
         <button

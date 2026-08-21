@@ -4,7 +4,7 @@ import {
   Beneficios,
   ZonasEntrega,
   MayoristaWhatsApp,
-  CatalogoDestacado,
+  ListaPrecios,
   ProximamenteLocal,
   FAQSection,
   Footer,
@@ -29,7 +29,7 @@ export async function LandingTemplate() {
         <Beneficios />
         <ZonasEntrega />
         <MayoristaWhatsApp />
-        <CatalogoDestacado />
+        <ListaPrecios />
         <ProximamenteLocal />
         <FAQSection />
       </main>
