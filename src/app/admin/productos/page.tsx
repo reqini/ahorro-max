@@ -2,7 +2,9 @@ import { getAllProductos } from '@/lib/productos'
 import { addProducto, deleteProducto, deleteAllProductos, toggleProducto } from './actions'
 import { DeleteButton } from '@/app/admin/components/DeleteButton'
 import { ImportExcel } from './ImportExcel'
+import { SubirFotos } from './SubirFotos'
 import { EditarCatalogo } from './EditarCatalogo'
+import { slugify } from '@/lib/slug'
 
 const INPUT = "w-full bg-[#1a1a1a] border border-white/20 text-white px-3 py-2.5 text-sm focus:outline-none focus:border-[#CC0000] transition-colors placeholder-white/30"
 
@@ -17,19 +19,23 @@ export default async function ProductosAdminPage() {
     return acc
   }, {})
   const sinCategoria = productos.filter((p) => !p.categoria)
+  const conFoto = productos.filter((p) => p.imagen_url).length
 
   return (
     <div className="max-w-4xl">
       <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
         <div>
           <h1 className="text-xl font-bold text-white">Productos</h1>
-          <p className="text-white/40 text-sm mt-0.5">{productos.length} productos · visible en la app del vendedor</p>
+          <p className="text-white/40 text-sm mt-0.5">
+            {productos.length} productos · {conFoto} con foto · visible en la app del vendedor
+          </p>
         </div>
       </div>
 
       {/* Import */}
-      <div className="mb-2">
+      <div className="mb-2 flex flex-col gap-4">
         <ImportExcel />
+        <SubirFotos nombres={productos.map((p) => `${slugify(p.nombre)}.jpg`)} />
       </div>
 
       {/* Vaciar catálogo, para reemplazarlo por una lista nueva */}
