@@ -90,7 +90,7 @@ const jsonLd = {
       hasOfferCatalog: {
         "@type": "OfferCatalog",
         name: "Catálogo de productos",
-        url: `${BASE_URL}/catalogo-mayorista.pdf`,
+        url: `${BASE_URL}/catalogo`,
       },
       sameAs: [WHATSAPP_URL],
       image: `${BASE_URL}/logo.png`,
