@@ -4,26 +4,55 @@
 
 ## Qué es Ahorra Max
 
-Distribuidora Ahorra Max es un negocio familiar con base en el partido de Tres de Febrero, zona oeste del Gran Buenos Aires. Comercializamos productos de consumo masivo (alimentos, limpieza, higiene personal, bebidas) tanto al por mayor como al por menor.
+Distribuidora Ahorra Max es un negocio familiar con base en el partido de Tres de Febrero, zona oeste del Gran Buenos Aires. Comercializamos productos de consumo masivo tanto al por mayor como al por menor: bebidas (con y sin alcohol), productos de almacén y productos de kiosco.
 
 ## Quiénes pueden comprar
 
 - **Minoristas / consumidores finales**: Cualquier persona que quiera comprar productos para su hogar a precios de distribuidora, sin mínimo de cantidad.
-- **Mayoristas / revendedores**: Almacenes, kioscos, maxiquioscos, despensas, negocios de barrio y revendedores que necesitan precios competitivos por volumen.
+- **Mayoristas / revendedores**: Almacenes, kioscos, maxiquioscos, despensas, restaurantes, bares y revendedores que necesitan precios competitivos por volumen. Mínimo de pedido mayorista: $300.000.
 
 ## Productos
 
-Productos de consumo masivo en general: alimentos secos, bebidas, productos de limpieza, artículos de higiene personal y del hogar. Ver catálogo completo en /catalogo-mayorista.pdf
+Catálogo completo y precios actualizados en /catalogo. Categorías de bebidas de la lista de precios vigente:
+
+- Gaseosas
+- Energizantes
+- Aguas y jugos
+- Cervezas
+- Aperitivos
+
+Además de bebidas, el catálogo incluye productos de almacén y de kiosco (alfajores, golosinas, snacks).
 
 ## Contacto
 
 - **WhatsApp**: +54 11 5020-3114
 - **Dirección**: 25 de mayo 108, Ciudadela, CP 1702, Buenos Aires, Argentina
-- **Horarios**: Lunes a Viernes 8:00-18:00 | Sábados 8:00-13:00
+- **Email**: ahorramaxdistribuidora@gmail.com
+- **Instagram**: https://www.instagram.com/distri.ahorramax
+- **Horarios**: Lunes a Viernes 8:00-18:00 | Sábados 8:00-13:00 | Domingos cerrado
 
 ## Zona de cobertura
 
-Ciudadela y alrededores. Partido de Tres de Febrero, zona oeste del Gran Buenos Aires.
+Repartimos en dos zonas, cada una con sus días fijos:
+
+**Zona Oeste — Miércoles y Sábado**: Ciudadela, Ramos Mejía, Lomas del Mirador, San Justo, Villa Luzuriaga, Morón, Villa Sarmiento, Haedo.
+
+**Zona CABA — Martes y Viernes**: Villa Devoto, Agronomía, Villa del Parque, Villa Real, Monte Castro, Villa Santa Rita, Versalles, Liniers, Villa Luro, Floresta.
+
+## Páginas del sitio
+
+- Inicio: https://ahorramax.app/
+- Catálogo (pedido online): https://ahorramax.app/catalogo/
+- Productos por categoría: https://ahorramax.app/productos/
+- Zonas de entrega: https://ahorramax.app/zona-de-cobertura/
+- Mayorista para kioscos: https://ahorramax.app/mayorista-para-kioscos/
+- Mayorista para almacenes: https://ahorramax.app/mayorista-para-almacenes/
+- Mayorista para restaurantes: https://ahorramax.app/mayorista-para-restaurantes/
+- Mayorista para eventos: https://ahorramax.app/mayorista-para-eventos/
+- Nosotros: https://ahorramax.app/nosotros/
+- Preguntas frecuentes: https://ahorramax.app/preguntas-frecuentes/
+- Contacto: https://ahorramax.app/contacto/
+- Blog: https://ahorramax.app/blog/
 
 ## Cómo contactar
 

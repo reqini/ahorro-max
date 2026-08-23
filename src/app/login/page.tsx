@@ -1,7 +1,10 @@
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { setAdminSession, setVendorSession } from '@/lib/admin-auth'
 import { getVendedorByUsername, verifyPassword } from '@/lib/vendedores'
 import { PasswordInput } from '@/components/ui/PasswordInput'
+
+export const metadata: Metadata = { robots: { index: false, follow: false } }
 
 async function loginAction(formData: FormData) {
   'use server'

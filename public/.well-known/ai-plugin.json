@@ -1,0 +1,12 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Ahorra Max",
+  "name_for_model": "ahorra_max",
+  "description_for_human": "Distribuidora mayorista de bebidas en Ciudadela, Buenos Aires.",
+  "description_for_model": "Legacy ChatGPT-plugins-era manifest kept for compatibility only; no plugin API exists here. For accurate, current information about this business (products, delivery zones, contact, hours), see https://ahorramax.app/llms.txt and https://ahorramax.app/sitemap.xml instead.",
+  "auth": { "type": "none" },
+  "api": { "type": "none" },
+  "logo_url": "https://ahorramax.app/logo.png",
+  "contact_email": "ahorramaxdistribuidora@gmail.com",
+  "legal_info_url": "https://ahorramax.app"
+}

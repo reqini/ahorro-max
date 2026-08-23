@@ -1,9 +1,6 @@
 import { MetadataRoute } from "next"
+import { BASE_URL } from "@/constants"
 
-const BASE_URL = "https://www.ahorramax.com.ar"
-
-// Important for static export (output: "export")
-// Next.js cannot use dynamic rendering for robots.txt.
 export const dynamic = "force-static"
 export const revalidate = false
 
@@ -13,6 +10,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
+        disallow: ["/admin", "/admin/", "/vendedor", "/vendedor/", "/login", "/api", "/api/"],
       },
       // Allow AI crawlers explicitly
       { userAgent: "GPTBot", allow: "/" },
@@ -28,4 +26,3 @@ export default function robots(): MetadataRoute.Robots {
     sitemap: `${BASE_URL}/sitemap.xml`,
   }
 }
-

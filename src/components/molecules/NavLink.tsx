@@ -12,9 +12,19 @@ interface NavLinkProps {
 
 export function NavLink({ href, label, className, onClick }: NavLinkProps) {
   const handleClick = (e: React.MouseEvent) => {
-    if (href.startsWith("#")) {
+    // Los anchors del home ("#mayorista" o "/#mayorista") solo hacen scroll suave
+    // si ya estamos en el home. Si no, se deja la navegación normal del browser
+    // (te lleva a "/" y salta al ancla solo, como cualquier link con hash).
+    const hashIndex = href.indexOf("#")
+    if (hashIndex === -1) return
+
+    const pathPart = href.slice(0, hashIndex)
+    const targetsHome = pathPart === "" || pathPart === "/"
+    const onHomePage = typeof window !== "undefined" && window.location.pathname === "/"
+
+    if (targetsHome && onHomePage) {
       e.preventDefault()
-      smoothScrollTo(href.slice(1))
+      smoothScrollTo(href.slice(hashIndex + 1))
       onClick?.()
     }
   }
