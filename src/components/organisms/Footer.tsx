@@ -3,13 +3,12 @@ import { NavLink } from "@/components/molecules"
 import { WhatsAppIcon } from "@/components/atoms"
 import {
   DIRECCION,
-  TELEFONO_DISPLAY,
-  WHATSAPP_MINORISTA_URL,
   FOOTER_CONTENT,
   NAVBAR_LINKS,
   EMAIL,
   SOCIAL_LINKS,
 } from "@/constants"
+import { getContactInfo } from "@/lib/whatsapp"
 import { MapPin, Mail } from "lucide-react"
 
 function InstagramIcon({ size = 18 }: { size?: number }) {
@@ -28,7 +27,9 @@ function FacebookIcon({ size = 18 }: { size?: number }) {
   )
 }
 
-export function Footer() {
+export async function Footer() {
+  const { minorista: whatsappMinoristaUrl, telefonoDisplay } = await getContactInfo()
+
   return (
     <footer
       id="footer"
@@ -72,13 +73,13 @@ export function Footer() {
             </h3>
             <div className="flex flex-col gap-3">
               <a
-                href={WHATSAPP_MINORISTA_URL}
+                href={whatsappMinoristaUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-white/80 hover:text-[#25D366] transition-colors"
               >
                 <WhatsAppIcon size={18} className="text-[#25D366]" />
-                <span className="text-sm font-semibold">{TELEFONO_DISPLAY}</span>
+                <span className="text-sm font-semibold">{telefonoDisplay}</span>
               </a>
               <a
                 href={`mailto:${EMAIL}`}

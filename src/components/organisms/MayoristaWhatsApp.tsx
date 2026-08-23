@@ -1,8 +1,15 @@
 'use client'
 
 import { useState, type FormEvent } from 'react'
-import { WHATSAPP_NUMBER, MAYORISTA_CONTENT, MAYORISTA_MIN_MONTO } from '@/constants'
+import { WHATSAPP_NUMBER, MAYORISTA_MIN_MONTO } from '@/constants'
 import { WhatsAppIcon } from '@/components/atoms/WhatsAppIcon'
+
+interface Props {
+  /** Número de WhatsApp; por defecto el fijo del código. Pasalo desde un componente que ya haya leído /admin/config. */
+  numero?: string
+  /** Mínimo de compra mayorista a mostrar; por defecto el fijo del código. Pasalo desde /admin/zonas. */
+  minimoMonto?: string
+}
 
 const VENTAJAS = [
   'Precios por volumen imposibles de igualar',
@@ -20,15 +27,15 @@ const inputClass =
  * catálogo: antes de ir a WhatsApp, pedimos nombre/tipo de comercio/zona para
  * llegar con el mensaje ya calificado.
  */
-export function MayoristaWhatsApp() {
+export function MayoristaWhatsApp({ numero = WHATSAPP_NUMBER, minimoMonto = MAYORISTA_MIN_MONTO }: Props = {}) {
   const [nombre, setNombre] = useState('')
   const [tipoComercio, setTipoComercio] = useState('')
   const [zona, setZona] = useState('')
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    const msg = `Hola! Soy ${nombre}, tengo un/a ${tipoComercio} en ${zona} y quiero pedir la lista de precios mayoristas (mínimo ${MAYORISTA_MIN_MONTO} por pedido) 📦`
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener')
+    const msg = `Hola! Soy ${nombre}, tengo un/a ${tipoComercio} en ${zona} y quiero pedir la lista de precios mayoristas (mínimo ${minimoMonto} por pedido) 📦`
+    window.open(`https://wa.me/${numero}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener')
   }
 
   return (
@@ -57,7 +64,7 @@ export function MayoristaWhatsApp() {
         </p>
 
         <p className="text-[#F5C000] font-bold text-sm md:text-base mt-3">
-          {MAYORISTA_CONTENT.minimoTexto}
+          Precios mayoristas en pedidos desde {minimoMonto}
         </p>
 
         <ul className="flex flex-col gap-2.5 max-w-md mx-auto mt-7 text-left">

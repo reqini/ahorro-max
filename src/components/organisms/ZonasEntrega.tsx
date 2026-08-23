@@ -1,7 +1,10 @@
-import { ZONAS_DETALLE, WHATSAPP_MINORISTA_URL } from '@/constants'
+import { getZonasDetalle } from '@/lib/zonas'
+import { getContactInfo } from '@/lib/whatsapp'
 
-/** Zonas de reparto sin cargo, agrupadas por región y día. Fijo en código. */
-export function ZonasEntrega() {
+/** Zonas de reparto sin cargo, agrupadas por región y día. Editable desde /admin/zonas. */
+export async function ZonasEntrega() {
+  const [zonas, { minorista: whatsappMinoristaUrl }] = await Promise.all([getZonasDetalle(), getContactInfo()])
+
   return (
     <section className="bg-[#0a0a0a] py-14 md:py-20">
       <div className="max-w-4xl mx-auto px-5 text-center">
@@ -13,7 +16,7 @@ export function ZonasEntrega() {
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-8 text-left">
-          {ZONAS_DETALLE.map((z) => (
+          {zonas.map((z) => (
             <div key={z.region} className="border border-white/15 bg-[#131313] p-5">
               <div className="flex items-center justify-between gap-3">
                 <h3 className="text-white font-black text-base uppercase tracking-wide">{z.region}</h3>
@@ -39,7 +42,7 @@ export function ZonasEntrega() {
         <p className="text-white/35 text-xs mt-6">
           ¿No ves tu zona?{' '}
           <a
-            href={WHATSAPP_MINORISTA_URL}
+            href={whatsappMinoristaUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="text-white/60 hover:text-[#F5C000] underline transition-colors"

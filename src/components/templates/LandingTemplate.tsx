@@ -11,6 +11,8 @@ import {
   PromoModal,
 } from "@/components/organisms"
 import { getPromoFlash } from "@/lib/promo"
+import { getContactInfo } from "@/lib/whatsapp"
+import { getMayoristaMinMonto } from "@/lib/zonas"
 
 /**
  * Landing orientada a la venta minorista: el consumidor final llega, ve la
@@ -18,7 +20,11 @@ import { getPromoFlash } from "@/lib/promo"
  * que lo lleva a pedir la lista por WhatsApp.
  */
 export async function LandingTemplate() {
-  const promo = await getPromoFlash()
+  const [promo, { numero }, minimoMonto] = await Promise.all([
+    getPromoFlash(),
+    getContactInfo(),
+    getMayoristaMinMonto(),
+  ])
 
   return (
     <>
@@ -28,7 +34,7 @@ export async function LandingTemplate() {
         <HeroVenta />
         <Beneficios />
         <ZonasEntrega />
-        <MayoristaWhatsApp />
+        <MayoristaWhatsApp numero={numero} minimoMonto={minimoMonto} />
         <ListaPrecios />
         <ProximamenteLocal />
         <FAQSection />

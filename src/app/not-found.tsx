@@ -1,7 +1,11 @@
 import Link from 'next/link'
-import { WHATSAPP_MINORISTA_URL } from '@/constants'
+import { getContactInfo } from '@/lib/whatsapp'
 
-export default function NotFound() {
+export const revalidate = 60
+
+export default async function NotFound() {
+  const { minorista: whatsappMinoristaUrl } = await getContactInfo()
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center px-5 text-center">
       <div className="flex flex-col items-center gap-6 max-w-md">
@@ -27,7 +31,7 @@ export default function NotFound() {
             🛒 Ver catálogo
           </Link>
           <a
-            href={WHATSAPP_MINORISTA_URL}
+            href={whatsappMinoristaUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full py-3.5 border border-white/20 text-white/70 hover:text-white hover:border-white/40 text-sm font-bold uppercase tracking-wide transition-colors"

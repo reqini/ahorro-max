@@ -3,26 +3,34 @@ import { buildMetadata } from '@/lib/seo'
 import { buildBreadcrumbSchema } from '@/lib/schema'
 import { JsonLd } from '@/components/atoms/JsonLd'
 import { MayoristaVerticalHero, MayoristaVerticalFAQ, ZonasEntrega, MayoristaWhatsApp } from '@/components/organisms'
-import { MAYORISTA_VERTICALS } from '@/constants/mayoristaVerticals'
+import { getMayoristaVerticals } from '@/constants/mayoristaVerticals'
+import { getMayoristaMinMonto } from '@/lib/zonas'
+import { getContactInfo } from '@/lib/whatsapp'
 
-const vertical = MAYORISTA_VERTICALS.find((v) => v.slug === 'mayorista-para-restaurantes')!
-const path = `/${vertical.slug}`
+const SLUG = 'mayorista-para-restaurantes'
+const path = `/${SLUG}`
+const verticalMeta = getMayoristaVerticals().find((v) => v.slug === SLUG)!
+
+export const revalidate = 60
 
 export const metadata: Metadata = buildMetadata({
-  title: vertical.metaTitle,
-  description: vertical.metaDescription,
+  title: verticalMeta.metaTitle,
+  description: verticalMeta.metaDescription,
   path,
-  keywords: vertical.keywords,
+  keywords: verticalMeta.keywords,
 })
 
-export default function MayoristaParaRestaurantesPage() {
+export default async function MayoristaParaRestaurantesPage() {
+  const [minimoMonto, { numero }] = await Promise.all([getMayoristaMinMonto(), getContactInfo()])
+  const vertical = getMayoristaVerticals(minimoMonto, numero).find((v) => v.slug === SLUG)!
+
   return (
     <>
       <JsonLd data={buildBreadcrumbSchema([{ name: 'Inicio', path: '/' }, { name: vertical.badge, path }])} />
-      <MayoristaVerticalHero vertical={vertical} />
+      <MayoristaVerticalHero vertical={vertical} minimoMonto={minimoMonto} />
       <ZonasEntrega />
       <MayoristaVerticalFAQ faqs={vertical.faqs} pageUrl={path} />
-      <MayoristaWhatsApp />
+      <MayoristaWhatsApp numero={numero} minimoMonto={minimoMonto} />
     </>
   )
 }

@@ -23,8 +23,8 @@ export const HORARIOS = [
   { dias: "Domingos", horario: "Cerrado" },
 ]
 
-export function buildWhatsAppUrl(message: string): string {
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`
+export function buildWhatsAppUrl(message: string, numero: string = WHATSAPP_NUMBER): string {
+  return `https://wa.me/${numero}?text=${encodeURIComponent(message)}`
 }
 
 export const WHATSAPP_MINORISTA_URL = buildWhatsAppUrl(WHATSAPP_MINORISTA_MSG)

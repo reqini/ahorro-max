@@ -3,8 +3,14 @@ import { FeatureList } from '@/components/molecules'
 import { MAYORISTA_MIN_MONTO } from '@/constants'
 import type { MayoristaVertical } from '@/constants/mayoristaVerticals'
 
+interface Props {
+  vertical: MayoristaVertical
+  /** Mínimo de compra a mostrar; por defecto el fijo del código. Pasalo desde /admin/zonas. */
+  minimoMonto?: string
+}
+
 /** Hero de una landing "mayorista para X": mismo tratamiento dorado que la sección mayorista del home, con contenido propio de cada vertical. */
-export function MayoristaVerticalHero({ vertical }: { vertical: MayoristaVertical }) {
+export function MayoristaVerticalHero({ vertical, minimoMonto = MAYORISTA_MIN_MONTO }: Props) {
   return (
     <section className="relative bg-[#0a0800] overflow-hidden">
       <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-[#F5C000]" />
@@ -42,7 +48,7 @@ export function MayoristaVerticalHero({ vertical }: { vertical: MayoristaVertica
           </div>
 
           <p className="text-[#F5C000] font-bold text-sm md:text-base">
-            Precios mayoristas en pedidos desde {MAYORISTA_MIN_MONTO}
+            Precios mayoristas en pedidos desde {minimoMonto}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3">
