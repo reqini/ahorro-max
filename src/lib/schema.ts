@@ -1,5 +1,6 @@
 import { BASE_URL } from "@/constants"
 import { parsearPrecio } from "./utils"
+import { slugify } from "./slug"
 import type { FaqItem } from "./faqs"
 import type { Producto } from "./productos"
 import type { BlogPost } from "@/content/blog"
@@ -36,12 +37,16 @@ export function buildFaqPageSchema(faqs: FaqItem[], pageUrl: string) {
   }
 }
 
-/** Muestra de productos de una categoría, como Product+Offer. Pensado para una selección chica (5-8), no el catálogo entero. */
+/**
+ * Muestra de productos de una categoría, como Product+Offer. Pensado para una selección chica
+ * (5-8), no el catálogo entero. La categoría entra en el @id para poder llamarla varias veces
+ * en la misma página (una por categoría) sin que los @id choquen entre sí.
+ */
 export function buildProductListSchema(productos: Producto[], categoria: string, pageUrl: string) {
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "@id": `${BASE_URL}${pageUrl}#productos`,
+    "@id": `${BASE_URL}${pageUrl}#productos-${slugify(categoria)}`,
     name: `Productos mayoristas — ${categoria}`,
     itemListElement: productos.map((p, i) => {
       const precio = parsearPrecio(p.precio_minorista)
